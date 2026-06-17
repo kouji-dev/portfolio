@@ -25,12 +25,14 @@
 </head>
 <body>
 
-  <!-- ===== GLOBAL COSMOS (fixed, behind the whole page for continuity) ===== -->
-  <div data-hero-bg class="cosmos"></div>
-  <!-- fade: clear over the hero (top), settling into deep space behind content so the glitter keeps twinkling subtly the whole way down -->
-  <div class="cosmos-fade" aria-hidden="true"></div>
-
   <div class="page">
+
+    <!-- ===== GLOBAL COSMOS (fixed, behind the whole page for continuity) ===== -->
+    <div data-hero-bg class="cosmos"></div>
+    <!-- fade: clear over the hero (top), settling into deep space behind content
+         so the glitter keeps twinkling subtly the whole way down. Lives inside
+         the relative .page so it spans the FULL document height (not just 1 viewport). -->
+    <div class="cosmos-fade" aria-hidden="true"></div>
 
     <!-- ===== NAV ===== -->
     <nav class="nav">
