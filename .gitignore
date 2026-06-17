@@ -1,0 +1,13 @@
+# Design handoff bundle — source material, not part of the deployed site
+_design_bundle/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# Dependencies (none currently — static site)
+node_modules/
+.vercel

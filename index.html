@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Driss Najih — Senior Software Engineer · AI-Driven Apps</title>
+  <meta name="description" content="Senior software engineer building scalable platforms and backend systems — and designing AI agents, RAG and LLM-driven workflows into them.">
+  <meta name="author" content="Driss Najih">
+  <meta name="theme-color" content="#05060B">
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Driss Najih — Senior Software Engineer · AI-Driven Apps">
+  <meta property="og:description" content="Engineering software with an AI-first mindset. Scalable platforms, backend systems, AI agents, RAG and LLM-driven workflows.">
+  <meta property="og:url" content="https://kouji.dev">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- ===== GLOBAL COSMOS (fixed, behind the whole page for continuity) ===== -->
+  <div data-hero-bg class="cosmos"></div>
+  <!-- fade: clear over the hero (top), settling into deep space behind content so the glitter keeps twinkling subtly the whole way down -->
+  <div class="cosmos-fade" aria-hidden="true"></div>
+
+  <div class="page">
+
+    <!-- ===== NAV ===== -->
+    <nav class="nav">
+      <a href="#top" class="brand">
+        <span class="brand-orb">
+          <span class="brand-orb-core"></span>
+          <span class="brand-orb-ring"></span>
+        </span>
+        <span>Driss&nbsp;Najih</span>
+      </a>
+      <div class="nav-right">
+        <div class="navlinks">
+          <a href="#about">About</a>
+          <a href="#work">Work</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <header id="top" class="hero">
+      <!-- soft scrim behind hero text for legibility over the bright nebula -->
+      <div class="hero-scrim" aria-hidden="true"></div>
+
+      <div class="hero-content">
+        <div data-reveal class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          Senior Software Engineer · AI-Driven Apps
+        </div>
+        <h1 data-reveal class="hero-title">
+          Engineering software<br>with an<br><span class="grad">AI-first mindset.</span>
+        </h1>
+        <p data-reveal class="hero-sub">
+          Senior software engineer building scalable platforms and backend systems — and designing AI agents, RAG and LLM-driven workflows into them.
+        </p>
+        <div data-reveal class="hero-actions">
+          <a href="#work" class="btn btn-primary">
+            View work
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#contact" class="btn btn-outline">Get in touch</a>
+          <div class="hero-socials">
+            <a href="https://github.com/kouji-dev" target="_blank" rel="noopener" title="GitHub" class="icon-btn" aria-label="GitHub">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/najih-driss/" target="_blank" rel="noopener" title="LinkedIn" class="icon-btn" aria-label="LinkedIn">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-hint" aria-hidden="true">
+        <span>SCROLL</span>
+        <svg width="16" height="22" viewBox="0 0 16 22" fill="none" stroke="currentColor" stroke-width="1.5" class="scroll-mouse"><rect x="1" y="1" width="14" height="20" rx="7"/><path d="M8 6v4" stroke-linecap="round"/></svg>
+      </div>
+    </header>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about" class="section about">
+      <div data-reveal class="section-num">01 — About</div>
+      <div class="about-grid">
+        <div data-reveal>
+          <p class="about-lead">
+            I'm a senior engineer specialising in <span class="c-accent">complex frontend frameworks</span>, <span class="c-accent2">platform-level backends</span>, and <span class="c-warm">AI-driven applications</span>.
+          </p>
+          <p class="about-body">
+            Across JavaScript/TypeScript, Java and Python, I've built shared frameworks, low-code systems and enterprise tooling used by multiple teams and products — with a focus on clean architecture, scalability and developer experience.
+          </p>
+          <p class="about-body">
+            Lately my work centres on preparing backend systems for AI integration and designing agent-based workflows — building AI capabilities <em>into</em> existing enterprise systems, not as isolated experiments.
+          </p>
+        </div>
+        <div data-reveal class="stats">
+          <div class="stat">
+            <div class="stat-value">7+ yrs</div>
+            <div class="stat-label">Building enterprise &amp; platform software</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">AI-first</div>
+            <div class="stat-label">Agents, RAG &amp; LLM-driven workflows</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- skills -->
+      <div data-reveal class="skillgrid">
+        <div class="skill">
+          <div class="skill-label">Languages</div>
+          <div class="skill-items">TypeScript · JavaScript · Java 8–21 · Rust · Python · Go</div>
+        </div>
+        <div class="skill">
+          <div class="skill-label">Front-End</div>
+          <div class="skill-items">Angular · React · NgRx · Redux · Tailwind</div>
+        </div>
+        <div class="skill">
+          <div class="skill-label">Back-End</div>
+          <div class="skill-items">Spring Boot · Quarkus · NestJS · Node</div>
+        </div>
+        <div class="skill">
+          <div class="skill-label">AI &amp; Data</div>
+          <div class="skill-items">LangChain · LLM APIs · RAG · pgvector · Agents · Prompt design</div>
+        </div>
+        <div class="skill">
+          <div class="skill-label">Cloud &amp; DevOps</div>
+          <div class="skill-items">AWS · Azure · Docker · Kubernetes · GitLab CI · GitHub Actions</div>
+        </div>
+        <div class="skill">
+          <div class="skill-label">Quality</div>
+          <div class="skill-items">Vitest · Jest · Playwright · Cypress · JUnit · SonarQube</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== WORK / FEATURED ===== -->
+    <section id="work" class="section work">
+      <div data-reveal class="section-num">02 — Featured Work</div>
+      <h2 data-reveal class="section-title">Shipped &amp; live in production</h2>
+      <p data-reveal class="section-intro">Two open-source projects you can explore right here — running live, not screenshots.</p>
+
+      <div class="project-list">
+
+        <article data-reveal class="project">
+          <div class="project-info">
+            <div class="project-meta">
+              <span class="project-n">01</span>
+              <span class="project-rule"></span>
+              <span class="project-kind">Native desktop · Solo author</span>
+            </div>
+            <h3 class="project-name">Orrery</h3>
+            <div class="project-tag">Multi-Agent Git Orchestrator IDE</div>
+            <p class="project-desc">A futuristic, IntelliJ-inspired desktop IDE that lets one developer drive multiple AI coding agents in parallel — each isolated in its own git worktree, branch, terminal and conversation. The name evokes an orrery: agents orbiting a project like bodies in a mechanical model of the solar system.</p>
+            <div class="tech-row">
+              <span class="tech">Tauri 2</span>
+              <span class="tech">Rust</span>
+              <span class="tech">Angular 20</span>
+              <span class="tech">xterm.js</span>
+              <span class="tech">CodeMirror 6</span>
+              <span class="tech">Lexical</span>
+            </div>
+            <div class="project-links">
+              <a href="https://orrery.kouji.dev" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+                Open live
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+              <a href="https://github.com/kouji-dev/orrery-releases" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+          <!-- browser frame with live iframe -->
+          <div class="frame">
+            <div class="frame-bar">
+              <span class="dot dot-r"></span>
+              <span class="dot dot-y"></span>
+              <span class="dot dot-g"></span>
+              <div class="frame-url">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                orrery.kouji.dev
+              </div>
+            </div>
+            <div class="frame-viewport">
+              <iframe src="https://orrery.kouji.dev" loading="lazy" title="Orrery live preview" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+            </div>
+          </div>
+        </article>
+
+        <article data-reveal class="project">
+          <div class="project-info">
+            <div class="project-meta">
+              <span class="project-n">02</span>
+              <span class="project-rule"></span>
+              <span class="project-kind">Open-source · 60+ components</span>
+            </div>
+            <h3 class="project-name">Kouji UI</h3>
+            <div class="project-tag">Angular Design System &amp; Component Library</div>
+            <p class="project-desc">An open-source Angular 21 design system: 60+ accessible, themable UI primitives in a pnpm + Turborepo monorepo, with a decoupled token-driven theming layer, axe-based accessibility audits and Changesets-based release engineering.</p>
+            <div class="tech-row">
+              <span class="tech">Angular 21</span>
+              <span class="tech">Turborepo</span>
+              <span class="tech">Vitest</span>
+              <span class="tech">Playwright</span>
+              <span class="tech">Tailwind 4</span>
+              <span class="tech">Changesets</span>
+            </div>
+            <div class="project-links">
+              <a href="https://ui.kouji.dev" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+                Open live
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+              <a href="https://github.com/kouji-dev/kouji-ui" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+                Source
+              </a>
+            </div>
+          </div>
+          <div class="frame">
+            <div class="frame-bar">
+              <span class="dot dot-r"></span>
+              <span class="dot dot-y"></span>
+              <span class="dot dot-g"></span>
+              <div class="frame-url">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                ui.kouji.dev
+              </div>
+            </div>
+            <div class="frame-viewport">
+              <iframe src="https://ui.kouji.dev" loading="lazy" title="Kouji UI live preview" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===== SECONDARY PROJECTS ===== -->
+    <section class="section secondary">
+      <div data-reveal class="secondary-head">
+        <h2 class="secondary-title">Also building</h2>
+        <a href="https://github.com/kouji-dev" target="_blank" rel="noopener" class="secondary-gh">github.com/kouji-dev
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+      <div class="card-grid">
+
+        <a href="https://github.com/kouji-dev/ai-portal" target="_blank" rel="noopener" data-reveal class="card">
+          <div class="card-head">
+            <h3 class="card-name">AI Portal</h3>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </div>
+          <p class="card-tag">Self-hostable enterprise AI assistant — streaming chat + RAG over private knowledge bases.</p>
+          <div class="card-tech">FastAPI · LangChain · pgvector</div>
+        </a>
+
+        <a href="https://github.com/kouji-dev/pages" target="_blank" rel="noopener" data-reveal class="card">
+          <div class="card-head">
+            <h3 class="card-name">Pages</h3>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </div>
+          <p class="card-tag">Unified project management + docs — a single replacement for the Jira + Confluence stack.</p>
+          <div class="card-tech">Angular 21 · FastAPI · WebSockets</div>
+        </a>
+
+        <a href="https://github.com/kouji-dev/GamerGG" target="_blank" rel="noopener" data-reveal class="card">
+          <div class="card-head">
+            <h3 class="card-name">GamerGG</h3>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </div>
+          <p class="card-tag">Gaming services marketplace connecting players with boosters &amp; coaches.</p>
+          <div class="card-tech">Next.js 13 · Prisma · NextAuth</div>
+        </a>
+
+        <a href="https://www.figma.com/community/plugin/1361309122482309141/chartify" target="_blank" rel="noopener" data-reveal class="card">
+          <div class="card-head">
+            <h3 class="card-name">Chartify</h3>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </div>
+          <p class="card-tag">Figma community plugin for generating data-viz charts inside Figma.</p>
+          <div class="card-tech">TypeScript · Figma API</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <section id="experience" class="section experience">
+      <div data-reveal class="section-num">03 — Experience</div>
+      <h2 data-reveal class="section-title exp-title">Seven years across enterprise platforms</h2>
+      <div class="timeline">
+        <div class="timeline-rail" aria-hidden="true"></div>
+
+        <div data-reveal class="tl-item">
+          <span class="tl-dot"></span>
+          <div class="tl-head">
+            <h3 class="tl-role">Senior Full Stack Developer</h3>
+            <span class="tl-period">Sep 2023 — Present</span>
+          </div>
+          <div class="tl-org">Amundi ITS</div>
+          <p class="tl-note">Maestro Angular framework (v15→18→20 migrations, micro-frontend-ready components), a low-code Web Designer with natural-language screen generation, and the AI "Vibe Toolbox" that provisions AI-ready dev environments.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Angular</span><span class="tl-tag">Java</span><span class="tl-tag">Spring</span><span class="tl-tag">AI Tooling</span>
+          </div>
+        </div>
+
+        <div data-reveal class="tl-item">
+          <span class="tl-dot"></span>
+          <div class="tl-head">
+            <h3 class="tl-role">Senior Java Developer</h3>
+            <span class="tl-period">Apr — Sep 2023</span>
+          </div>
+          <div class="tl-org">Société Générale — KYC</div>
+          <p class="tl-note">Backend KYC services for customer trust scoring, eligibility and fraud-detection workflows, secured with Spring Security &amp; OAuth2.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Java 17</span><span class="tl-tag">Spring Boot</span><span class="tl-tag">OAuth2</span>
+          </div>
+        </div>
+
+        <div data-reveal class="tl-item">
+          <span class="tl-dot"></span>
+          <div class="tl-head">
+            <h3 class="tl-role">Senior Full Stack Developer</h3>
+            <span class="tl-period">Jan — Apr 2023</span>
+          </div>
+          <div class="tl-org">Colas — Global CRM</div>
+          <p class="tl-note">CRM deployed across 55 countries on Azure with SSO (Azure AD) and Spring Batch data migration pipelines.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Angular</span><span class="tl-tag">Java</span><span class="tl-tag">Azure</span>
+          </div>
+        </div>
+
+        <div data-reveal class="tl-item">
+          <span class="tl-dot"></span>
+          <div class="tl-head">
+            <h3 class="tl-role">Full Stack Developer</h3>
+            <span class="tl-period">Oct 2022 — Jan 2023</span>
+          </div>
+          <div class="tl-org">Zsoft — Gloody</div>
+          <p class="tl-note">Multi-tenant business management platform: new REST APIs in Spring Boot and React/Ant Design features.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Java</span><span class="tl-tag">React</span><span class="tl-tag">AWS</span>
+          </div>
+        </div>
+
+        <div data-reveal class="tl-item">
+          <span class="tl-dot"></span>
+          <div class="tl-head">
+            <h3 class="tl-role">Full Stack Developer</h3>
+            <span class="tl-period">Jun 2019 — Sep 2022</span>
+          </div>
+          <div class="tl-org">Scor — RiskReveal</div>
+          <p class="tl-note">Natural-disaster risk assessment platform with real-time WebSocket features and rich data visualisation.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Angular</span><span class="tl-tag">Spring</span><span class="tl-tag">SQL Server</span>
+          </div>
+        </div>
+
+        <div data-reveal class="tl-item">
+          <span class="tl-dot"></span>
+          <div class="tl-head">
+            <h3 class="tl-role">Front-End Developer · Internship</h3>
+            <span class="tl-period">Mar — Jun 2019</span>
+          </div>
+          <div class="tl-org">Scor — SoliT</div>
+          <p class="tl-note">Pricing management platform for internal pricing teams — Angular UI components and REST integration.</p>
+          <div class="tl-tags">
+            <span class="tl-tag">Angular</span><span class="tl-tag">TypeScript</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact" class="section contact">
+      <div class="contact-glow" aria-hidden="true"></div>
+      <div data-reveal class="contact-inner">
+        <div class="section-num">04 — Contact</div>
+        <h2 class="contact-title">Let's build something<br>worth orbiting.</h2>
+        <p class="contact-sub">Open to senior engineering roles and collaboration on AI-driven platforms. Based in France.</p>
+        <div class="contact-actions">
+          <a href="mailto:najih.driss73@gmail.com" class="btn btn-primary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            najih.driss73@gmail.com
+          </a>
+          <a href="https://www.linkedin.com/in/najih-driss/" target="_blank" rel="noopener" class="btn btn-outline btn-lg">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/kouji-dev" target="_blank" rel="noopener" class="btn btn-outline btn-lg">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span class="mono">Driss Najih · Senior Software Engineer</span>
+      <span class="mono">© 2026 — built in orbit</span>
+    </footer>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="/cosmos.js" defer></script>
+</body>
+</html>
