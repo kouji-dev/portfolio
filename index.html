@@ -47,8 +47,11 @@
     <nav class="nav">
       <a href="#top" class="brand">
         <span class="brand-orb">
+          <svg width="32" height="32" viewBox="0 0 32 32" class="brand-ring" aria-hidden="true">
+            <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
+            <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
+          </svg>
           <span class="brand-orb-core"></span>
-          <span class="brand-orb-ring"></span>
         </span>
         <span>Driss&nbsp;Najih</span>
       </a>
@@ -56,11 +59,28 @@
         <div class="navlinks">
           <a href="#about">About</a>
           <a href="#work">Work</a>
+          <a href="#stack">AI Stack</a>
           <a href="#experience">Experience</a>
           <a href="#contact">Contact</a>
         </div>
+        <button type="button" data-menubtn class="menubtn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
       </div>
     </nav>
+
+    <!-- ===== MOBILE MENU ===== -->
+    <div id="mobile-menu" class="mobile-menu" data-mobile-menu hidden>
+      <button type="button" data-menuclose class="menuclose" aria-label="Close menu">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <a href="#about">About</a>
+      <a href="#work">Work</a>
+      <a href="#stack">AI Stack</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+      <div class="mobile-menu-foot mono">DRISS NAJIH · SENIOR SOFTWARE ENGINEER</div>
+    </div>
 
     <!-- ===== HERO ===== -->
     <header id="top" class="hero">
@@ -72,18 +92,18 @@
           <span class="eyebrow-dot"></span>
           Senior Software Engineer · AI-Driven Apps
         </div>
-        <h1 data-reveal class="hero-title">
+        <h1 data-splitwords class="hero-title">
           Engineering software<br>with an<br><span class="grad">AI-first mindset.</span>
         </h1>
         <p data-reveal class="hero-sub">
           Senior software engineer building scalable platforms and backend systems — and designing AI agents, RAG and LLM-driven workflows into them.
         </p>
         <div data-reveal class="hero-actions">
-          <a href="#work" class="btn btn-primary">
+          <a href="#work" class="btn btn-primary" data-magnet>
             View work
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#contact" class="btn btn-outline">Get in touch</a>
+          <a href="#contact" class="btn btn-outline" data-magnet>Get in touch</a>
           <div class="cv-split">
             <a href="cv/najih-driss-cv-en.pdf" download="Driss Najih - CV (EN).pdf" class="btn btn-outline" title="Download CV — English">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16"/></svg>
@@ -199,6 +219,25 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
                 Source
               </a>
+              <button type="button" class="btn-case" data-case-toggle aria-expanded="false" aria-controls="case-orrery">+ case study</button>
+            </div>
+            <div id="case-orrery" class="case-panel">
+              <div class="case-panel-inner">
+                <div class="case-box">
+                <div class="case-row">
+                  <span class="case-k k-problem">PROBLEM</span>
+                  <p class="case-text case-strong">Coding agents are powerful but serialized — one developer, one agent, one branch at a time. Running several in the same working copy ends in merge chaos.</p>
+                </div>
+                <div class="case-row">
+                  <span class="case-k k-approach">APPROACH</span>
+                  <p class="case-text">A Rust/Tauri core manages git worktrees so every agent operates on its own branch with its own terminal (xterm.js) and conversation. An Angular 20 UI with CodeMirror 6 gives IDE-grade review of each agent's diff before anything merges.</p>
+                </div>
+                <div class="case-row">
+                  <span class="case-k k-result">RESULT</span>
+                  <p class="case-text">One developer supervises a fleet of agents in parallel — isolated execution, reviewable diffs, no cross-contamination between tasks.</p>
+                </div>
+                </div>
+              </div>
             </div>
           </div>
           <!-- browser frame with live iframe -->
@@ -213,7 +252,8 @@
               </div>
             </div>
             <div class="frame-viewport">
-              <iframe src="https://orrery.kouji.dev" loading="lazy" title="Orrery live preview" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+              <div class="frame-loading" aria-hidden="true">loading live preview…</div>
+              <iframe data-lazy-src="https://orrery.kouji.dev" loading="lazy" title="Orrery live preview" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
             </div>
           </div>
         </article>
@@ -245,6 +285,25 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
                 Source
               </a>
+              <button type="button" class="btn-case" data-case-toggle aria-expanded="false" aria-controls="case-kouji-ui">+ case study</button>
+            </div>
+            <div id="case-kouji-ui" class="case-panel">
+              <div class="case-panel-inner">
+                <div class="case-box">
+                <div class="case-row">
+                  <span class="case-k k-problem">PROBLEM</span>
+                  <p class="case-text case-strong">Every Angular project rebuilds the same primitives — inconsistently, and usually with accessibility as an afterthought.</p>
+                </div>
+                <div class="case-row">
+                  <span class="case-k k-approach">APPROACH</span>
+                  <p class="case-text">A token-driven theming layer fully decoupled from component logic; pnpm + Turborepo monorepo; axe accessibility audits and Playwright suites in CI; Changesets for automated versioned releases.</p>
+                </div>
+                <div class="case-row">
+                  <span class="case-k k-result">RESULT</span>
+                  <p class="case-text">60+ accessible components that re-theme without forking — release engineering solid enough for teams to depend on.</p>
+                </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="frame">
@@ -258,7 +317,8 @@
               </div>
             </div>
             <div class="frame-viewport">
-              <iframe src="https://ui.kouji.dev" loading="lazy" title="Kouji UI live preview" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+              <div class="frame-loading" aria-hidden="true">loading live preview…</div>
+              <iframe data-lazy-src="https://ui.kouji.dev" loading="lazy" title="Kouji UI live preview" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
             </div>
           </div>
         </article>
@@ -315,12 +375,58 @@
       </div>
     </section>
 
+    <!-- ===== AI TOOLBOX ===== -->
+    <section id="stack" class="section stack">
+      <div data-reveal class="section-num">03 — AI Toolbox</div>
+      <h2 data-reveal class="section-title">How I build with AI</h2>
+      <p data-reveal class="section-intro stack-intro">Not prompt tricks — engineering patterns. The same ones running in Orrery, AI Portal and the enterprise tooling I ship at work.</p>
+      <div class="stackgrid">
+        <div data-reveal class="stack-card" data-card>
+          <div class="stack-head">
+            <span class="stack-n">a</span>
+            <span class="stack-rule"></span>
+            <h3 class="stack-title">Agents &amp; orchestration</h3>
+          </div>
+          <p class="stack-text">Multi-agent workflows with hard isolation — each agent gets its own git worktree, branch, terminal and conversation, supervised from one cockpit. The pattern behind Orrery.</p>
+          <div class="stack-tools">Tool calling · Worktrees · Sandboxed terminals</div>
+        </div>
+        <div data-reveal class="stack-card" data-card>
+          <div class="stack-head">
+            <span class="stack-n">b</span>
+            <span class="stack-rule"></span>
+            <h3 class="stack-title">Retrieval &amp; RAG</h3>
+          </div>
+          <p class="stack-text">Hybrid retrieval over private knowledge: vector embeddings plus keyword search with reranking, returning cited answers instead of confident guesses. Running in AI Portal.</p>
+          <div class="stack-tools">pgvector · LangChain · Hybrid search · Citations</div>
+        </div>
+        <div data-reveal class="stack-card" data-card>
+          <div class="stack-head">
+            <span class="stack-n">c</span>
+            <span class="stack-rule"></span>
+            <h3 class="stack-title">LLM integration</h3>
+          </div>
+          <p class="stack-text">Streaming chat, structured output and tool use wired into existing backends — AI as a capability of the platform, not a separate demo app.</p>
+          <div class="stack-tools">Anthropic / OpenAI APIs · Streaming · JSON schemas</div>
+        </div>
+        <div data-reveal class="stack-card" data-card>
+          <div class="stack-head">
+            <span class="stack-n">d</span>
+            <span class="stack-rule"></span>
+            <h3 class="stack-title">Guardrails &amp; evals</h3>
+          </div>
+          <p class="stack-text">Prompt design treated like API design: versioned, validated, regression-tested. Output checks and eval suites so LLM features ship with the same rigor as any service.</p>
+          <div class="stack-tools">Output validation · Eval suites · Prompt versioning</div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== EXPERIENCE ===== -->
     <section id="experience" class="section experience">
-      <div data-reveal class="section-num">03 — Experience</div>
+      <div data-reveal class="section-num">04 — Experience</div>
       <h2 data-reveal class="section-title exp-title">Seven years across enterprise platforms</h2>
-      <div class="timeline">
+      <div class="timeline" data-timeline-wrap>
         <div class="timeline-rail" aria-hidden="true"></div>
+        <div class="timeline-fill" data-timeline-fill aria-hidden="true"></div>
 
         <div data-reveal class="tl-item">
           <span class="tl-dot"></span>
@@ -407,11 +513,11 @@
     <section id="contact" class="section contact">
       <div class="contact-glow" aria-hidden="true"></div>
       <div data-reveal class="contact-inner">
-        <div class="section-num">04 — Contact</div>
+        <div class="section-num">05 — Contact</div>
         <h2 class="contact-title">Let's build something<br>worth orbiting.</h2>
         <p class="contact-sub">Open to senior engineering roles and collaboration on AI-driven platforms. Based in France.</p>
         <div class="contact-actions">
-          <a href="mailto:najih.driss73@gmail.com" class="btn btn-primary btn-lg">
+          <a href="mailto:najih.driss73@gmail.com" class="btn btn-primary btn-lg" data-magnet>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
             najih.driss73@gmail.com
           </a>
@@ -442,6 +548,10 @@
       <span class="mono">Driss Najih · Senior Software Engineer</span>
       <span class="mono">© 2026 — built in orbit</span>
     </footer>
+
+    <!-- ===== CUSTOM CURSOR (fine pointers only, enabled from JS) ===== -->
+    <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
+    <div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
 
   </div>
 

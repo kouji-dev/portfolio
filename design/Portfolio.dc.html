@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#05060B;color:#E6E9F0;font-family:'Sora',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:rgba(122,162,255,.32)}
+  body::-webkit-scrollbar{width:10px}
+  body::-webkit-scrollbar-track{background:#05060B}
+  body::-webkit-scrollbar-thumb{background:#1b2030;border-radius:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes spinR{to{transform:rotate(-360deg)}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.9}}
+  @keyframes corepulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+  @keyframes shimmer{to{background-position:240% center}}
+  @keyframes menuIn{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="position:relative;width:100%;min-height:100vh;background:transparent;">
+
+  <!-- ===== GLOBAL COSMOS (fixed, behind the whole page for continuity) ===== -->
+  <div data-hero-bg style="position:fixed;inset:0;z-index:0;pointer-events:none;"></div>
+  <!-- fade: clear over the hero (top), settling into deep space behind content so the glitter keeps twinkling subtly the whole way down -->
+  <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg, rgba(5,6,11,0) 0, rgba(5,6,11,0) 76vh, rgba(5,6,11,0.5) 100vh, rgba(5,6,11,0.8) 140vh, rgba(5,6,11,0.85) 230vh);"></div>
+
+  <!-- ===== NAV ===== -->
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:linear-gradient(180deg,rgba(5,6,11,.62) 0%,rgba(5,6,11,.2) 65%,rgba(5,6,11,0) 100%);">
+    <a href="#top" style="display:flex;align-items:center;gap:11px;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.2px;">
+      <span style="display:inline-flex;width:32px;height:32px;align-items:center;justify-content:center;position:relative;">
+        <svg width="32" height="32" viewBox="0 0 32 32" style="position:absolute;inset:0;transform:rotate(-90deg);">
+          <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
+          <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent,#7AA2FF)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
+        </svg>
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--accent,#7AA2FF);box-shadow:0 0 12px var(--glow,rgba(122,162,255,.5));"></span>
+      </span>
+      <span>Driss&nbsp;Najih</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:clamp(14px,2.4vw,34px);">
+      <div style="display:none;gap:28px;font-size:14px;color:var(--muted,#8A90A2);" data-navlinks>
+        <a href="#about" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">About</a>
+        <a href="#work" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">Work</a>
+        <a href="#stack" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">AI Stack</a>
+        <a href="#experience" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">Experience</a>
+        <a href="#contact" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">Contact</a>
+      </div>
+      <button data-menubtn onClick="{{ toggleMenu }}" aria-label="Menu" style="display:none;width:42px;height:42px;align-items:center;justify-content:center;background:rgba(5,6,11,.4);border:1px solid var(--border,rgba(255,255,255,.14));border-radius:10px;color:var(--text,#E6E9F0);cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== MOBILE MENU ===== -->
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:90;background:rgba(5,6,11,.95);backdrop-filter:blur(12px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;animation:menuIn .25s ease;">
+      <button onClick="{{ closeMenu }}" aria-label="Close menu" style="position:absolute;top:18px;right:20px;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border,rgba(255,255,255,.16));border-radius:10px;color:var(--text,#E6E9F0);cursor:pointer;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <a href="#about" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">About</a>
+      <a href="#work" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">Work</a>
+      <a href="#stack" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">AI Stack</a>
+      <a href="#experience" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">Experience</a>
+      <a href="#contact" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">Contact</a>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--muted,#8A90A2);margin-top:14px;">DRISS NAJIH · SENIOR SOFTWARE ENGINEER</div>
+    </div>
+  </sc-if>
+
+  <!-- ===== HERO ===== -->
+  <header id="top" style="position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px clamp(20px,5vw,64px) 80px;overflow:hidden;">
+    <!-- soft scrim behind hero text for legibility over the bright nebula -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(960px,94vw);height:min(660px,84vh);z-index:1;pointer-events:none;background:radial-gradient(ellipse at center, rgba(5,6,11,0.72) 0%, rgba(5,6,11,0.48) 40%, rgba(5,6,11,0) 70%);"></div>
+
+    <!-- hero content -->
+    <div style="position:relative;z-index:3;max-width:880px;">
+      <div data-reveal style="display:inline-flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);border:1px solid var(--border,rgba(255,255,255,.12));border-radius:999px;padding:7px 16px;margin-bottom:28px;background:rgba(255,255,255,.02);">
+        <span style="width:6px;height:6px;border-radius:50%;background:#3ddc84;box-shadow:0 0 8px #3ddc84;"></span>
+        Senior Software Engineer · AI-Driven Apps
+      </div>
+      <h1 data-splitwords style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:clamp(38px,6.6vw,76px);line-height:1.02;letter-spacing:-1.5px;margin:0 0 26px;text-wrap:balance;text-shadow:0 2px 28px rgba(5,6,11,.6);">
+        Engineering software<br>with an<br><span style="background:linear-gradient(120deg,var(--accent,#7AA2FF),var(--accent2,#C792EA) 40%,var(--warm,#FFB454) 70%,var(--accent,#7AA2FF));background-size:240% auto;background-position:0 center;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 7s linear infinite;">AI-first mindset.</span>
+      </h1>
+      <p data-reveal style="max-width:580px;margin:0 auto 38px;font-size:clamp(16px,1.9vw,19px);line-height:1.6;color:#C5CBDA;text-shadow:0 1px 18px rgba(5,6,11,.75);text-wrap:pretty;">
+        Senior software engineer building scalable platforms and backend systems — and designing AI agents, RAG and LLM-driven workflows into them.
+      </p>
+      <div data-reveal style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center;">
+        <a href="#work" data-magnet style="display:inline-flex;align-items:center;gap:9px;padding:14px 26px;border-radius:999px;background:var(--accent,#7AA2FF);color:#05060B;font-weight:600;font-size:15px;box-shadow:0 8px 30px var(--glow,rgba(122,162,255,.35));transition:box-shadow .2s;">
+          View work
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#contact" data-magnet style="display:inline-flex;align-items:center;gap:9px;padding:14px 26px;border-radius:999px;border:1px solid var(--border,rgba(255,255,255,.16));color:var(--text,#E6E9F0);font-weight:500;font-size:15px;transition:border-color .2s,background .2s;" onMouseOver="{{ outlineOn }}" onMouseOut="{{ outlineOff }}">Get in touch</a>
+        <div style="display:flex;gap:10px;">
+          <a href="https://github.com/kouji-dev" target="_blank" rel="noopener" title="GitHub" style="display:inline-flex;width:46px;height:46px;align-items:center;justify-content:center;border:1px solid var(--border,rgba(255,255,255,.14));border-radius:50%;color:var(--muted,#8A90A2);transition:color .2s,border-color .2s;" onMouseOver="{{ iconOn }}" onMouseOut="{{ iconOff }}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/najih-driss/" target="_blank" rel="noopener" title="LinkedIn" style="display:inline-flex;width:46px;height:46px;align-items:center;justify-content:center;border:1px solid var(--border,rgba(255,255,255,.14));border-radius:50%;color:var(--muted,#8A90A2);transition:color .2s,border-color .2s;" onMouseOver="{{ iconOn }}" onMouseOut="{{ iconOff }}">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted,#8A90A2);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;">
+      <span>SCROLL</span>
+      <svg width="16" height="22" viewBox="0 0 16 22" fill="none" stroke="currentColor" stroke-width="1.5" style="animation:bob 2.4s ease-in-out infinite;"><rect x="1" y="1" width="14" height="20" rx="7"/><path d="M8 6v4" stroke-linecap="round"/></svg>
+    </div>
+  </header>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" style="position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:clamp(70px,9vw,120px) clamp(20px,5vw,64px);">
+    <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:30px;">01 — About</div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(36px,6vw,80px);align-items:start;" data-aboutgrid>
+      <div data-reveal>
+        <p style="font-family:'Space Grotesk',sans-serif;font-size:clamp(21px,2.7vw,30px);line-height:1.45;font-weight:400;margin:0 0 22px;letter-spacing:-.4px;text-wrap:pretty;">
+          I'm a senior engineer specialising in <span style="color:var(--accent,#7AA2FF);">complex frontend frameworks</span>, <span style="color:var(--accent2,#C792EA);">platform-level backends</span>, and <span style="color:var(--warm,#FFB454);">AI-driven applications</span>.
+        </p>
+        <p style="font-size:16px;line-height:1.7;color:var(--muted,#8A90A2);margin:0 0 16px;text-wrap:pretty;">
+          Across JavaScript/TypeScript, Java and Python, I've built shared frameworks, low-code systems and enterprise tooling used by multiple teams and products — with a focus on clean architecture, scalability and developer experience.
+        </p>
+        <p style="font-size:16px;line-height:1.7;color:var(--muted,#8A90A2);margin:0;text-wrap:pretty;">
+          Lately my work centres on preparing backend systems for AI integration and designing agent-based workflows — building AI capabilities <em style="color:var(--text,#E6E9F0);font-style:normal;">into</em> existing enterprise systems, not as isolated experiments.
+        </p>
+      </div>
+      <div data-reveal style="display:flex;flex-direction:column;gap:14px;">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+          <div style="border:1px solid var(--border,rgba(255,255,255,.09));border-radius:14px;padding:20px 22px;background:var(--surface,rgba(255,255,255,.025));">
+            <div style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;color:var(--accent,#7AA2FF);line-height:1;letter-spacing:-.5px;">{{ s.value }}</div>
+            <div style="font-size:13.5px;color:var(--muted,#8A90A2);margin-top:7px;">{{ s.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- skills -->
+    <div data-reveal data-skillgrid style="margin-top:clamp(44px,6vw,72px);display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border,rgba(255,255,255,.08));border:1px solid var(--border,rgba(255,255,255,.08));border-radius:16px;overflow:hidden;">
+      <sc-for list="{{ skillGroups }}" as="g" hint-placeholder-count="6">
+        <div style="background:#080A12;padding:22px 24px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:12px;">{{ g.label }}</div>
+          <div style="font-size:14.5px;line-height:1.75;color:var(--text,#E6E9F0);">{{ g.items }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===== WORK / FEATURED ===== -->
+  <section id="work" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:clamp(40px,6vw,80px) clamp(20px,5vw,64px);">
+    <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:14px;">02 — Featured Work</div>
+    <h2 data-reveal style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,46px);font-weight:600;letter-spacing:-1px;margin:0 0 14px;">Shipped &amp; live in production</h2>
+    <p data-reveal style="font-size:16px;color:var(--muted,#8A90A2);max-width:560px;margin:0 0 56px;line-height:1.6;">Two open-source projects you can explore right here — running live, not screenshots.</p>
+
+    <div style="display:flex;flex-direction:column;gap:clamp(48px,7vw,96px);">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="2">
+        <article data-reveal data-project style="display:grid;grid-template-columns:1fr 1.25fr;gap:clamp(28px,4vw,56px);align-items:center;">
+          <!-- info -->
+          <div data-projinfo>
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent,#7AA2FF);">{{ p.n }}</span>
+              <span style="height:1px;width:42px;background:var(--border,rgba(255,255,255,.2));"></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted,#8A90A2);">{{ p.meta }}</span>
+            </div>
+            <h3 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.6vw,40px);font-weight:600;letter-spacing:-.8px;margin:0 0 6px;">{{ p.name }}</h3>
+            <div style="font-size:16px;color:var(--accent2,#C792EA);margin-bottom:18px;">{{ p.tag }}</div>
+            <p style="font-size:15.5px;line-height:1.7;color:var(--muted,#8A90A2);margin:0 0 22px;text-wrap:pretty;">{{ p.desc }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px;">
+              <sc-for list="{{ p.tech }}" as="t" hint-placeholder-count="6">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 11px;border:1px solid var(--border,rgba(255,255,255,.1));border-radius:7px;color:var(--text,#E6E9F0);background:var(--surface,rgba(255,255,255,.02));">{{ t }}</span>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+              <a href="{{ p.url }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;background:var(--accent,#7AA2FF);color:#05060B;font-weight:600;font-size:14px;transition:transform .2s;" onMouseOver="{{ liftOn }}" onMouseOut="{{ liftOff }}">
+                Open live
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+              <a href="{{ p.repo }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;border:1px solid var(--border,rgba(255,255,255,.16));color:var(--text,#E6E9F0);font-weight:500;font-size:14px;transition:border-color .2s;" onMouseOver="{{ outlineOn }}" onMouseOut="{{ outlineOff }}">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+                Source
+              </a>
+              <button onClick="{{ p.toggle }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:999px;background:transparent;border:1px dashed var(--border,rgba(255,255,255,.2));color:var(--muted,#8A90A2);font-family:'JetBrains Mono',monospace;font-size:12.5px;cursor:pointer;transition:color .2s,border-color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">{{ p.caseLabel }}</button>
+            </div>
+            <sc-if value="{{ p.expanded }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:20px;border:1px solid var(--border,rgba(255,255,255,.1));border-radius:14px;padding:20px 22px;background:rgba(255,255,255,.02);display:flex;flex-direction:column;gap:16px;">
+                <div style="display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:start;">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--accent,#7AA2FF);padding-top:2px;">PROBLEM</span>
+                  <p style="margin:0;font-size:14px;line-height:1.65;color:var(--text,#E6E9F0);text-wrap:pretty;">{{ p.csProblem }}</p>
+                </div>
+                <div style="display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:start;">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--accent2,#C792EA);padding-top:2px;">APPROACH</span>
+                  <p style="margin:0;font-size:14px;line-height:1.65;color:var(--muted,#8A90A2);text-wrap:pretty;">{{ p.csApproach }}</p>
+                </div>
+                <div style="display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:start;">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.5px;color:var(--warm,#FFB454);padding-top:2px;">RESULT</span>
+                  <p style="margin:0;font-size:14px;line-height:1.65;color:var(--muted,#8A90A2);text-wrap:pretty;">{{ p.csResult }}</p>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <!-- browser frame with live iframe (lazy-loaded when scrolled near) -->
+          <div style="position:relative;border:1px solid var(--border,rgba(255,255,255,.12));border-radius:14px;overflow:hidden;background:#0A0C14;box-shadow:0 30px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.02);">
+            <div style="display:flex;align-items:center;gap:8px;padding:11px 14px;background:#0E1018;border-bottom:1px solid var(--border,rgba(255,255,255,.08));">
+              <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></span>
+              <span style="width:11px;height:11px;border-radius:50%;background:#febc2e;"></span>
+              <span style="width:11px;height:11px;border-radius:50%;background:#28c840;"></span>
+              <div style="flex:1;margin-left:8px;display:flex;align-items:center;gap:7px;padding:5px 12px;background:#05060B;border:1px solid var(--border,rgba(255,255,255,.07));border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted,#8A90A2);overflow:hidden;white-space:nowrap;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--accent,#7AA2FF)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                {{ p.display }}
+              </div>
+            </div>
+            <div style="position:relative;width:100%;aspect-ratio:16/10;background:#05060B;">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted,#8A90A2);letter-spacing:1px;">loading live preview…</div>
+              <iframe data-lazy-src="{{ p.url }}" loading="lazy" title="{{ p.name }} live preview" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" style="position:absolute;top:0;left:0;width:133.34%;height:133.34%;border:0;transform:scale(.75);transform-origin:0 0;z-index:2;"></iframe>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===== SECONDARY PROJECTS ===== -->
+  <section style="position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:clamp(40px,6vw,72px) clamp(20px,5vw,64px);">
+    <div data-reveal style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:34px;">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(22px,2.8vw,30px);font-weight:600;letter-spacing:-.6px;margin:0;">Also building</h2>
+      <a href="https://github.com/kouji-dev" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent,#7AA2FF);display:inline-flex;align-items:center;gap:7px;">github.com/kouji-dev
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+      <sc-for list="{{ secondary }}" as="x" hint-placeholder-count="5">
+        <a href="{{ x.repo }}" target="_blank" rel="noopener" data-reveal data-card style="display:block;border:1px solid var(--border,rgba(255,255,255,.09));border-radius:14px;padding:24px;background:var(--surface,rgba(255,255,255,.02));transition:transform .25s,border-color .25s;" onMouseMove="{{ cardMove }}" onMouseOver="{{ cardOn }}" onMouseOut="{{ cardOff }}">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <h3 style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;margin:0;">{{ x.name }}</h3>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted,#8A90A2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+          </div>
+          <p style="font-size:14px;line-height:1.6;color:var(--muted,#8A90A2);margin:0 0 16px;text-wrap:pretty;">{{ x.tag }}</p>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent2,#C792EA);">{{ x.tech }}</div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===== AI TOOLBOX ===== -->
+  <section id="stack" style="position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:clamp(50px,7vw,100px) clamp(20px,5vw,64px);">
+    <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:14px;">03 — AI Toolbox</div>
+    <h2 data-reveal style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,46px);font-weight:600;letter-spacing:-1px;margin:0 0 14px;">How I build with AI</h2>
+    <p data-reveal style="font-size:16px;color:var(--muted,#8A90A2);max-width:600px;margin:0 0 44px;line-height:1.6;">Not prompt tricks — engineering patterns. The same ones running in Orrery, AI Portal and the enterprise tooling I ship at work.</p>
+    <div data-stackgrid style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+      <sc-for list="{{ stack }}" as="k" hint-placeholder-count="4">
+        <div data-reveal data-card style="border:1px solid var(--border,rgba(255,255,255,.09));border-radius:14px;padding:26px 28px;background:var(--surface,rgba(255,255,255,.02));transition:transform .25s,border-color .25s;" onMouseMove="{{ cardMove }}" onMouseOver="{{ cardOn }}" onMouseOut="{{ cardOff }}">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent,#7AA2FF);">{{ k.n }}</span>
+            <span style="height:1px;flex:0 0 26px;background:var(--border,rgba(255,255,255,.2));"></span>
+            <h3 style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;margin:0;">{{ k.title }}</h3>
+          </div>
+          <p style="font-size:14.5px;line-height:1.7;color:var(--muted,#8A90A2);margin:0 0 14px;text-wrap:pretty;">{{ k.text }}</p>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent2,#C792EA);">{{ k.tools }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===== EXPERIENCE ===== -->
+  <section id="experience" style="position:relative;z-index:2;max-width:980px;margin:0 auto;padding:clamp(50px,7vw,100px) clamp(20px,5vw,64px);">
+    <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:14px;">04 — Experience</div>
+    <h2 data-reveal style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,46px);font-weight:600;letter-spacing:-1px;margin:0 0 50px;">Seven years across enterprise platforms</h2>
+    <div style="position:relative;" data-timeline-wrap>
+      <div style="position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:rgba(255,255,255,.1);"></div>
+      <div data-timeline-fill style="position:absolute;left:7px;top:6px;width:1px;height:0%;background:linear-gradient(180deg,var(--accent,#7AA2FF) 60%,transparent);box-shadow:0 0 10px var(--glow,rgba(122,162,255,.4));"></div>
+      <sc-for list="{{ experiences }}" as="e" hint-placeholder-count="6">
+        <div data-reveal style="position:relative;padding-left:40px;padding-bottom:38px;">
+          <span data-dot style="position:absolute;left:0;top:5px;width:15px;height:15px;border-radius:50%;background:#05060B;border:2px solid rgba(255,255,255,.25);box-shadow:0 0 0 4px rgba(5,6,11,1);transition:border-color .4s,box-shadow .4s;"></span>
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;justify-content:space-between;margin-bottom:4px;">
+            <h3 style="font-family:'Space Grotesk',sans-serif;font-size:19px;font-weight:600;margin:0;">{{ e.role }}</h3>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted,#8A90A2);">{{ e.period }}</span>
+          </div>
+          <div style="font-size:15px;color:var(--accent,#7AA2FF);margin-bottom:10px;">{{ e.org }}</div>
+          <p style="font-size:14.5px;line-height:1.65;color:var(--muted,#8A90A2);margin:0 0 12px;max-width:640px;text-wrap:pretty;">{{ e.note }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;">
+            <sc-for list="{{ e.tags }}" as="tag" hint-placeholder-count="3">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:3px 9px;border:1px solid var(--border,rgba(255,255,255,.1));border-radius:6px;color:var(--muted,#8A90A2);">{{ tag }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" style="position:relative;z-index:2;padding:clamp(60px,9vw,130px) clamp(20px,5vw,64px);text-align:center;overflow:hidden;">
+    <div style="position:absolute;top:50%;left:50%;width:600px;height:600px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,var(--glow,rgba(122,162,255,.35)),transparent 65%);opacity:.4;pointer-events:none;"></div>
+    <div data-reveal style="position:relative;z-index:2;max-width:680px;margin:0 auto;">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:22px;">05 — Contact</div>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,5.2vw,58px);font-weight:600;letter-spacing:-1.3px;margin:0 0 22px;text-wrap:balance;">Let's build something<br>worth orbiting.</h2>
+      <p style="font-size:17px;color:var(--muted,#8A90A2);line-height:1.6;margin:0 0 40px;">Open to senior engineering roles and collaboration on AI-driven platforms. Based in France.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
+        <a href="mailto:najih.driss73@gmail.com" data-magnet style="display:inline-flex;align-items:center;gap:10px;padding:15px 30px;border-radius:999px;background:var(--accent,#7AA2FF);color:#05060B;font-weight:600;font-size:16px;box-shadow:0 8px 30px var(--glow,rgba(122,162,255,.35));">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+          najih.driss73@gmail.com
+        </a>
+        <a href="https://www.linkedin.com/in/najih-driss/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;border:1px solid var(--border,rgba(255,255,255,.16));color:var(--text,#E6E9F0);font-weight:500;font-size:16px;transition:border-color .2s;" onMouseOver="{{ outlineOn }}" onMouseOut="{{ outlineOff }}">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://github.com/kouji-dev" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;border:1px solid var(--border,rgba(255,255,255,.16));color:var(--text,#E6E9F0);font-weight:500;font-size:16px;transition:border-color .2s;" onMouseOver="{{ outlineOn }}" onMouseOut="{{ outlineOff }}">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="position:relative;z-index:2;border-top:1px solid var(--border,rgba(255,255,255,.07));padding:30px clamp(20px,5vw,64px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;font-size:13px;color:var(--muted,#8A90A2);">
+    <span style="font-family:'JetBrains Mono',monospace;">Driss Najih · Senior Software Engineer</span>
+    <span style="font-family:'JetBrains Mono',monospace;">© 2026 — built in orbit</span>
+  </footer>
+
+  <!-- ===== CUSTOM CURSOR (fine pointers only, enabled from logic) ===== -->
+  <div data-cursor-dot style="position:fixed;left:0;top:0;width:6px;height:6px;border-radius:50%;background:var(--accent,#7AA2FF);z-index:99;pointer-events:none;display:none;will-change:transform;"></div>
+  <div data-cursor-ring style="position:fixed;left:0;top:0;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--accent,#7AA2FF);opacity:.55;z-index:99;pointer-events:none;display:none;will-change:transform;"></div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;heroStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;nebula&quot;,&quot;aurora&quot;,&quot;plasma&quot;,&quot;midnight&quot;],&quot;default&quot;:&quot;nebula&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;flowSpeed&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:0.2,&quot;min&quot;:0.1,&quot;max&quot;:2,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;},&quot;glitterIntensity&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:0.4,&quot;min&quot;:0,&quot;max&quot;:2.5,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;},&quot;accentJourney&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { menuOpen: false, expanded: {} };
+
+  get dir() { return 'stellar'; }
+
+  themes = {
+    stellar: { accent:'#7AA2FF', accent2:'#C792EA', warm:'#FFB454', glow:'rgba(122,162,255,.4)' }
+  };
+
+  // per-section palette journey (subtle hue morph as you scroll)
+  paletteStops = [
+    { id:'top',        accent:'#7AA2FF', accent2:'#C792EA', warm:'#FFB454' },
+    { id:'about',      accent:'#7AA2FF', accent2:'#C792EA', warm:'#FFB454' },
+    { id:'work',       accent:'#A78BFA', accent2:'#7AA2FF', warm:'#F2A6E8' },
+    { id:'stack',      accent:'#5EEAD4', accent2:'#7AA2FF', warm:'#FFB454' },
+    { id:'experience', accent:'#FFB454', accent2:'#C792EA', warm:'#7AA2FF' },
+    { id:'contact',    accent:'#7AA2FF', accent2:'#C792EA', warm:'#FFB454' }
+  ];
+
+  applyTheme() {
+    const t = this.themes.stellar;
+    const r = document.documentElement;
+    r.style.setProperty('--accent', t.accent);
+    r.style.setProperty('--accent2', t.accent2);
+    r.style.setProperty('--warm', t.warm);
+    r.style.setProperty('--glow', t.glow);
+    r.style.setProperty('--text', '#E6E9F0');
+    r.style.setProperty('--muted', '#8A90A2');
+    r.style.setProperty('--border', 'rgba(255,255,255,.1)');
+    r.style.setProperty('--surface', 'rgba(255,255,255,.025)');
+  }
+
+  componentDidMount() {
+    this.applyTheme();
+    this.setupReveal();
+    this.setupResponsive();
+    this.setupHeroSplit();
+    this.setupScrollFX();
+    this.setupPointerFX();
+    this.setupLazyIframes();
+    window.addEventListener('resize', this._resize = () => this.setupResponsive());
+    this.buildHero();
+    this._lastHero = this.props.heroStyle;
+    this._lastDir = this.dir;
+    this._lastReduce = this.props.reduceMotion;
+    const root = this._root || document.documentElement;
+    if (typeof ResizeObserver !== 'undefined') {
+      this._ro = new ResizeObserver(() => {
+        this.setupResponsive();
+        if (this._heroResize) this._heroResize();
+      });
+      this._ro.observe(root);
+      if (document.body) this._ro.observe(document.body);
+    }
+    [0, 60, 300].forEach(d => setTimeout(() => { this.setupResponsive(); if (this._heroResize) this._heroResize(); }, d));
+    requestAnimationFrame(() => { this.setupResponsive(); if (this._heroResize) this._heroResize(); });
+    this._remeasure = () => {
+      if (typeof document !== 'undefined' && document.visibilityState && document.visibilityState !== 'visible') return;
+      this.setupResponsive();
+      if (this._heroResize) this._heroResize();
+    };
+    this._onVisible = () => {
+      if (document.visibilityState === 'visible') {
+        this._remeasure();
+        // resume render loop
+        if (this._gl && !this.props.reduceMotion && this._heroPaused) {
+          this._heroPaused = false;
+          this._heroRaf = requestAnimationFrame(this._heroFrame);
+        }
+      } else if (this._gl) {
+        // pause when hidden — no wasted GPU while tab is in background
+        this._heroPaused = true;
+        if (this._heroRaf) cancelAnimationFrame(this._heroRaf);
+      }
+    };
+    document.addEventListener('visibilitychange', this._onVisible);
+    window.addEventListener('load', this._remeasure);
+  }
+
+  componentDidUpdate() {
+    this.applyTheme();
+    if (this._fxUpdate) this._fxUpdate();
+    if (this._lastHero !== this.props.heroStyle || this._lastDir !== this.dir || this._lastReduce !== this.props.reduceMotion) {
+      this._lastHero = this.props.heroStyle;
+      this._lastDir = this.dir;
+      this._lastReduce = this.props.reduceMotion;
+      this.buildHero();
+      this.setupHeroSplit();
+    } else if (this._heroUniforms) {
+      this._heroUniforms.uSpeed.value = this.props.flowSpeed ?? 0.7;
+      this._heroUniforms.uIntensity.value = this.props.glitterIntensity ?? 1.0;
+    }
+    this.setupLazyIframes();
+  }
+
+  componentWillUnmount() {
+    if (this._ro) this._ro.disconnect();
+    if (this._onVisible) document.removeEventListener('visibilitychange', this._onVisible);
+    if (this._remeasure) window.removeEventListener('load', this._remeasure);
+    if (this._resize) window.removeEventListener('resize', this._resize);
+    if (this._revealCheck) { window.removeEventListener('scroll', this._revealCheck); window.removeEventListener('resize', this._revealCheck); }
+    if (this._revealTimer) clearInterval(this._revealTimer);
+    if (this._fxScroll) { window.removeEventListener('scroll', this._fxScroll); window.removeEventListener('resize', this._fxScroll); }
+    if (this._pointerMove) document.removeEventListener('mousemove', this._pointerMove);
+    if (this._cursorRaf) cancelAnimationFrame(this._cursorRaf);
+    if (this._cursorStyle && this._cursorStyle.parentNode) this._cursorStyle.parentNode.removeChild(this._cursorStyle);
+    if (this._lazyScroll) { window.removeEventListener('scroll', this._lazyScroll); window.removeEventListener('resize', this._lazyScroll); }
+    if (this._lazyTimer) clearInterval(this._lazyTimer);
+    this._heroPaused = true;
+    if (this._heroRaf) cancelAnimationFrame(this._heroRaf);
+    if (this._heroResizeRaf) cancelAnimationFrame(this._heroResizeRaf);
+    if (this._heroResize) window.removeEventListener('resize', this._heroResize);
+    if (this._heroWait) clearTimeout(this._heroWait);
+    if (this._gl) { try { this._gl.renderer.dispose(); this._gl.renderer.forceContextLoss(); } catch(e){} this._gl = null; this._renderer = null; }
+  }
+
+  /* ---------- WebGL cosmos ---------- */
+  buildHero(attempt) {
+    const host = document.querySelector('[data-hero-bg]');
+    if (!host) return;
+    if (this._heroRaf) cancelAnimationFrame(this._heroRaf);
+
+    const reduce = !!this.props.reduceMotion;
+    const th = this.themes[this.dir] || this.themes.stellar;
+    const hexv = (h) => { h = h.replace('#',''); if (h.length===3) h = h.split('').map(c=>c+c).join(''); return [parseInt(h.slice(0,2),16)/255, parseInt(h.slice(2,4),16)/255, parseInt(h.slice(4,6),16)/255]; };
+    const A = hexv(th.accent), B = hexv(th.accent2), C = hexv(th.warm);
+
+    host.style.background = 'radial-gradient(120% 90% at 50% 32%, '+th.glow+' 0%, transparent 55%), radial-gradient(80% 70% at 78% 80%, color-mix(in srgb,'+th.accent2+' 22%, transparent), transparent 60%), #05060B';
+
+    if (typeof THREE === 'undefined') {
+      attempt = (attempt || 0) + 1;
+      if (attempt < 60) { this._heroWait = setTimeout(() => this.buildHero(attempt), 80); }
+      return;
+    }
+
+    const modeMap = { nebula:0.0, aurora:1.0, plasma:2.0, midnight:3.0 };
+    const mode = modeMap[this.props.heroStyle] ?? 0.0;
+    const speed = (this.props.flowSpeed ?? 0.7);
+    const intensity = (this.props.glitterIntensity ?? 1.0);
+
+    if (this._gl) {
+      const g = this._gl;
+      if (g.canvas.parentNode !== host) { host.innerHTML = ''; host.appendChild(g.canvas); }
+      g.uniforms.uA.value.setRGB(A[0],A[1],A[2]);
+      g.uniforms.uB.value.setRGB(B[0],B[1],B[2]);
+      g.uniforms.uC.value.setRGB(C[0],C[1],C[2]);
+      g.uniforms.uMode.value = mode;
+      g.uniforms.uSpeed.value = speed;
+      g.uniforms.uIntensity.value = intensity;
+      if (this._heroResize) this._heroResize();
+      if (reduce) { this._heroPaused = true; g.uniforms.uTime.value = 8.0; g.renderer.render(g.scene, g.camera); }
+      else { this._heroPaused = false; this._heroRaf = requestAnimationFrame(this._heroFrame); }
+      return;
+    }
+
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+    } catch(e) { return; }
+    this._renderer = renderer;
+    renderer.setClearColor(0x05060B, 1);
+    const canvas = renderer.domElement;
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+    host.innerHTML = '';
+    host.appendChild(canvas);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.Camera();
+    const uniforms = {
+      uTime: { value: 0 },
+      uRes: { value: new THREE.Vector2(1,1) },
+      uA: { value: new THREE.Color(A[0],A[1],A[2]) },
+      uB: { value: new THREE.Color(B[0],B[1],B[2]) },
+      uC: { value: new THREE.Color(C[0],C[1],C[2]) },
+      uSpeed: { value: speed },
+      uIntensity: { value: intensity },
+      uMode: { value: mode },
+      uScroll: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0,0) }
+    };
+    this._heroUniforms = uniforms;
+
+    const vert = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position,1.0); }';
+    const frag = [
+      'precision highp float;',
+      'varying vec2 vUv;',
+      'uniform float uTime,uSpeed,uIntensity,uMode,uScroll;',
+      'uniform vec2 uRes,uMouse;',
+      'uniform vec3 uA,uB,uC;',
+      'float hash(vec2 p){ p=fract(p*vec2(123.34,345.45)); p+=dot(p,p+34.345); return fract(p.x*p.y); }',
+      'float noise(vec2 p){ vec2 i=floor(p),f=fract(p); float a=hash(i),b=hash(i+vec2(1.,0.)),c=hash(i+vec2(0.,1.)),d=hash(i+vec2(1.,1.)); vec2 u=f*f*(3.-2.*f); return mix(mix(a,b,u.x),mix(c,d,u.x),u.y); }',
+      'float fbm(vec2 p){ float v=0.,a=0.5; mat2 m=mat2(1.6,1.2,-1.2,1.6); for(int i=0;i<6;i++){ v+=a*noise(p); p=m*p; a*=0.5; } return v; }',
+      'float glitter(vec2 uv,float scale,float t,float seed){',
+      '  vec2 g=uv*scale; vec2 id=floor(g); vec2 f=fract(g)-0.5;',
+      '  float r=hash(id+seed);',
+      '  if(r<0.82) return 0.0;',
+      '  vec2 off=(vec2(hash(id+seed+1.7),hash(id+seed+4.3))-0.5)*0.7;',
+      '  vec2 d=f-off; float dist=length(d);',
+      '  float tw=max(0.0,sin(t*(0.7+r*1.6)+r*6.2831)); tw=pow(tw,7.0);',
+      '  float core=smoothstep(0.07,0.0,dist);',
+      '  float rayx=smoothstep(0.45,0.0,abs(d.x))*smoothstep(0.045,0.0,abs(d.y));',
+      '  float rayy=smoothstep(0.45,0.0,abs(d.y))*smoothstep(0.045,0.0,abs(d.x));',
+      '  return (core+(rayx+rayy)*0.6)*tw;',
+      '}',
+      'void main(){',
+      '  vec2 uv=vUv; vec2 p=(uv-0.5); p.x*=uRes.x/uRes.y;',
+      // mouse parallax on the whole field, scroll drifts the nebula upward
+      '  p+=uMouse*0.07;',
+      '  vec2 ps=p+vec2(uMouse.x*0.03, uScroll*0.22);',
+      '  float t=uTime*uSpeed;',
+      '  vec2 q=vec2(fbm(ps*2.2+vec2(0.0,t*0.15)), fbm(ps*2.2+vec2(5.2,-t*0.12)));',
+      '  vec2 rr=vec2(fbm(ps*2.2+q*1.4+vec2(1.7,9.2)+t*0.10), fbm(ps*2.2+q*1.4+vec2(8.3,2.8)-t*0.08));',
+      '  float f=fbm(ps*2.2+rr*1.4);',
+      '  if(uMode>0.5 && uMode<1.5){ f=fbm(vec2(ps.x*1.6, ps.y*3.2 - t*0.35)+rr*1.2); }',
+      '  if(uMode>1.5 && uMode<2.5){ f=fbm(ps*3.0+rr*2.2+t*0.05); f=0.5+0.5*sin(f*6.2831+t); }',
+      '  vec3 base=vec3(0.016,0.022,0.045);',
+      '  if(uMode>2.5){ base=vec3(0.01,0.012,0.03); f*=0.8; }',
+      '  vec3 col=base;',
+      '  col=mix(col,uA, smoothstep(0.18,0.78,f)*0.75);',
+      '  col=mix(col,uB, smoothstep(0.42,0.95,f+rr.x*0.3)*0.6);',
+      '  col=mix(col,uC, smoothstep(0.7,1.0,f*rr.y+0.18)*0.45);',
+      '  vec2 gp=p-uMouse*0.18;',
+      '  float glow=exp(-dot(gp,gp)*2.6); col+=uA*glow*0.28;',
+      '  col*=mix(0.5,1.0, smoothstep(1.05,0.0,length(p)));',
+      '  float gM=(uMode>2.5)?1.35:1.0;',
+      '  float spk=glitter(p,12.0,t*1.3,0.0)+glitter(p,21.0,t*1.6,11.3);',
+      // glitter thins out slightly as you scroll into the page
+      '  spk*=uIntensity*gM*(1.0-clamp(uScroll*0.10,0.0,0.45));',
+      '  col+=vec3(1.0,1.0,1.06)*clamp(spk,0.0,2.0)*0.85;',
+      '  col+=uA*clamp(spk,0.0,2.0)*0.12;',
+      // deepen slightly with scroll so content sits on calmer space
+      '  col*=1.0-clamp(uScroll*0.05,0.0,0.22);',
+      '  col=pow(col, vec3(0.95));',
+      '  gl_FragColor=vec4(col,1.0);',
+      '}'
+    ].join('\n');
+
+    const material = new THREE.ShaderMaterial({ uniforms, vertexShader: vert, fragmentShader: frag });
+    const quad = new THREE.Mesh(new THREE.PlaneGeometry(2,2), material);
+    scene.add(quad);
+
+    this._gl = { renderer, scene, camera, uniforms, canvas };
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio||1, 2);
+      const W = host.clientWidth || window.innerWidth || 0;
+      const H = host.clientHeight || window.innerHeight || 0;
+      if (W < 2 || H < 2) { this._heroResizeRaf = requestAnimationFrame(resize); return; }
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(W, H, false);
+      uniforms.uRes.value.set(W, H);
+    };
+    this._heroResize = resize;
+    window.addEventListener('resize', resize);
+    resize();
+
+    const start = performance.now();
+    this._heroFrame = (now) => {
+      uniforms.uTime.value = (now - start) / 1000;
+      // ease scroll + mouse toward their targets for smooth parallax
+      uniforms.uScroll.value += ((this._scT || 0) - uniforms.uScroll.value) * 0.06;
+      uniforms.uMouse.value.x += ((this._mxT || 0) - uniforms.uMouse.value.x) * 0.05;
+      uniforms.uMouse.value.y += ((this._myT || 0) - uniforms.uMouse.value.y) * 0.05;
+      renderer.render(scene, camera);
+      if (!this._heroPaused) this._heroRaf = requestAnimationFrame(this._heroFrame);
+    };
+    if (reduce) { this._heroPaused = true; uniforms.uTime.value = 8.0; renderer.render(scene, camera); }
+    else { this._heroPaused = false; this._heroRaf = requestAnimationFrame(this._heroFrame); }
+  }
+
+  /* ---------- scroll FX: progress ring, palette journey, timeline draw, uScroll ---------- */
+  setupScrollFX() {
+    const hexRGB = (h) => { h = h.replace('#',''); return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)]; };
+    const lerpHex = (a, b, t) => {
+      const A = hexRGB(a), B = hexRGB(b);
+      const c = A.map((v,i) => Math.round(v + (B[i]-v)*t));
+      return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+    };
+    const lerpArr = (a, b, t) => a.map((v,i) => v + (b[i]-v)*t);
+
+    const update = () => {
+      const sy = window.scrollY || 0;
+      const vh = window.innerHeight || 800;
+      const docH = Math.max(document.documentElement.scrollHeight - vh, 1);
+
+      // shader scroll target (in viewport-heights)
+      this._scT = sy / vh;
+
+      // nav progress ring
+      const ring = document.querySelector('[data-progress-ring]');
+      if (ring) ring.style.strokeDashoffset = String(87.96 * (1 - Math.min(sy / docH, 1)));
+
+      // experience timeline draw + dots
+      const wrap = document.querySelector('[data-timeline-wrap]');
+      const fill = document.querySelector('[data-timeline-fill]');
+      if (wrap && fill) {
+        const r = wrap.getBoundingClientRect();
+        const prog = Math.min(Math.max((vh * 0.72 - r.top) / r.height, 0), 1);
+        fill.style.height = (prog * 100) + '%';
+        document.querySelectorAll('[data-dot]').forEach(dot => {
+          const dr = dot.getBoundingClientRect();
+          const on = dr.top < vh * 0.72;
+          dot.style.borderColor = on ? 'var(--accent,#7AA2FF)' : 'rgba(255,255,255,.25)';
+          dot.style.boxShadow = on ? '0 0 0 4px rgba(5,6,11,1), 0 0 12px var(--glow,rgba(122,162,255,.5))' : '0 0 0 4px rgba(5,6,11,1)';
+        });
+      }
+
+      // section palette journey
+      if (this.props.accentJourney === false) return;
+      const stops = this.paletteStops
+        .map(s => { const el = document.getElementById(s.id); return el ? { s, pos: el.offsetTop + el.offsetHeight * 0.5 } : null; })
+        .filter(Boolean);
+      if (stops.length < 2) return;
+      const c = sy + vh * 0.45;
+      let a = stops[0], b = stops[0], t = 0;
+      if (c <= stops[0].pos) { a = b = stops[0]; }
+      else if (c >= stops[stops.length-1].pos) { a = b = stops[stops.length-1]; }
+      else {
+        for (let i = 0; i < stops.length - 1; i++) {
+          if (c >= stops[i].pos && c <= stops[i+1].pos) {
+            a = stops[i]; b = stops[i+1];
+            t = (c - a.pos) / Math.max(b.pos - a.pos, 1);
+            break;
+          }
+        }
+      }
+      const r2 = document.documentElement;
+      const acc = lerpHex(a.s.accent, b.s.accent, t);
+      r2.style.setProperty('--accent', acc);
+      r2.style.setProperty('--accent2', lerpHex(a.s.accent2, b.s.accent2, t));
+      r2.style.setProperty('--warm', lerpHex(a.s.warm, b.s.warm, t));
+      const av = lerpArr(hexRGB(a.s.accent), hexRGB(b.s.accent), t);
+      r2.style.setProperty('--glow', 'rgba(' + Math.round(av[0]) + ',' + Math.round(av[1]) + ',' + Math.round(av[2]) + ',.4)');
+      // feed the shader the same journey
+      if (this._heroUniforms) {
+        const bv = lerpArr(hexRGB(a.s.accent2), hexRGB(b.s.accent2), t);
+        const cv = lerpArr(hexRGB(a.s.warm), hexRGB(b.s.warm), t);
+        this._heroUniforms.uA.value.setRGB(av[0]/255, av[1]/255, av[2]/255);
+        this._heroUniforms.uB.value.setRGB(bv[0]/255, bv[1]/255, bv[2]/255);
+        this._heroUniforms.uC.value.setRGB(cv[0]/255, cv[1]/255, cv[2]/255);
+        if (this._heroPaused && this._gl) this._gl.renderer.render(this._gl.scene, this._gl.camera);
+      }
+    };
+
+    this._fxUpdate = update;
+    let raf = null;
+    this._fxScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = null; update(); }); };
+    window.addEventListener('scroll', this._fxScroll, { passive: true });
+    window.addEventListener('resize', this._fxScroll, { passive: true });
+    update();
+  }
+
+  /* ---------- pointer FX: custom cursor, magnetic CTAs, shader parallax ---------- */
+  setupPointerFX() {
+    const fine = typeof matchMedia !== 'undefined' && matchMedia('(pointer:fine)').matches;
+    const dot = document.querySelector('[data-cursor-dot]');
+    const ringEl = document.querySelector('[data-cursor-ring]');
+    let cx = -100, cy = -100, rx = -100, ry = -100, rs = 1, rsT = 1, seen = false;
+    let magnet = null;
+
+    this._pointerMove = (e) => {
+      // shader parallax targets (normalized -0.5..0.5, y flipped for GL)
+      const w = window.innerWidth || 1, h = window.innerHeight || 1;
+      this._mxT = (e.clientX / w - 0.5) * 1.0;
+      this._myT = (0.5 - e.clientY / h) * 1.0;
+
+      if (!fine) return;
+      cx = e.clientX; cy = e.clientY; seen = true;
+
+      // cursor grow over interactive elements
+      const inter = e.target && e.target.closest && e.target.closest('a,button,[data-card]');
+      rsT = inter ? 1.7 : 1;
+
+      // magnetic CTAs
+      const m = e.target && e.target.closest && e.target.closest('[data-magnet]');
+      if (m !== magnet) {
+        if (magnet) { magnet.style.transform = ''; magnet.style.transition = 'transform .35s cubic-bezier(.2,.8,.2,1)'; }
+        magnet = m;
+        if (magnet) magnet.style.transition = 'transform .12s ease-out';
+      }
+      if (magnet && !this.props.reduceMotion) {
+        const r = magnet.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width/2)) * 0.22;
+        const dy = (e.clientY - (r.top + r.height/2)) * 0.28;
+        magnet.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+      }
+    };
+    document.addEventListener('mousemove', this._pointerMove, { passive: true });
+
+    if (!fine || !dot || !ringEl) return;
+
+    const loop = () => {
+      const active = !this.props.reduceMotion && seen;
+      if (active) {
+        if (dot.style.display !== 'block') { dot.style.display = 'block'; ringEl.style.display = 'block'; this._cursorHide(true); }
+        rx += (cx - rx) * 0.16; ry += (cy - ry) * 0.16; rs += (rsT - rs) * 0.18;
+        dot.style.transform = 'translate(' + (cx - 3) + 'px,' + (cy - 3) + 'px)';
+        ringEl.style.transform = 'translate(' + (rx - 18) + 'px,' + (ry - 18) + 'px) scale(' + rs.toFixed(3) + ')';
+      } else if (dot.style.display === 'block') {
+        dot.style.display = 'none'; ringEl.style.display = 'none'; this._cursorHide(false);
+      }
+      this._cursorRaf = requestAnimationFrame(loop);
+    };
+    this._cursorHide = (on) => {
+      if (on && !this._cursorStyle) {
+        this._cursorStyle = document.createElement('style');
+        this._cursorStyle.textContent = '*{cursor:none !important}';
+        document.head.appendChild(this._cursorStyle);
+      } else if (!on && this._cursorStyle) {
+        this._cursorStyle.remove();
+        this._cursorStyle = null;
+      }
+    };
+    this._cursorRaf = requestAnimationFrame(loop);
+  }
+
+  /* ---------- lazy iframes ---------- */
+  // Queries fresh nodes on every check (scroll + interval) — an IntersectionObserver
+  // bound at mount can end up watching stale nodes after the streamed DOM is replaced.
+  setupLazyIframes() {
+    if (this._lazyBound) { this._lazyCheck && this._lazyCheck(); return; }
+    this._lazyBound = true;
+    const check = () => {
+      const vh = window.innerHeight || 800;
+      let pending = 0;
+      document.querySelectorAll('iframe[data-lazy-src]').forEach(f => {
+        const u = f.getAttribute('data-lazy-src');
+        if (!u || f.getAttribute('src')) return;
+        const r = f.getBoundingClientRect();
+        if (r.top < vh + 700 && r.bottom > -700) f.src = u;
+        else pending++;
+      });
+      // once everything is loaded, stop listening
+      if (!pending && this._lazyScroll) {
+        window.removeEventListener('scroll', this._lazyScroll);
+        window.removeEventListener('resize', this._lazyScroll);
+        if (this._lazyTimer) { clearInterval(this._lazyTimer); this._lazyTimer = null; }
+        this._lazyScroll = null;
+      }
+    };
+    this._lazyCheck = check;
+    this._lazyScroll = () => check();
+    window.addEventListener('scroll', this._lazyScroll, { passive: true });
+    window.addEventListener('resize', this._lazyScroll, { passive: true });
+    this._lazyTimer = setInterval(check, 800);
+    check();
+  }
+
+  /* ---------- staggered word reveal for the hero headline ---------- */
+  setupHeroSplit() {
+    const h1 = document.querySelector('[data-splitwords]');
+    if (!h1 || h1.dataset.split === '1') return;
+    if (this.props.reduceMotion) return;
+    h1.dataset.split = '1';
+    const units = [];
+    Array.from(h1.childNodes).forEach(node => {
+      if (node.nodeType === 3) {
+        const parts = node.textContent.split(/(\s+)/);
+        const frag = document.createDocumentFragment();
+        parts.forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          const s = document.createElement('span');
+          s.style.display = 'inline-block';
+          s.textContent = part;
+          frag.appendChild(s);
+          units.push(s);
+        });
+        h1.replaceChild(frag, node);
+      } else if (node.nodeType === 1 && node.tagName !== 'BR') {
+        node.style.display = 'inline-block';
+        units.push(node);
+      }
+    });
+    units.forEach((s, i) => {
+      s.style.opacity = '0';
+      s.style.transform = 'translateY(26px)';
+      s.style.transition = 'opacity .7s cubic-bezier(.2,.7,.2,1) ' + (120 + i*70) + 'ms, transform .7s cubic-bezier(.2,.7,.2,1) ' + (120 + i*70) + 'ms';
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      units.forEach(s => { s.style.opacity = '1'; s.style.transform = 'none'; });
+    }));
+    // safety: force visible if transitions never ran (print, throttled tab)
+    setTimeout(() => {
+      units.forEach(s => {
+        if (parseFloat(getComputedStyle(s).opacity) < 0.05) { s.style.transition = 'none'; s.style.opacity = '1'; s.style.transform = 'none'; }
+      });
+    }, 2200);
+  }
+
+  setupResponsive() {
+    const w = window.innerWidth;
+    const navlinks = document.querySelector('[data-navlinks]');
+    if (navlinks) navlinks.style.display = w > 760 ? 'flex' : 'none';
+    const menubtn = document.querySelector('[data-menubtn]');
+    if (menubtn) menubtn.style.display = w > 760 ? 'none' : 'inline-flex';
+    const set = (sel, cols) => document.querySelectorAll(sel).forEach(el => { el.style.gridTemplateColumns = cols; });
+    if (w <= 860) {
+      set('[data-aboutgrid]', '1fr');
+      document.querySelectorAll('[data-project]').forEach(el => { el.style.gridTemplateColumns = '1fr'; });
+    } else {
+      set('[data-aboutgrid]', '1.4fr 1fr');
+      document.querySelectorAll('[data-project]').forEach(el => { el.style.gridTemplateColumns = '1fr 1.25fr'; });
+    }
+    set('[data-skillgrid]', w <= 560 ? '1fr' : (w <= 860 ? 'repeat(2,1fr)' : 'repeat(3,1fr)'));
+    set('[data-stackgrid]', w <= 720 ? '1fr' : 'repeat(2,1fr)');
+  }
+
+  setupReveal() {
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    const reveal = (el, instant) => {
+      if (instant) el.style.transition = 'none';
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    };
+    if (this.props.reduceMotion) { els.forEach(el => reveal(el, true)); return; }
+    els.forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(26px)';
+      el.style.transition = 'opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1)';
+    });
+    const check = () => {
+      const vh = window.innerHeight || 800;
+      // stagger: elements entering in the same pass cascade in
+      const batch = [];
+      for (const el of els) {
+        if (el.style.opacity === '1' || el.dataset.revealQueued === '1') continue;
+        const r = el.getBoundingClientRect();
+        if (r.top < vh * 0.94 && r.bottom > -40) batch.push({ el, top: r.top });
+      }
+      batch.sort((a, b) => a.top - b.top);
+      batch.forEach((b2, i) => {
+        b2.el.dataset.revealQueued = '1';
+        setTimeout(() => reveal(b2.el), i * 85);
+      });
+    };
+    check();
+    this._revealCheck = () => check();
+    window.addEventListener('scroll', this._revealCheck, { passive: true });
+    window.addEventListener('resize', this._revealCheck, { passive: true });
+    let ticks = 0;
+    this._revealTimer = setInterval(() => {
+      check();
+      ticks++;
+      for (const el of els) {
+        if (el.style.opacity === '1' && el.style.transition !== 'none' && parseFloat(getComputedStyle(el).opacity) < 0.05) {
+          reveal(el, true);
+        }
+      }
+      if (ticks > 13) { els.forEach(el => reveal(el)); clearInterval(this._revealTimer); this._revealTimer = null; }
+    }, 200);
+  }
+
+  renderVals() {
+    const hoverOn = (e) => { e.currentTarget.style.color = 'var(--text,#E6E9F0)'; };
+    const hoverOff = (e) => { e.currentTarget.style.color = 'var(--muted,#8A90A2)'; };
+    const liftOn = (e) => { e.currentTarget.style.transform = 'translateY(-3px)'; };
+    const liftOff = (e) => { e.currentTarget.style.transform = 'translateY(0)'; };
+    const outlineOn = (e) => { e.currentTarget.style.borderColor = 'var(--accent,#7AA2FF)'; e.currentTarget.style.background = 'rgba(255,255,255,.03)'; };
+    const outlineOff = (e) => { e.currentTarget.style.borderColor = 'var(--border,rgba(255,255,255,.16))'; e.currentTarget.style.background = 'transparent'; };
+    const iconOn = (e) => { e.currentTarget.style.color = 'var(--accent,#7AA2FF)'; e.currentTarget.style.borderColor = 'var(--accent,#7AA2FF)'; };
+    const iconOff = (e) => { e.currentTarget.style.color = 'var(--muted,#8A90A2)'; e.currentTarget.style.borderColor = 'var(--border,rgba(255,255,255,.14))'; };
+    const cardOn = (e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = 'var(--accent,#7AA2FF)'; };
+    const cardOff = (e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border,rgba(255,255,255,.09))'; e.currentTarget.style.background = 'var(--surface,rgba(255,255,255,.02))'; };
+    // spotlight follows the cursor inside cards
+    const cardMove = (e) => {
+      const r = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      e.currentTarget.style.background = 'radial-gradient(260px circle at ' + x + 'px ' + y + 'px, rgba(255,255,255,.06), rgba(255,255,255,.02))';
+    };
+
+    const expanded = this.state.expanded || {};
+    const mkProj = (base) => ({
+      ...base,
+      expanded: !!expanded[base.name],
+      caseLabel: expanded[base.name] ? '− case study' : '+ case study',
+      toggle: () => this.setState(s => ({ expanded: { ...s.expanded, [base.name]: !s.expanded[base.name] } }))
+    });
+
+    return {
+      rootRef: (el) => { this._root = el; },
+      hoverOn, hoverOff, liftOn, liftOff, outlineOn, outlineOff, iconOn, iconOff, cardOn, cardOff, cardMove,
+      menuOpen: !!this.state.menuOpen,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      stats: [
+        { value:'7+ yrs', label:'Building enterprise & platform software' },
+        { value:'AI-first', label:'Agents, RAG & LLM-driven workflows' }
+      ],
+      skillGroups: [
+        { label:'Languages', items:'TypeScript · JavaScript · Java 8–21 · Rust · Python · Go' },
+        { label:'Front-End', items:'Angular · React · NgRx · Redux · Tailwind' },
+        { label:'Back-End', items:'Spring Boot · Quarkus · NestJS · Node' },
+        { label:'AI & Data', items:'LangChain · LLM APIs · RAG · pgvector · Agents · Prompt design' },
+        { label:'Cloud & DevOps', items:'AWS · Azure · Docker · Kubernetes · GitLab CI · GitHub Actions' },
+        { label:'Quality', items:'Vitest · Jest · Playwright · Cypress · JUnit · SonarQube' }
+      ],
+      stack: [
+        { n:'a', title:'Agents & orchestration', text:'Multi-agent workflows with hard isolation — each agent gets its own git worktree, branch, terminal and conversation, supervised from one cockpit. The pattern behind Orrery.', tools:'Tool calling · Worktrees · Sandboxed terminals' },
+        { n:'b', title:'Retrieval & RAG', text:'Hybrid retrieval over private knowledge: vector embeddings plus keyword search with reranking, returning cited answers instead of confident guesses. Running in AI Portal.', tools:'pgvector · LangChain · Hybrid search · Citations' },
+        { n:'c', title:'LLM integration', text:'Streaming chat, structured output and tool use wired into existing backends — AI as a capability of the platform, not a separate demo app.', tools:'Anthropic / OpenAI APIs · Streaming · JSON schemas' },
+        { n:'d', title:'Guardrails & evals', text:'Prompt design treated like API design: versioned, validated, regression-tested. Output checks and eval suites so LLM features ship with the same rigor as any service.', tools:'Output validation · Eval suites · Prompt versioning' }
+      ],
+      projects: [
+        mkProj({
+          n:'01', name:'Orrery', tag:'Multi-Agent Git Orchestrator IDE',
+          meta:'Native desktop · Solo author',
+          url:'https://orrery.kouji.dev', display:'orrery.kouji.dev',
+          repo:'https://github.com/kouji-dev/orrery-releases',
+          desc:'A futuristic, IntelliJ-inspired desktop IDE that lets one developer drive multiple AI coding agents in parallel — each isolated in its own git worktree, branch, terminal and conversation. The name evokes an orrery: agents orbiting a project like bodies in a mechanical model of the solar system.',
+          tech:['Tauri 2','Rust','Angular 20','xterm.js','CodeMirror 6','Lexical'],
+          csProblem:'Coding agents are powerful but serialized — one developer, one agent, one branch at a time. Running several in the same working copy ends in merge chaos.',
+          csApproach:'A Rust/Tauri core manages git worktrees so every agent operates on its own branch with its own terminal (xterm.js) and conversation. An Angular 20 UI with CodeMirror 6 gives IDE-grade review of each agent\u2019s diff before anything merges.',
+          csResult:'One developer supervises a fleet of agents in parallel — isolated execution, reviewable diffs, no cross-contamination between tasks.'
+        }),
+        mkProj({
+          n:'02', name:'Kouji UI', tag:'Angular Design System & Component Library',
+          meta:'Open-source · 60+ components',
+          url:'https://ui.kouji.dev', display:'ui.kouji.dev',
+          repo:'https://github.com/kouji-dev/kouji-ui',
+          desc:'An open-source Angular 21 design system: 60+ accessible, themable UI primitives in a pnpm + Turborepo monorepo, with a decoupled token-driven theming layer, axe-based accessibility audits and Changesets-based release engineering.',
+          tech:['Angular 21','Turborepo','Vitest','Playwright','Tailwind 4','Changesets'],
+          csProblem:'Every Angular project rebuilds the same primitives — inconsistently, and usually with accessibility as an afterthought.',
+          csApproach:'A token-driven theming layer fully decoupled from component logic; pnpm + Turborepo monorepo; axe accessibility audits and Playwright suites in CI; Changesets for automated versioned releases.',
+          csResult:'60+ accessible components that re-theme without forking — release engineering solid enough for teams to depend on.'
+        })
+      ],
+      secondary: [
+        { name:'AI Portal', tag:'Self-hostable enterprise AI assistant — streaming chat + RAG over private knowledge bases.', tech:'FastAPI · LangChain · pgvector', repo:'https://github.com/kouji-dev/ai-portal' },
+        { name:'Pages', tag:'Unified project management + docs — a single replacement for the Jira + Confluence stack.', tech:'Angular 21 · FastAPI · WebSockets', repo:'https://github.com/kouji-dev/pages' },
+        { name:'GamerGG', tag:'Gaming services marketplace connecting players with boosters & coaches.', tech:'Next.js 13 · Prisma · NextAuth', repo:'https://github.com/kouji-dev/GamerGG' },
+        { name:'Chartify', tag:'Figma community plugin for generating data-viz charts inside Figma.', tech:'TypeScript · Figma API', repo:'https://www.figma.com/community/plugin/1361309122482309141/chartify' }
+      ],
+      experiences: [
+        { role:'Senior Full Stack Developer', org:'Amundi ITS', period:'Sep 2023 — Present', note:'Maestro Angular framework (v15→18→20 migrations, micro-frontend-ready components), a low-code Web Designer with natural-language screen generation, and the AI "Vibe Toolbox" that provisions AI-ready dev environments.', tags:['Angular','Java','Spring','AI Tooling'] },
+        { role:'Senior Java Developer', org:'Société Générale — KYC', period:'Apr — Sep 2023', note:'Backend KYC services for customer trust scoring, eligibility and fraud-detection workflows, secured with Spring Security & OAuth2.', tags:['Java 17','Spring Boot','OAuth2'] },
+        { role:'Senior Full Stack Developer', org:'Colas — Global CRM', period:'Jan — Apr 2023', note:'CRM deployed across 55 countries on Azure with SSO (Azure AD) and Spring Batch data migration pipelines.', tags:['Angular','Java','Azure'] },
+        { role:'Full Stack Developer', org:'Zsoft — Gloody', period:'Oct 2022 — Jan 2023', note:'Multi-tenant business management platform: new REST APIs in Spring Boot and React/Ant Design features.', tags:['Java','React','AWS'] },
+        { role:'Full Stack Developer', org:'Scor — RiskReveal', period:'Jun 2019 — Sep 2022', note:'Natural-disaster risk assessment platform with real-time WebSocket features and rich data visualisation.', tags:['Angular','Spring','SQL Server'] },
+        { role:'Front-End Developer · Internship', org:'Scor — SoliT', period:'Mar — Jun 2019', note:'Pricing management platform for internal pricing teams — Angular UI components and REST integration.', tags:['Angular','TypeScript'] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
