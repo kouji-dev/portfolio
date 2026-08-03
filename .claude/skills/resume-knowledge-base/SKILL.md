@@ -43,6 +43,8 @@ Each experience should ultimately be documented with:
 - Lessons learned
 - Technologies (exact versions)
 
+This is the **only** artefact allowed unlimited detail. Everything here is raw material: resume-writer selects from it under a strict density budget (≤12 bullets per mission, ≤200 characters per bullet, four-part structure) and leaves technical challenges, mechanics and lessons learned here as interview preparation. Never copy a Level 3 entry into a CV verbatim.
+
 Level 1 (one sentence) and Level 2 (3–6 recruiter bullets) are *derived* from Level 3 by resume-writer — never written first.
 
 ## Maintenance rules

@@ -91,13 +91,13 @@ experiences:
   - in: [short, long]
     company: "Preesm Group"
     role:
-      en: "Freelance Full Stack Engineer (Angular / Node.js)"
-      fr: "Ingénieur Full Stack Freelance (Angular / Node.js)"
-    dates: { en: "Since May 2026 (freelance, ongoing)", fr: "Depuis mai 2026 (freelance, en cours)" }
+      en: "Full Stack Engineer (Angular / Node.js)"
+      fr: "Ingénieur Full Stack (Angular / Node.js)"
+    dates: { en: "Since May 2026 (ongoing)", fr: "Depuis mai 2026 (en cours)" }
     client: null
     context:
-      en: "**Preesm Portal** (preesm-group.com) — a B2B SaaS platform digitising the complete franchisee lifecycle of a French franchise network, used daily by headquarters staff, franchisors and franchisees: prospect intake, portfolio management, a structured **26-step onboarding journey**, document generation & signature, file hub, team-based access control and transactional mailing. Direct freelance engagement with the client, covering requirements, architecture, development, quality and production operations."
-      fr: "**Preesm Portal** (preesm-group.com) — plateforme SaaS B2B digitalisant le cycle de vie complet des franchisés d'un réseau de franchise français, utilisée au quotidien par le siège, les franchiseurs et les franchisés : acquisition de prospects, gestion de portefeuille, **parcours d'onboarding structuré en 26 étapes**, génération et signature de documents, gestion documentaire, contrôle d'accès par équipes et mailing transactionnel. Mission freelance en direct avec le client, couvrant besoins, architecture, développement, qualité et exploitation en production."
+      en: "**Preesm Portal** (preesm-group.com) — a B2B SaaS platform digitising the complete franchisee lifecycle of a French franchise network, used daily by headquarters staff, franchisors and franchisees. Sole engineer on the product, working directly with the client from requirements through to production operations."
+      fr: "**Preesm Portal** (preesm-group.com) — plateforme SaaS B2B digitalisant le cycle de vie complet des franchisés d'un réseau de franchise français, utilisée au quotidien par le siège, les franchiseurs et les franchisés. Seul ingénieur sur le produit, en direct avec le client, du recueil du besoin à l'exploitation en production."
     responsibilities:
       - in: [short]
         text:
@@ -105,63 +105,62 @@ experiences:
           fr: "Conçu et livré **Preesm Portal** (SaaS B2B) **de bout en bout en tant que seul ingénieur** — SPA **Angular 22 zoneless/signals** construite sur **@kouji-ui**, mon propre design system — **première release en production en un mois**"
       - in: [short]
         text:
-          en: "Implemented the core features: **26-step onboarding journey**, document generation & signature, **transactional mailing** and team-based RBAC, secured with **passkey/MFA** authentication"
-          fr: "Implémenté les fonctionnalités cœur : **parcours d'onboarding en 26 étapes**, génération et signature de documents, **mailing transactionnel** et RBAC par équipes, sécurisés par auth **passkey/MFA**"
+          en: "Built the product surface: a **guided onboarding journey** with per-step evidence and validation, portfolio back-office, **document generation & signature**, file hub, team management and a **franchisee-facing space**"
+          fr: "Construit la surface produit : **parcours d'onboarding guidé** avec justificatifs et validation par étape, back-office portefeuille, **génération et signature de documents**, hub documentaire, gestion des équipes et **espace franchisé**"
       - in: [short]
         text:
-          en: "Managed deployments through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
-          fr: "Géré les déploiements via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
+          en: "Secured the platform with **passkey/MFA authentication** and **team-based, deny-by-default RBAC**, and ship through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
+          fr: "Sécurisé la plateforme avec l'authentification **passkey/MFA** et un **RBAC par équipes, deny-by-default**, et livré via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
       - in: [long]
         text:
-          en: "Owned the platform **end to end as sole engineer** — product scoping directly with the client, data model, **system architecture**, UI/UX design, development, CI/CD and production operations"
-          fr: "Responsable de la plateforme **de bout en bout en tant que seul ingénieur** — cadrage produit en direct avec le client, modèle de données, **architecture système**, design UI/UX, développement, CI/CD et exploitation en production"
+          en: "Built an **Angular 22 zoneless/signals** SPA — standalone components, **OnPush** everywhere, signal inputs/outputs, `@if`/`@for` control flow — in a pnpm monorepo of vertical feature slices"
+          fr: "Construit une SPA **Angular 22 zoneless/signals** — composants standalone, **OnPush** partout, inputs/outputs signaux, control flow `@if`/`@for` — dans un monorepo pnpm en feature slices verticales"
       - in: [long]
         text:
-          en: "Built an **Angular 22 zoneless/signals** SPA on **@kouji-ui**, my own design system — with **Tailwind CSS 4**, **ECharts** dashboards and a **Lexical** rich-text editor — and a **Hono/Node.js** API in a **pnpm monorepo** structured as vertical feature slices"
-          fr: "Construit une SPA **Angular 22 zoneless/signals** sur **@kouji-ui**, mon propre design system — avec **Tailwind CSS 4**, dashboards **ECharts** et un éditeur rich-text **Lexical** — et une API **Hono/Node.js** dans un **monorepo pnpm** structuré en feature slices verticales"
+          en: "Standardised the data flow on **component-scoped signal stores**: containers own fetching and shared state, presentational children stay input/output-driven, HTTP stays in services"
+          fr: "Standardisé le flux de données sur des **stores à signaux scopés au composant** : les conteneurs portent le fetching et l'état partagé, les composants de présentation restent pilotés par inputs/outputs, le HTTP reste dans les services"
       - in: [long]
         text:
-          en: "Operate production on an **OVH VPS** behind **Caddy** TLS: idempotent migrations & seeding, encrypted **pgBackRest** backups with restore testing and **SOPS/age**-managed secrets"
-          fr: "Exploite la production sur un **VPS OVH** derrière TLS **Caddy** : migrations et seed idempotents, sauvegardes chiffrées **pgBackRest** avec tests de restauration et secrets gérés via **SOPS/age**"
+          en: "Used my own **@kouji-ui** design system as the exclusive UI layer, with **Tailwind CSS 4** design tokens, dark mode and accessible dialogs, menus and data tables"
+          fr: "Utilisé mon design system **@kouji-ui** comme unique couche UI, avec des tokens de design **Tailwind CSS 4**, un mode sombre et des dialogues, menus et tableaux de données accessibles"
+      - in: [long]
+        text:
+          en: "Built the **onboarding journey UI** — dynamically rendered step components (file deposits, checklists), conditional visibility, upload and document-generation flows, comments and validation feedback"
+          fr: "Construit l'**UI du parcours d'onboarding** — composants d'étape rendus dynamiquement (dépôts de fichiers, checklists), visibilité conditionnelle, flux d'upload et de génération de documents, commentaires et retours de validation"
+      - in: [long]
+        text:
+          en: "Developed the **portfolio back-office** — search, filters, configurable columns, archiving and a network selector scoping every screen — plus the franchisee-facing space"
+          fr: "Développé le **back-office portefeuille** — recherche, filtres, colonnes configurables, archivage et sélecteur de réseau cadrant chaque écran — ainsi que l'espace franchisé"
+      - in: [long]
+        text:
+          en: "Wired **typed reactive forms** to a **single-source-of-truth package** shared with the API (**Drizzle** schema + **Zod** DTOs), surfacing backend per-field validation directly in the UI"
+          fr: "Branché des **formulaires réactifs typés** sur un **package single source of truth** partagé avec l'API (schéma **Drizzle** + DTOs **Zod**), remontant la validation par champ du backend directement dans l'UI"
+      - in: [long]
+        text:
+          en: "Delivered the **auth and account UX** — passkey enrolment, mandatory TOTP MFA, session refresh — with **RBAC-driven route guards** and UI gating derived from a two-level team model"
+          fr: "Livré l'**UX d'authentification et de compte** — enrôlement passkey, MFA TOTP obligatoire, refresh de session — avec des **guards de route pilotés par le RBAC** et un masquage d'UI dérivé d'un modèle d'équipes à deux niveaux"
+      - in: [long]
+        text:
+          en: "Gated every release with **Vitest** unit tests and a **Playwright E2E** suite (auth, MFA, RBAC matrix, onboarding) in **GitHub Actions**, deploying Docker images to Render staging and an OVH production VPS"
+          fr: "Verrouillé chaque release par des tests unitaires **Vitest** et une suite **E2E Playwright** (auth, MFA, matrice RBAC, onboarding) dans **GitHub Actions**, avec déploiement d'images Docker sur le staging Render et le VPS de production OVH"
     achievements:
       - in: [long]
         text:
-          en: "Shipped the **first production release within one month**, working directly with the client, and have delivered features continuously since"
-          fr: "Livré la **première release en production en moins d'un mois**, en direct avec le client, avec des fonctionnalités livrées en continu depuis"
+          en: "Shipped the **first production release within one month** and have delivered features continuously since, working directly with the client"
+          fr: "Livré la **première release en production en moins d'un mois**, avec des fonctionnalités livrées en continu depuis, en direct avec le client"
       - in: [long]
         text:
-          en: "Validated **@kouji-ui** — components, theming and accessibility — as the **exclusive UI layer of a real client product**, feeding fixes and improvements back into the design system"
-          fr: "Validé **@kouji-ui** — composants, thématisation et accessibilité — comme **unique couche UI d'un produit client réel**, en reversant corrections et améliorations dans le design system"
+          en: "Validated **@kouji-ui** — components, theming and accessibility — as the exclusive UI layer of a **real client product**, feeding fixes back into the design system"
+          fr: "Validé **@kouji-ui** — composants, thématisation et accessibilité — comme unique couche UI d'un **produit client réel**, en reversant les corrections dans le design system"
       - in: [long]
         text:
-          en: "Digitised the full franchisee lifecycle — a structured **26-step onboarding journey (5 categories)** with per-step validation and reason-traced amendments, portfolio management, a document hub, server-side **PDF generation & signature** and **transactional mailing (17 templates)** — replacing manual, document-driven processes"
-          fr: "Digitalisé le cycle de vie complet des franchisés — **parcours d'onboarding structuré en 26 étapes (5 catégories)** avec validation par étape et avenants tracés avec motif, gestion de portefeuille, hub documentaire, **génération et signature de PDF côté serveur** et **mailing transactionnel (17 templates)** — en remplacement de processus manuels basés sur des documents"
+          en: "Digitised the **full franchisee lifecycle**, replacing a manual document-and-e-mail process with a single traceable workflow"
+          fr: "Digitalisé le **cycle de vie complet des franchisés**, en remplaçant un processus manuel à base de documents et d'e-mails par un workflow unique et traçable"
       - in: [long]
         text:
-          en: "Eliminated API/frontend contract drift with a **single-source-of-truth package** (Drizzle schema, inferred types, Zod DTOs) shared between SPA and API, enabling **end-to-end type safety** and backend-driven per-field validation"
-          fr: "Éliminé la dérive de contrat API/frontend grâce à un **package single source of truth** (schéma Drizzle, types inférés, DTOs Zod) partagé entre SPA et API, apportant une **sûreté de typage de bout en bout** et une validation par champ pilotée par le backend"
-      - in: [long]
-        text:
-          en: "Secured the platform with **BetterAuth** — **WebAuthn passkeys**, **TOTP MFA**, JWT session refresh — and **team-based, deny-by-default RBAC**"
-          fr: "Sécurisé la plateforme avec **BetterAuth** — **passkeys WebAuthn**, **MFA TOTP**, refresh de session JWT — et un **RBAC par équipes, deny-by-default**"
-      - in: [long]
-        text:
-          en: "Automated the full delivery pipeline with **GitHub Actions** — lint, unit and **Playwright E2E** gates against a live PostgreSQL container, multi-stage **Docker** builds to **GHCR** — deploying automatically to **Render.com** staging and over SSH to the **OVH** production VPS"
-          fr: "Automatisé l'ensemble de la chaîne de livraison avec **GitHub Actions** — gates de lint, tests unitaires et **E2E Playwright** contre un conteneur PostgreSQL réel, builds **Docker** multi-stage vers **GHCR** — avec déploiement automatique vers le staging **Render.com** et via SSH vers le VPS de production **OVH**"
-    challenges:
-      - in: [long]
-        text:
-          en: "Dogfooding a **self-built design system** on a production client product while evolving it upstream"
-          fr: "Utiliser en dogfooding un **design system auto-construit** sur un produit client en production tout en le faisant évoluer en amont"
-      - in: [long]
-        text:
-          en: "Modelling a **26-step business onboarding journey** with amendment traceability while keeping the UX simple for non-technical users"
-          fr: "Modéliser un **parcours d'onboarding métier en 26 étapes** avec traçabilité des avenants tout en gardant une UX simple pour des utilisateurs non techniques"
-      - in: [long]
-        text:
-          en: "Owning the **full production lifecycle solo** — security, backups, migrations, TLS — on a minimal-cost infrastructure"
-          fr: "Assumer **seul l'ensemble du cycle de production** — sécurité, sauvegardes, migrations, TLS — sur une infrastructure à coût minimal"
-    tech: "Angular 22 (zoneless, signals), TypeScript, @kouji-ui, Tailwind CSS 4, ECharts, Lexical, Hono, Node.js, BetterAuth, PostgreSQL 17, Drizzle ORM, Zod, Playwright, Vitest, Docker, GitHub Actions, Render, OVH"
+          en: "Eliminated API/frontend contract drift with the shared type package — a schema change now surfaces at compile time on both sides instead of in production"
+          fr: "Éliminé la dérive de contrat API/frontend grâce au package de types partagé — un changement de schéma se voit désormais à la compilation des deux côtés plutôt qu'en production"
+    tech: "Angular 22 (zoneless, signals), TypeScript, @kouji-ui, Tailwind CSS 4, Angular CDK, RxJS, Hono, Node.js, BetterAuth (passkeys, TOTP), PostgreSQL 17, Drizzle ORM, Zod, pdf-lib, S3-compatible storage, Playwright, Vitest, Docker, GitHub Actions, Render, OVH, Caddy"
 
   - in: [short, long]
     company: "Amundi ITS"

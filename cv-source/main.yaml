@@ -109,13 +109,13 @@ experiences:
   - in: [short, long]
     company: "Preesm Group"
     role:
-      en: "Freelance Full Stack Developer (Angular / Node.js)"
-      fr: "Développeur Full Stack Freelance (Angular / Node.js)"
-    dates: { en: "Since May 2026 (freelance, ongoing)", fr: "Depuis mai 2026 (freelance, en cours)" }
+      en: "Full Stack Developer (Angular / Node.js)"
+      fr: "Développeur Full Stack (Angular / Node.js)"
+    dates: { en: "Since May 2026 (ongoing)", fr: "Depuis mai 2026 (en cours)" }
     client: null
     context:
-      en: "**Preesm Portal** (preesm-group.com) — a B2B SaaS platform digitising the complete franchisee lifecycle of a French franchise network, used daily by headquarters staff, franchisors and franchisees: prospect intake, portfolio management, a structured **26-step onboarding journey**, document generation & signature, file hub, team-based access control and transactional mailing. Direct freelance engagement with the client, covering requirements, architecture, development, quality and production operations."
-      fr: "**Preesm Portal** (preesm-group.com) — plateforme SaaS B2B digitalisant le cycle de vie complet des franchisés d'un réseau de franchise français, utilisée au quotidien par le siège, les franchiseurs et les franchisés : acquisition de prospects, gestion de portefeuille, **parcours d'onboarding structuré en 26 étapes**, génération et signature de documents, gestion documentaire, contrôle d'accès par équipes et mailing transactionnel. Mission freelance en direct avec le client, couvrant besoins, architecture, développement, qualité et exploitation en production."
+      en: "**Preesm Portal** (preesm-group.com) — a B2B SaaS platform digitising the complete franchisee lifecycle of a French franchise network, used daily by headquarters staff, franchisors and franchisees. Sole engineer on the product, working directly with the client from requirements through to production operations."
+      fr: "**Preesm Portal** (preesm-group.com) — plateforme SaaS B2B digitalisant le cycle de vie complet des franchisés d'un réseau de franchise français, utilisée au quotidien par le siège, les franchiseurs et les franchisés. Seul ingénieur sur le produit, en direct avec le client, du recueil du besoin à l'exploitation en production."
     responsibilities:
       - in: [short]
         text:
@@ -123,59 +123,62 @@ experiences:
           fr: "Conçu et livré **Preesm Portal** (SaaS B2B) **de bout en bout en tant que seul ingénieur** — SPA **Angular 22**, API **Hono/Node.js**, PostgreSQL — **première release en production en un mois**"
       - in: [short]
         text:
-          en: "Implemented the core features: **26-step onboarding journey**, document generation & signature, **transactional mailing** and team-based RBAC, secured with **passkey/MFA** authentication"
-          fr: "Implémenté les fonctionnalités cœur : **parcours d'onboarding en 26 étapes**, génération et signature de documents, **mailing transactionnel** et RBAC par équipes, sécurisés par auth **passkey/MFA**"
+          en: "Built the **onboarding engine** driving the franchisee journey — a **declarative step catalog** with dependency-based unlocking, server-enforced status transitions, **document generation & signature**, a **file hub** and configurable e-mail notifications"
+          fr: "Construit le **moteur d'onboarding** qui pilote le parcours franchisé — **catalogue d'étapes déclaratif** avec déblocage par dépendances, transitions de statut contrôlées côté serveur, **génération et signature de documents**, **hub documentaire** et notifications e-mail configurables"
       - in: [short]
         text:
-          en: "Managed deployments through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
-          fr: "Géré les déploiements via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
+          en: "Secured the platform with **passkey/MFA authentication** and **team-based, deny-by-default RBAC**, and ship through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
+          fr: "Sécurisé la plateforme avec l'authentification **passkey/MFA** et un **RBAC par équipes, deny-by-default**, et livré via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
       - in: [long]
         text:
-          en: "Owned the platform **end to end as sole engineer** — product scoping directly with the client, data model, **system architecture**, UI/UX design, development, CI/CD and production operations"
-          fr: "Responsable de la plateforme **de bout en bout en tant que seul ingénieur** — cadrage produit en direct avec le client, modèle de données, **architecture système**, design UI/UX, développement, CI/CD et exploitation en production"
+          en: "Designed the architecture: **Angular 22** SPA (zoneless, signals) and a **Hono/Node.js** API in a pnpm monorepo, sharing one typed contract package (**Drizzle** schema + **Zod** DTOs)"
+          fr: "Conçu l'architecture : SPA **Angular 22** (zoneless, signals) et API **Hono/Node.js** dans un monorepo pnpm, partageant un package de contrat typé (schéma **Drizzle** + DTOs **Zod**)"
       - in: [long]
         text:
-          en: "Built an **Angular 22** SPA (zoneless, signals, standalone components) and a **Hono/Node.js** API in a **pnpm monorepo** structured as vertical feature slices"
-          fr: "Construit une SPA **Angular 22** (zoneless, signals, composants standalone) et une API **Hono/Node.js** dans un **monorepo pnpm** structuré en feature slices verticales"
+          en: "Built the **onboarding engine** — declarative step catalog, dependency-based unlocking and a server-enforced status state machine with automatic progress tracking"
+          fr: "Construit le **moteur d'onboarding** — catalogue d'étapes déclaratif, déblocage par dépendances et machine à états de statut contrôlée côté serveur avec suivi d'avancement automatique"
       - in: [long]
         text:
-          en: "Operate production on an **OVH VPS** behind **Caddy** TLS: idempotent migrations & seeding, encrypted **pgBackRest** backups with restore testing and **SOPS/age**-managed secrets"
-          fr: "Exploite la production sur un **VPS OVH** derrière TLS **Caddy** : migrations et seed idempotents, sauvegardes chiffrées **pgBackRest** avec tests de restauration et secrets gérés via **SOPS/age**"
+          en: "Developed the **franchisee portfolio back-office** (search, filters, archiving, network scoping) and the franchisee-facing space built on the same engine"
+          fr: "Développé le **back-office portefeuille franchisés** (recherche, filtres, archivage, cadrage par réseau) et l'espace franchisé bâti sur le même moteur"
+      - in: [long]
+        text:
+          en: "Implemented **server-side document generation** with **pdf-lib**, signed-counterpart storage, and a **file hub** on S3-compatible object storage with presigned upload/download"
+          fr: "Implémenté la **génération de documents côté serveur** avec **pdf-lib**, le stockage des contreparties signées, et un **hub documentaire** sur stockage objet compatible S3 avec upload/download présignés"
+      - in: [long]
+        text:
+          en: "Delivered **transactional mailing** over SMTP and an admin panel where staff configure notification recipients per business trigger, without a code change"
+          fr: "Livré le **mailing transactionnel** en SMTP et un panneau d'administration où les équipes configurent les destinataires des notifications par déclencheur métier, sans modification de code"
+      - in: [long]
+        text:
+          en: "Secured the platform with **BetterAuth** — WebAuthn passkeys, mandatory **TOTP MFA** — and a **deny-by-default RBAC** derived from a two-level team model, plus rate limiting and hashed invitation tokens"
+          fr: "Sécurisé la plateforme avec **BetterAuth** — passkeys WebAuthn, **MFA TOTP obligatoire** — et un **RBAC deny-by-default** dérivé d'un modèle d'équipes à deux niveaux, avec rate limiting et tokens d'invitation hachés"
+      - in: [long]
+        text:
+          en: "Set up **CI/CD on GitHub Actions** — lint, build, **Vitest** unit tests and a **Playwright E2E** suite run against a real PostgreSQL container — with Docker images published to GHCR"
+          fr: "Mis en place la **CI/CD GitHub Actions** — lint, build, tests unitaires **Vitest** et suite **E2E Playwright** exécutée contre un conteneur PostgreSQL réel — avec images Docker publiées sur GHCR"
+      - in: [long]
+        text:
+          en: "Operate production on an **OVH VPS** behind **Caddy** TLS: idempotent migrations, encrypted **pgBackRest** backups with restore drills and **SOPS/age**-managed secrets"
+          fr: "Exploite la production sur un **VPS OVH** derrière TLS **Caddy** : migrations idempotentes, sauvegardes chiffrées **pgBackRest** avec exercices de restauration et secrets gérés via **SOPS/age**"
     achievements:
       - in: [long]
         text:
-          en: "Shipped the **first production release within one month**, working directly with the client, and have delivered features continuously since"
-          fr: "Livré la **première release en production en moins d'un mois**, en direct avec le client, avec des fonctionnalités livrées en continu depuis"
+          en: "Shipped the **first production release within one month** and have delivered features continuously since, working directly with the client"
+          fr: "Livré la **première release en production en moins d'un mois**, avec des fonctionnalités livrées en continu depuis, en direct avec le client"
       - in: [long]
         text:
-          en: "Digitised the full franchisee lifecycle — a structured **26-step onboarding journey (5 categories)** with per-step validation and reason-traced amendments, portfolio management, a document hub, server-side **PDF generation & signature** and **transactional mailing (17 templates)** — replacing manual, document-driven processes"
-          fr: "Digitalisé le cycle de vie complet des franchisés — **parcours d'onboarding structuré en 26 étapes (5 catégories)** avec validation par étape et avenants tracés avec motif, gestion de portefeuille, hub documentaire, **génération et signature de PDF côté serveur** et **mailing transactionnel (17 templates)** — en remplacement de processus manuels basés sur des documents"
+          en: "Digitised the **full franchisee lifecycle**, replacing a manual document-and-e-mail process with a single traceable workflow"
+          fr: "Digitalisé le **cycle de vie complet des franchisés**, en remplaçant un processus manuel à base de documents et d'e-mails par un workflow unique et traçable"
       - in: [long]
         text:
-          en: "Eliminated API/frontend contract drift with a **single-source-of-truth package** (Drizzle schema, inferred types, Zod DTOs) shared between SPA and API, enabling **end-to-end type safety** and backend-driven per-field validation"
-          fr: "Éliminé la dérive de contrat API/frontend grâce à un **package single source of truth** (schéma Drizzle, types inférés, DTOs Zod) partagé entre SPA et API, apportant une **sûreté de typage de bout en bout** et une validation par champ pilotée par le backend"
+          en: "Eliminated API/frontend contract drift with the shared type package — a schema change now surfaces at compile time on both sides instead of in production"
+          fr: "Éliminé la dérive de contrat API/frontend grâce au package de types partagé — un changement de schéma se voit désormais à la compilation des deux côtés plutôt qu'en production"
       - in: [long]
         text:
-          en: "Secured the platform with **BetterAuth** — **WebAuthn passkeys**, **TOTP MFA**, JWT session refresh — and **team-based, deny-by-default RBAC**"
-          fr: "Sécurisé la plateforme avec **BetterAuth** — **passkeys WebAuthn**, **MFA TOTP**, refresh de session JWT — et un **RBAC par équipes, deny-by-default**"
-      - in: [long]
-        text:
-          en: "Automated the full delivery pipeline with **GitHub Actions** — lint, unit and **Playwright E2E** gates against a live PostgreSQL container, multi-stage **Docker** builds to **GHCR** — deploying automatically to **Render.com** staging and over SSH to the **OVH** production VPS"
-          fr: "Automatisé l'ensemble de la chaîne de livraison avec **GitHub Actions** — gates de lint, tests unitaires et **E2E Playwright** contre un conteneur PostgreSQL réel, builds **Docker** multi-stage vers **GHCR** — avec déploiement automatique vers le staging **Render.com** et via SSH vers le VPS de production **OVH**"
-    challenges:
-      - in: [long]
-        text:
-          en: "Modelling a **26-step business onboarding journey** with amendment traceability while keeping the UX simple for non-technical users"
-          fr: "Modéliser un **parcours d'onboarding métier en 26 étapes** avec traçabilité des avenants tout en gardant une UX simple pour des utilisateurs non techniques"
-      - in: [long]
-        text:
-          en: "Designing a **team-derived, deny-by-default RBAC** model flexible enough for headquarters, franchisor and franchisee roles"
-          fr: "Concevoir un modèle **RBAC deny-by-default dérivé des équipes**, assez flexible pour les rôles siège, franchiseur et franchisé"
-      - in: [long]
-        text:
-          en: "Owning the **full production lifecycle solo** — security, backups, migrations, TLS — on a minimal-cost infrastructure"
-          fr: "Assumer **seul l'ensemble du cycle de production** — sécurité, sauvegardes, migrations, TLS — sur une infrastructure à coût minimal"
-    tech: "Angular 22 (zoneless, signals), TypeScript, Tailwind CSS 4, Hono, Node.js, BetterAuth, PostgreSQL 17, Drizzle ORM, Zod, Playwright, Vitest, Docker, GitHub Actions, Render, OVH"
+          en: "Turned the business process into **configuration rather than code**: new steps and notification recipients no longer require a release"
+          fr: "Transformé le processus métier en **configuration plutôt qu'en code** : nouvelles étapes et destinataires de notifications ne nécessitent plus de release"
+    tech: "Angular 22 (zoneless, signals), TypeScript, Tailwind CSS 4, Hono, Node.js, BetterAuth (passkeys, TOTP), PostgreSQL 17, Drizzle ORM, Zod, pdf-lib, nodemailer, S3-compatible storage, Playwright, Vitest, Docker, GitHub Actions, Render, OVH, Caddy, pgBackRest"
 
   - in: [short, long]
     company: "Amundi ITS"

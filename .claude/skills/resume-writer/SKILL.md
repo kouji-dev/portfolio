@@ -30,23 +30,29 @@ All facts come from the resume-knowledge-base skill (`main.yaml` long content + 
 
 ## Resume types
 
-- **Master Resume** — unlimited length, complete career documentation (see resume-knowledge-base).
-- **Professional Resume** — job applications, ~2 pages: concise summary, grouped skills, selected achievements and projects. Maps to the `long` variant in this repo.
+- **Master Resume** — unlimited length, complete career documentation (see resume-knowledge-base). This is the *only* place unlimited detail belongs.
+- **Dossier de candidature** — the French/ESN client-facing format, 2–3 pages (5 absolute maximum). Each mission described as Context → Responsibilities → Key Achievements → Technical Environment. Maps to the `long` variant in this repo.
 - **Executive Resume** — Director/Staff/Principal, 1 page, only highest-impact experience. Maps to the `short` variant in this repo.
 - **LinkedIn Version** — readable, SEO-optimized profile.
 - **Portfolio Biography** — narrative version for personal websites.
 
 ## Resume structure (always this order unless explicitly requested otherwise)
 
-1. Header
-2. Professional Summary
-3. Core Skills
-4. Professional Experience
-5. Selected Projects
-6. Education
-7. Certifications
-8. Languages
-9. Optional: Open Source, Talks, Publications, Awards
+| # | Section | Goal — what the reader gets from it | Don't |
+|---|---|---|---|
+| 1 | Header | Who you are, title, years of experience, how to reach you | Graphics, logos, marital status, full postal address |
+| 2 | Professional Summary | Profile, expertise, industries, value — in 5–8 lines | "Hard-working developer seeking opportunities"; bare tech lists |
+| 3 | Core Skills (matrix) | Fast verification that you match the required stack | Alphabetical dumps; star ratings (★★★★★) |
+| 4 | Professional Experience | Career history, technical depth, progression | One huge paragraph; the same bullets repeated across jobs |
+| 5 | Selected Projects | Initiative and tech that doesn't appear in the missions | Tutorials, clones, school assignments |
+| 6 | Certifications | Validated knowledge, continuous development | Expired or trivial course certificates |
+| 7 | Education | Academic foundation | Anything before higher education |
+| 8 | Languages | Ability to work in multilingual environments | Inflated levels — they get tested |
+| 9 | Optional: Open Source, Talks, Publications | Community credibility and thought leadership | Internal company meetings billed as "conferences" |
+
+Keep this order unless explicitly asked otherwise.
+
+**Total length**: 1 page (junior) · 2 pages (3–8 years, the ideal) · 2–3 pages (senior/architect) · up to 5 pages only for a detailed French client-facing dossier. If the document exceeds its budget, cut from the *oldest and least relevant* entries first, then from projects — never by shrinking achievements.
 
 ## Professional summary rules
 
@@ -62,30 +68,59 @@ Always group skills; never produce keyword dumps. Preferred groups: Frontend, Ba
 
 ## Professional Experience — the most important section
 
-For each company/mission, structure the entry as **Context → Responsibilities → Achievements/Impact → Technical Challenges → Technologies**, each answering its questions:
+Every mission uses exactly four parts, in this order — **Context → Responsibilities → Key Achievements → Technical Environment**. Nothing else. No fifth section, no invented sub-headings.
 
-**Context** — Where did you work? What does the company/product do? What business problem were you solving? What was the scale? Who were the users? What was your role?
-> Amundi ITS — Senior Full Stack Engineer. Development of shared enterprise frameworks used by multiple financial applications.
+**Context** (2–3 lines, one paragraph) — business domain, product, users, and your role. Enough to situate the mission, then stop.
+> Amundi ITS — Senior Full Stack Engineer. Shared enterprise frameworks used by multiple financial applications.
 
-**Responsibilities** — What were you responsible for? What areas did you own? What technologies did you use? What decisions did you make?
-> Designed frontend architecture. Developed backend APIs. Reviewed technical solutions. Mentored developers.
+**Responsibilities** (max 6–8 bullets) — what you owned and did. Action verb first, one idea per bullet.
+> Designed the frontend architecture · Developed backend APIs · Reviewed technical solutions · Mentored developers
 
-**Achievements / Impact** — *the most important part.* What did you improve? What problem did you solve? What changed because of your work? What was the measurable impact? How did you make the system better? Structure each bullet as **Action + Technology/Solution + Impact**:
-> Migrated Angular framework from v15 to v20, enabling 40+ applications to adopt modern frontend architecture and improving maintainability.
+**Key Achievements** (3–5 bullets) — *the section that sells you.* What changed because of your work, quantified whenever the number is real. **Action + Technology/Solution + Impact**:
+> Migrated the Angular framework from v15 to v20, enabling 40+ applications to adopt modern frontend architecture.
 
-**Technical Challenges** — What was difficult? What trade-offs did you solve? What architectural decisions did you make? What complexity did you handle?
-> Microfrontend integration. Framework backward compatibility. Performance optimization. Large-scale migration.
+**Technical Environment** — only what was actually used on *that* mission. Never paste the global stack under every entry.
 
-**Technologies** — only what was actually used, and relevant to the target role.
+**YAML mapping**: `context:` → Context; `responsibilities:` → Responsibilities; `achievements:` → Key Achievements; `tech:` → Technical Environment. Short variants pick bullets via `in:` tags from responsibilities and achievements.
 
-**YAML mapping**: `context:` → Context; `responsibilities:` → Responsibilities; `achievements:` → Achievements/Impact; `challenges:` → Technical Challenges (long-only, never in short); `tech:` → Technologies. Subgroups (teams/clients) may carry their own `responsibilities`/`achievements`/`challenges`. Short variants pick bullets via `in:` tags from responsibilities and achievements.
+**`challenges:` is deprecated** — "what was hard" is interview material (see the STAR companion below), not dossier material. Don't add it to new entries; strip it when reworking an existing one.
+
+### Density budget (hard limits)
+
+| Scope | Limit |
+|---|---|
+| Bullets per mission | ≤ 12 total (responsibilities + achievements) |
+| Responsibility bullets | 6–8 |
+| Achievement bullets | 3–5 |
+| Bullet length | ≤ 2 rendered lines — **≈200 characters max**, 140–180 is the sweet spot |
+| Bullets per project | 2–3 |
+| Older/less relevant missions | halve the budget; an internship gets 2–3 bullets total |
+
+Count characters before shipping. A bullet over ~200 chars is carrying detail that belongs in the master resume.
+
+### One bullet, one idea
+
+Nested parentheticals and enumerated internals are the main density leak. Compress ruthlessly:
+
+- ❌ `Implemented the onboarding engine: a dependency graph unlocking each step (with recursive look-through for optional steps and cycle guards), a server-enforced status state machine (pending → in progress → submitted → validated / sent back / not applicable) and automatic progress aggregation per step and category`
+- ✅ `Built the onboarding engine — declarative step catalog, dependency-based unlocking and a server-enforced status state machine with automatic progress tracking`
+
+Drop: internal state names, algorithm mechanics, guard clauses, exhaustive enumerations, exact template counts. A recruiter cannot use them, and they cost the page budget that achievements need.
+
+### Sub-groups: only for genuinely distinct scopes
+
+Sub-headings inside an entry (`subgroups:`) are legitimate **only** when the mission really split into separate teams, clients or products — each with its own scope, and ideally its own `tech:` line.
+
+Never use sub-groups to decompose a single mission by feature area. That is how an entry silently grows from 8 bullets to 25: five invented headings, five bullets each, all of it detail nobody asked for. A solo end-to-end mission is **one flat entry**, whatever its technical breadth.
 
 ## Projects (personal / open source)
 
-For each project answer: **Why does it exist** (what problem it solves, why you built it)? **What did you build** (main features, architecture, what makes it technically interesting)? **Technical depth** (technologies used, engineering challenges solved, design decisions)? **Impact** (who uses it, user counts, GitHub stars, community, production usage — verifiable numbers only, never invented).
+Select **3–4 projects maximum** — the ones that show skills, architecture or initiative the professional experience doesn't already cover. A long tail of side projects dilutes the strong ones and eats the page budget.
 
-Structure: Project name → Purpose → Architecture → Key features → Technical challenges → Technologies → Links.
-**YAML mapping**: `name`, `context:` → purpose, `responsibilities:` → architecture + key features, `challenges:` → technical challenges (optional), `tech:`, `repo:`/`link:`.
+For each: **Why does it exist** (the problem it solves)? **What did you build** (architecture, what makes it technically interesting)? **Impact** (users, GitHub stars, production usage — verifiable numbers only, never invented).
+
+Structure: Project name → Purpose (1–2 lines) → 2–3 bullets → Technologies → Links.
+**YAML mapping**: `name`, `context:` → purpose, `responsibilities:` → architecture + key features, `tech:`, `repo:`/`link:`.
 
 ## Bullet writing rules
 
@@ -139,7 +174,7 @@ All pipeline paths below are relative to `cv-source/` in this repo. Generated PD
    node scripts/convert-cv.js --source=<tag>.yaml --tag=<tag> --lang=fr,en
    ```
 
-5. **Always verify the short variants are exactly 1 page** right after generating:
+5. **Always verify page counts** right after generating — shorts exactly **1 page**, longs within the **2–3 page** budget (5 absolute maximum):
 
    ```bash
    node -e "
@@ -151,17 +186,36 @@ All pipeline paths below are relative to `cv-source/` in this repo. Generated PD
 
    If a short exceeds 1 page: tighten the new content first, then demote the least-relevant short item (`in: [short, long]` → `[long]`) — and tell the user what was demoted. To locate the overflow precisely, render the short HTML at a 726px viewport and compare body height to ≈1070px usable.
 
+   If a long exceeds its budget, audit density before anything else — bullets per entry and characters per bullet:
+
+   ```bash
+   node -e "
+   const {loadYaml,resolve}=require('./scripts/lib/loader');
+   const m=resolve(loadYaml('main.yaml'),'en','long');
+   const n=x=>(x||[]).length;
+   for (const x of m.experiences) {
+     let sg=0; for (const g of x.subgroups||[]) sg+=n(g.responsibilities)+n(g.achievements)+n(g.challenges);
+     const t=n(x.responsibilities)+n(x.achievements)+n(x.challenges)+sg;
+     console.log((t>12?'OVER  ':'ok    ')+t+'  '+x.company);
+     for (const b of [...(x.responsibilities||[]),...(x.achievements||[])]) {
+       const l=b.text.replace(/\*\*/g,'').length; if (l>200) console.log('        '+l+' chars: '+b.text.slice(0,60)+'…');
+     }
+   }"
+   ```
+
 ## Output principles
 
 Professional. Concise. Truthful. Technically credible. Recruiter friendly. Engineering manager friendly. ATS compatible. Metric driven. Easy to skim in under 30 seconds.
 
 ## Interview companion (on request only)
 
-Convert resume bullets into STAR format (Situation, Task, Action, Result). Never include STAR inside the resume itself.
+Convert resume bullets into STAR format (Situation, Task, Action, Result). Never include STAR inside the resume itself. This is also where the technical detail cut from bullets belongs — state machines, guard clauses, trade-offs, "what was hard".
 
 ## Golden rules
 
 - Never lie. Never fabricate metrics. Never use buzzwords without evidence.
+- **Detail is not depth.** Cutting a bullet from 300 characters to 150 makes the same expertise land harder. When in doubt, cut.
+- Respect the density budget. An entry that needs sub-headings to fit its bullets has too many bullets, not too few headings.
 - Optimize for impact, not verbosity.
 - Prefer achievements over responsibilities; technical outcomes over task descriptions.
 - Write for humans first, ATS second.

@@ -15,15 +15,19 @@ Final quality gate. Run after resume-writer or resume-tailor, before delivering 
 - ✓ Experience is ordered by relevance (reverse-chronological unless tailored).
 - ✓ Every bullet starts with a strong action verb (no "Worked on", "Responsible for", "Helped").
 - ✓ Every bullet communicates impact (XYZ or Action+Tech+Outcome; never STAR).
-- ✓ No duplicated technologies across bullets/tech lines within an entry.
+- ✓ **Every mission uses the four-part structure** — Context → Responsibilities → Key Achievements → Technical Environment. No extra sections, no `challenges:` on new entries.
+- ✓ **Density budget respected**: ≤12 bullets per mission (6–8 responsibilities, 3–5 achievements), 2–3 per project. Older entries proportionally smaller.
+- ✓ **No bullet over ~200 characters** — measure, don't eyeball. Flag nested parentheticals, enumerated internals and exhaustive lists inside a single bullet.
+- ✓ **Sub-groups only for genuinely distinct teams/clients/products** — never as a way to split one mission by feature area.
+- ✓ No duplicated technologies across bullets/tech lines within an entry; each `tech:` line reflects that mission only, not the global stack.
 - ✓ ATS compatibility: standard headings, single column, no tables/icons/graphics.
 - ✓ Consistent tense and consistent date formats.
-- ✓ Appropriate length per type (Professional ≈ 2 pages; Executive/short = exactly 1 page).
+- ✓ Appropriate length per type (long/dossier 2–3 pages, 5 absolute max; Executive/short = exactly 1 page).
 - ✓ **No fabricated information** — spot-check every metric and claim against resume-knowledge-base / source repos.
 
 ## Repo-specific checks
 
-- Short PDFs are **exactly 1 page**: rebuild and count pages (`/Type /Pages … /Count N` in the PDF binary), for every language of every source file.
+- Short PDFs are **exactly 1 page** and long PDFs within **2–3 pages**: rebuild and count pages (`/Type /Pages … /Count N` in the PDF binary), for every language of every source file. An over-budget long is a **fail**, not a note — report which entries carry the excess bullets.
 - **EN/FR parity**: each edited `en:` string has a semantically equivalent `fr:` sibling and vice versa.
 - YAML loader warnings reviewed: only the intentional `[short]`-not-in-`[long]` summary-bullet warning is acceptable.
 - PDFs regenerated from the current YAML (never hand-edited).
