@@ -1,0 +1,776 @@
+# CV source of truth. See cv.template.yaml for the schema + conventions.
+#   { en, fr } = localized text.   in: [short, long] = which versions include it.
+#   Build: `npm run convert` (4 PDFs) | `npm run convert:docx` (adds DOCX).
+
+meta:
+  name: "NAJIH Driss"
+  title:
+    en: "Senior Software Engineer – AI-Driven Apps"
+    fr: "Ingénieur Logiciel Senior – Applications Pilotées par l'IA"
+  contact:
+    location: { en: "France", fr: "France" }
+    email: "najih.driss73@gmail.com"
+    phone: "+33 7 49 52 96 00"
+    linkedin: "https://www.linkedin.com/in/najih-driss/"
+    github: "https://github.com/kouji-dev"
+    portfolio: "https://www.kouji.dev"
+    booking: "https://calendar.app.google/KTPtgPtkgrbJUEjm7"
+
+about:
+  - in: [short, long]
+    text:
+      en: "Senior Software Engineer with **7+ years of experience** designing and building large-scale web platforms and backend frameworks. Extensive experience across JavaScript/TypeScript, Java, Angular, React, and cloud-native architectures."
+      fr: "Ingénieur Logiciel Senior avec **plus de 7 ans d'expérience** dans la conception et le développement de plateformes web à grande échelle et de frameworks backend. Expérience approfondie en JavaScript/TypeScript, Java, Angular, React et architectures cloud-native."
+  - in: [long]
+    text:
+      en: "Specialized in **complex frontend frameworks, backend systems, and platform-level development**, with experience working on **shared frameworks, low-code-like systems, and enterprise tooling** used by multiple teams and products."
+      fr: "Spécialisé dans les **frameworks frontend complexes, systèmes backend et développement au niveau plateforme**, avec une expérience dans le travail sur **frameworks partagés, systèmes de type low-code et outils d'entreprise** utilisés par plusieurs équipes et produits."
+  - in: [long]
+    text:
+      en: "Experienced in **AI-driven application design**, particularly for **backend systems prepared for AI integration**, with hands-on usage of **Python and LLM APIs in personal and proof-of-concept contexts** to design AI-enabled workflows, automation, and agent-based capabilities."
+      fr: "Expérimenté dans la **conception d'applications pilotées par l'IA**, notamment pour les **systèmes backend préparés pour l'intégration IA**, avec une utilisation pratique de **Python et d'APIs LLM dans des contextes personnels et de preuve de concept** pour concevoir des workflows activés par l'IA, l'automatisation et des capacités basées sur des agents."
+  - in: [long]
+    text:
+      en: "Strong focus on clean architecture, scalability, maintainability, and developer experience."
+      fr: "Fort accent mis sur l'architecture propre, la scalabilité, la maintenabilité et l'expérience développeur."
+
+aiCapabilities:
+  - in: [long]
+    text:
+      en: "Use of **Python as a general-purpose language** for AI-driven applications, automation, and backend services (personal and PoC contexts)"
+      fr: "Utilisation de **Python comme langage généraliste** pour les applications pilotées par l'IA, l'automatisation et les services backend (contextes personnels et PoC)"
+  - in: [long]
+    text:
+      en: "Hands-on experimentation with **LLM APIs**"
+      fr: "Expérimentation pratique avec les **APIs LLM**"
+  - in: [long]
+    text:
+      en: "Design and testing of **AI agents**, prompt engineering strategies, and agent workflows"
+      fr: "Conception et test d'**agents IA**, stratégies d'ingénierie de prompts et workflows d'agents"
+  - in: [long]
+    text:
+      en: "Strong interest in integrating AI capabilities into existing enterprise systems rather than isolated ML projects"
+      fr: "Fort intérêt pour l'intégration de capacités IA dans les systèmes d'entreprise existants plutôt que dans des projets ML isolés"
+
+skills:
+  - in: [short, long]
+    category: { en: "Languages", fr: "Langages" }
+    items:
+      en: "JavaScript, TypeScript, Java 8/11/17/21, Python (AI/automation – PoC), Rust, Go"
+      fr: "JavaScript, TypeScript, Java 8/11/17/21, Python (IA/automatisation – PoC), Rust, Go"
+  - in: [short, long]
+    category: { en: "Front-End", fr: "Front-End" }
+    items:
+      en: "Angular (15 → 22), RxJS, NGRX, NGXS, Angular Material, React, Redux, TailwindCSS, Ant Design, MUI, HTML5, CSS3/SCSS, Lexical, AG-Grid, ECharts"
+      fr: "Angular (15 → 22), RxJS, NGRX, NGXS, Angular Material, React, Redux, TailwindCSS, Ant Design, MUI, HTML5, CSS3/SCSS, Lexical, AG-Grid, ECharts"
+  - in: [short, long]
+    category: { en: "Back-End", fr: "Back-End" }
+    items:
+      en: "Spring Boot, Spring MVC, Spring Data, Spring Security, Spring Batch, Hibernate, JPA, Node.js, Express.js, NestJS, Prisma, Quarkus"
+      fr: "Spring Boot, Spring MVC, Spring Data, Spring Security, Spring Batch, Hibernate, JPA, Node.js, Express.js, NestJS, Prisma, Quarkus"
+  - in: [long]
+    category: { en: "APIs", fr: "APIs" }
+    items: { en: "REST, GraphQL", fr: "REST, GraphQL" }
+  - in: [short, long]
+    category: { en: "Databases", fr: "Bases de Données" }
+    items:
+      en: "PostgreSQL, Oracle DB, SQL Server, MongoDB, MySQL, Redis"
+      fr: "PostgreSQL, Oracle DB, SQL Server, MongoDB, MySQL, Redis"
+  - in: [long]
+    category: { en: "Messaging", fr: "Messagerie" }
+    items: { en: "RabbitMQ, Kafka", fr: "RabbitMQ, Kafka" }
+  - in: [long]
+    category: { en: "Security", fr: "Sécurité" }
+    items:
+      en: "OAuth2, JWT, Keycloak, Azure AD (SSO)"
+      fr: "OAuth2, JWT, Keycloak, Azure AD (SSO)"
+  - in: [short, long]
+    category: { en: "Cloud", fr: "Cloud" }
+    items:
+      en: "AWS (Lambda, Step Functions, S3, DynamoDB, EC2, Elastic Beanstalk, CloudFront), Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL)"
+      fr: "AWS (Lambda, Step Functions, S3, DynamoDB, EC2, Elastic Beanstalk, CloudFront), Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL)"
+  - in: [short, long]
+    category: { en: "DevOps", fr: "DevOps" }
+    items:
+      en: "Docker, Kubernetes, GitLab CI/CD, Jenkins"
+      fr: "Docker, Kubernetes, GitLab CI/CD, Jenkins"
+  - in: [long]
+    category: { en: "Testing", fr: "Tests" }
+    items:
+      en: "JUnit 5, AssertJ, Mockito, WireMock, Jest, Karma, Testing Library, Cypress, Playwright, JaCoCo, SonarQube"
+      fr: "JUnit 5, AssertJ, Mockito, WireMock, Jest, Karma, Testing Library, Cypress, Playwright, JaCoCo, SonarQube"
+  - in: [long]
+    category: { en: "Tools & Practices", fr: "Outils & Pratiques" }
+    items:
+      en: "Agile Scrum, Git, GitHub, GitLab, Jira, Maven, NPM, Yarn, IntelliJ, Figma, TDD, DDD, BDD, Clean Architecture, Hexagonal Architecture"
+      fr: "Agile Scrum, Git, GitHub, GitLab, Jira, Maven, NPM, Yarn, IntelliJ, Figma, TDD, DDD, BDD, Clean Architecture, Hexagonal Architecture"
+
+experiences:
+  - in: [short, long]
+    company: "Preesm Group"
+    role:
+      en: "Freelance Full Stack Developer (Angular / Node.js)"
+      fr: "Développeur Full Stack Freelance (Angular / Node.js)"
+    dates: { en: "Since May 2026 (freelance, ongoing)", fr: "Depuis mai 2026 (freelance, en cours)" }
+    client: null
+    context:
+      en: "**Preesm Portal** (preesm-group.com) — a B2B SaaS platform digitising the complete franchisee lifecycle of a French franchise network, used daily by headquarters staff, franchisors and franchisees: prospect intake, portfolio management, a structured **26-step onboarding journey**, document generation & signature, file hub, team-based access control and transactional mailing. Direct freelance engagement with the client, covering requirements, architecture, development, quality and production operations."
+      fr: "**Preesm Portal** (preesm-group.com) — plateforme SaaS B2B digitalisant le cycle de vie complet des franchisés d'un réseau de franchise français, utilisée au quotidien par le siège, les franchiseurs et les franchisés : acquisition de prospects, gestion de portefeuille, **parcours d'onboarding structuré en 26 étapes**, génération et signature de documents, gestion documentaire, contrôle d'accès par équipes et mailing transactionnel. Mission freelance en direct avec le client, couvrant besoins, architecture, développement, qualité et exploitation en production."
+    responsibilities:
+      - in: [short]
+        text:
+          en: "Designed and shipped **Preesm Portal** (B2B SaaS for a franchise network) **end to end as sole engineer** — **Angular 22** SPA, **Hono/Node.js** API, PostgreSQL — **first release in production within a month**"
+          fr: "Conçu et livré **Preesm Portal** (SaaS B2B) **de bout en bout en tant que seul ingénieur** — SPA **Angular 22**, API **Hono/Node.js**, PostgreSQL — **première release en production en un mois**"
+      - in: [short]
+        text:
+          en: "Implemented the core features: **26-step onboarding journey**, document generation & signature, **transactional mailing** and team-based RBAC, secured with **passkey/MFA** authentication"
+          fr: "Implémenté les fonctionnalités cœur : **parcours d'onboarding en 26 étapes**, génération et signature de documents, **mailing transactionnel** et RBAC par équipes, sécurisés par auth **passkey/MFA**"
+      - in: [short]
+        text:
+          en: "Managed deployments through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
+          fr: "Géré les déploiements via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
+      - in: [long]
+        text:
+          en: "Owned the platform **end to end as sole engineer** — product scoping directly with the client, data model, **system architecture**, UI/UX design, development, CI/CD and production operations"
+          fr: "Responsable de la plateforme **de bout en bout en tant que seul ingénieur** — cadrage produit en direct avec le client, modèle de données, **architecture système**, design UI/UX, développement, CI/CD et exploitation en production"
+      - in: [long]
+        text:
+          en: "Built an **Angular 22** SPA (zoneless, signals, standalone components) and a **Hono/Node.js** API in a **pnpm monorepo** structured as vertical feature slices"
+          fr: "Construit une SPA **Angular 22** (zoneless, signals, composants standalone) et une API **Hono/Node.js** dans un **monorepo pnpm** structuré en feature slices verticales"
+      - in: [long]
+        text:
+          en: "Operate production on an **OVH VPS** behind **Caddy** TLS: idempotent migrations & seeding, encrypted **pgBackRest** backups with restore testing and **SOPS/age**-managed secrets"
+          fr: "Exploite la production sur un **VPS OVH** derrière TLS **Caddy** : migrations et seed idempotents, sauvegardes chiffrées **pgBackRest** avec tests de restauration et secrets gérés via **SOPS/age**"
+    achievements:
+      - in: [long]
+        text:
+          en: "Shipped the **first production release within one month**, working directly with the client, and have delivered features continuously since"
+          fr: "Livré la **première release en production en moins d'un mois**, en direct avec le client, avec des fonctionnalités livrées en continu depuis"
+      - in: [long]
+        text:
+          en: "Digitised the full franchisee lifecycle — a structured **26-step onboarding journey (5 categories)** with per-step validation and reason-traced amendments, portfolio management, a document hub, server-side **PDF generation & signature** and **transactional mailing (17 templates)** — replacing manual, document-driven processes"
+          fr: "Digitalisé le cycle de vie complet des franchisés — **parcours d'onboarding structuré en 26 étapes (5 catégories)** avec validation par étape et avenants tracés avec motif, gestion de portefeuille, hub documentaire, **génération et signature de PDF côté serveur** et **mailing transactionnel (17 templates)** — en remplacement de processus manuels basés sur des documents"
+      - in: [long]
+        text:
+          en: "Eliminated API/frontend contract drift with a **single-source-of-truth package** (Drizzle schema, inferred types, Zod DTOs) shared between SPA and API, enabling **end-to-end type safety** and backend-driven per-field validation"
+          fr: "Éliminé la dérive de contrat API/frontend grâce à un **package single source of truth** (schéma Drizzle, types inférés, DTOs Zod) partagé entre SPA et API, apportant une **sûreté de typage de bout en bout** et une validation par champ pilotée par le backend"
+      - in: [long]
+        text:
+          en: "Secured the platform with **BetterAuth** — **WebAuthn passkeys**, **TOTP MFA**, JWT session refresh — and **team-based, deny-by-default RBAC**"
+          fr: "Sécurisé la plateforme avec **BetterAuth** — **passkeys WebAuthn**, **MFA TOTP**, refresh de session JWT — et un **RBAC par équipes, deny-by-default**"
+      - in: [long]
+        text:
+          en: "Automated the full delivery pipeline with **GitHub Actions** — lint, unit and **Playwright E2E** gates against a live PostgreSQL container, multi-stage **Docker** builds to **GHCR** — deploying automatically to **Render.com** staging and over SSH to the **OVH** production VPS"
+          fr: "Automatisé l'ensemble de la chaîne de livraison avec **GitHub Actions** — gates de lint, tests unitaires et **E2E Playwright** contre un conteneur PostgreSQL réel, builds **Docker** multi-stage vers **GHCR** — avec déploiement automatique vers le staging **Render.com** et via SSH vers le VPS de production **OVH**"
+    challenges:
+      - in: [long]
+        text:
+          en: "Modelling a **26-step business onboarding journey** with amendment traceability while keeping the UX simple for non-technical users"
+          fr: "Modéliser un **parcours d'onboarding métier en 26 étapes** avec traçabilité des avenants tout en gardant une UX simple pour des utilisateurs non techniques"
+      - in: [long]
+        text:
+          en: "Designing a **team-derived, deny-by-default RBAC** model flexible enough for headquarters, franchisor and franchisee roles"
+          fr: "Concevoir un modèle **RBAC deny-by-default dérivé des équipes**, assez flexible pour les rôles siège, franchiseur et franchisé"
+      - in: [long]
+        text:
+          en: "Owning the **full production lifecycle solo** — security, backups, migrations, TLS — on a minimal-cost infrastructure"
+          fr: "Assumer **seul l'ensemble du cycle de production** — sécurité, sauvegardes, migrations, TLS — sur une infrastructure à coût minimal"
+    tech: "Angular 22 (zoneless, signals), TypeScript, Tailwind CSS 4, Hono, Node.js, BetterAuth, PostgreSQL 17, Drizzle ORM, Zod, Playwright, Vitest, Docker, GitHub Actions, Render, OVH"
+
+  - in: [short, long]
+    company: "Amundi ITS"
+    role:
+      en: "Senior Full Stack Developer (Angular / Java)"
+      fr: "Développeur Full Stack Senior (Angular / Java)"
+    dates: { en: "Since September 2023", fr: "Depuis septembre 2023" }
+    client: null
+    context:
+      en: "Amundi ITS develops shared platforms and frameworks used by multiple internal and client-facing applications. A major product is the **Maestro framework**, an Angular-based solution enabling backend teams to rapidly integrate consistent, enterprise-grade user interfaces."
+      fr: "Amundi ITS développe des plateformes et frameworks partagés utilisés par plusieurs applications internes et clientes. Un produit majeur est le **framework Maestro**, une solution basée sur Angular permettant aux équipes backend d'intégrer rapidement des interfaces utilisateur cohérentes et de niveau entreprise."
+    subgroups:
+      - label: { en: "Framework Team", fr: "Équipe Framework" }
+        responsibilities:
+          - in: [short, long]
+            text:
+              en: "Maintained and evolved the **Maestro Angular framework** used by multiple internal and client-facing applications"
+              fr: "Maintenu et fait évoluer le **framework Angular Maestro** utilisé par plusieurs applications internes et clientes"
+          - in: [short, long]
+            text:
+              en: "Actively participated in **major Angular version migrations (15 → 18 → 20)**, including component upgrades, dependency updates, and adoption of new framework capabilities (Signals, Standalone Components, etc.)"
+              fr: "Participé activement aux **migrations de versions majeures d'Angular (15 → 18 → 20)**, incluant la mise à niveau des composants, des dépendances et l'adoption des nouveautés du framework (Signals, Standalone Components, etc.)"
+          - in: [long]
+            text:
+              en: "Designed and developed **major reusable Angular components** integrated into the framework (forms, data grids, navigation, layouts, etc.)"
+              fr: "Conçu et développé des **composants Angular majeurs et réutilisables** intégrés au framework (formulaires, grilles de données, navigation, layouts, etc.)"
+          - in: [long]
+            text:
+              en: "Co-designed the **framework architecture** for compatibility with **micro-frontend environments**, enabling smoother integration into modular and distributed applications"
+              fr: "Co-conçu l'**architecture du framework** pour la compatibilité avec les environnements **micro-frontends**, facilitant son intégration dans des applications modulaires et distribuées"
+          - in: [long]
+            text:
+              en: "Managed versioning and delivery of framework releases, ensuring stability for consuming teams"
+              fr: "Géré le versioning et la livraison des releases du framework, garantissant la stabilité pour les équipes consommatrices"
+          - in: [long]
+            text:
+              en: "Ensured component quality, accessibility, and adherence to Angular best practices"
+              fr: "Garanti la qualité, l'accessibilité et le respect des meilleures pratiques Angular sur l'ensemble des composants"
+          - in: [long]
+            text:
+              en: "Provided **level 3 support** to application teams integrating the framework"
+              fr: "Fourni un **support niveau 3** aux équipes applicatives intégrant le framework"
+          - in: [long]
+            text:
+              en: "Partnered with product owners and UX designers to translate business needs into scalable UI components"
+              fr: "Collaboré étroitement avec les product owners et designers UX pour traduire les besoins métier en composants UI scalables"
+      - label: { en: "Lowcode Team", fr: "Équipe Lowcode" }
+        responsibilities:
+          - in: [long]
+            text:
+              en: "Delivered a **drag & drop, no-code interface** enabling teams to compose screens visually without writing code"
+              fr: "Livré une **interface drag & drop, no-code** permettant aux équipes de composer des écrans visuellement sans écrire de code"
+          - in: [long]
+            text:
+              en: "Created the **low-code library** powering the Web Designer — a **descriptor-pattern engine** where screens, components and behaviors are defined declaratively via structured **JSON**"
+              fr: "Créé la **bibliothèque low-code** qui alimente le Web Designer — un **moteur à base de descripteurs** où écrans, composants et comportements sont définis déclarativement via un **JSON** structuré"
+          - in: [long]
+            text:
+              en: "Redesigned a rigid declarative system into a **more scalable and maintainable architecture**"
+              fr: "Refondu un système déclaratif rigide en une **architecture plus scalable et maintenable**"
+          - in: [long]
+            text:
+              en: "Maintained and evolved the low-code platform (bug fixes, refactoring, performance improvements, new features)"
+              fr: "Maintenu et fait évoluer la plateforme low-code (corrections de bugs, refactoring, améliorations de performance, nouvelles fonctionnalités)"
+          - in: [long]
+            text:
+              en: "Led or supported the **migration of three existing client applications** onto the low-code platform, acting as the platform-side referent for each team"
+              fr: "Piloté ou accompagné la **migration de trois applications clientes existantes** vers la plateforme low-code, en tant que référent plateforme auprès de chaque équipe"
+          - in: [long]
+            text:
+              en: "**Siebel migration (ESR team)** — migrated an **Oracle Siebel legacy application** onto the low-code platform, rebuilding its screens as declarative descriptors"
+              fr: "**Migration Siebel (équipe ESR)** — migré une **application legacy Oracle Siebel** vers la plateforme low-code, en reconstruisant ses écrans sous forme de descripteurs déclaratifs"
+          - in: [long]
+            text:
+              en: "**Alto team** — migrated the application from the **legacy descriptor format to the new descriptor architecture**, defining the migration path and supporting the team through breaking changes"
+              fr: "**Équipe Alto** — migré l'application de l'**ancien format de descripteurs vers la nouvelle architecture de descripteurs**, en définissant le chemin de migration et en accompagnant l'équipe sur les ruptures de compatibilité"
+          - in: [long]
+            text:
+              en: "**Dashboard** — delivered the application as the **Web Designer candidate**, validating the designer end to end from visual composition to generated JSON descriptors"
+              fr: "**Dashboard** — livré l'application comme **candidate du Web Designer**, validant l'outil de bout en bout, de la composition visuelle aux descripteurs JSON générés"
+          - in: [long]
+            text:
+              en: "Also re-platformed a **legacy Java desktop client to the web** and moved critical business components (Employee Savings Plan) off legacy tooling"
+              fr: "Également re-plateformé un **client lourd Java legacy vers le web** et migré des composants métier critiques (Plan d'Épargne Salariale) depuis des outils legacy"
+          - in: [long]
+            text:
+              en: "Contributed to the **architecture of client applications** from other teams, providing technical expertise and best practices"
+              fr: "Contribué à l'**architecture d'applications clientes** d'autres équipes, en apportant expertise technique et bonnes pratiques"
+          - in: [short, long]
+            text:
+              en: "Built the **Web Designer from scratch** and integrated an **AI agent** enabling **natural-language-driven generation of dynamic web applications** — users describe screens or flows in plain language and it scaffolds the corresponding JSON-defined views, components and bindings, ready for further refinement"
+              fr: "Développé le **Web Designer de zéro** et intégré un **agent IA** permettant la **génération d'applications web dynamiques en langage naturel** — l'utilisateur décrit des écrans ou des flux en langage simple et l'outil produit les vues, composants et bindings définis en JSON, prêts à être affinés"
+          - in: [long]
+            text:
+              en: "Defined the product **UX in close collaboration with the Product Owner**, shaping user flows and interaction patterns end to end"
+              fr: "Défini l'**UX du produit en étroite collaboration avec le Product Owner**, façonnant les parcours utilisateurs et les patterns d'interaction de bout en bout"
+      - label: { en: "AI Tooling Team — Vibe Toolbox (current)", fr: "Équipe AI Tooling — Vibe Toolbox (en cours)" }
+        responsibilities:
+          - in: [short, long]
+            text:
+              en: "Currently building the **Vibe Toolbox**, an internal **desktop application (Electron + Angular, Node.js/TypeScript backend, SQLite, PowerShell automation)** that **provisions AI-ready development environments** — managing **agent skills, MCP servers and artifact installation** — for engineers across the organisation, reducing time-to-productivity from days to minutes"
+              fr: "Développe actuellement la **Vibe Toolbox**, une **application desktop interne (Electron + Angular, backend Node.js/TypeScript, SQLite, automatisation PowerShell)** qui **provisionne des environnements de développement prêts pour l'IA** — gérant les **skills d'agents, serveurs MCP et l'installation d'artefacts** — pour les ingénieurs de l'organisation, réduisant le time-to-productivity de plusieurs jours à quelques minutes"
+          - in: [long]
+            text:
+              en: "Implemented **skills management** — installation, versioning and sharing of reusable AI skills (prompts, workflows, agent definitions) so teams adopt validated patterns instead of rebuilding them per project"
+              fr: "Implémenté la **gestion de skills** — installation, versioning et partage de skills IA réutilisables (prompts, workflows, définitions d'agents) pour que les équipes adoptent des patterns validés au lieu de les recréer à chaque projet"
+          - in: [long]
+            text:
+              en: "Built **marketplace mechanics** for AI skills and agents, supporting discovery, packaging and lifecycle management with role-based governance suited to enterprise use"
+              fr: "Construit les **mécanismes de marketplace** pour les skills et agents IA, supportant découverte, packaging et gestion du cycle de vie avec une gouvernance par rôles adaptée à l'usage entreprise"
+          - in: [long]
+            text:
+              en: "Designed the toolbox as a **single entry point** for developers to bootstrap model access, credentials, MCP configuration and skill bundles, bringing consistency to how AI tooling is adopted across teams"
+              fr: "Conçu la toolbox comme **point d'entrée unique** pour les développeurs pour configurer accès aux modèles, credentials, configuration MCP et bundles de skills, apportant une cohérence dans l'adoption de l'outillage IA à travers les équipes"
+      - label: { en: "Cross-team contributions", fr: "Contributions transverses" }
+        responsibilities:
+          - in: [long]
+            text:
+              en: "Designed, built and published multiple **internal Java and JavaScript packages** (libraries, shared utilities, framework modules) consumed by Maestro and downstream application teams"
+              fr: "Conçu, créé et publié plusieurs **packages internes Java et JavaScript** (librairies, utilitaires partagés, modules de framework) consommés par Maestro et les équipes applicatives en aval"
+          - in: [long]
+            text:
+              en: "Set up and maintained **automated CI/CD pipelines** (GitLab CI, Jenkins) covering build, lint, tests, coverage and release of framework and low-code artifacts"
+              fr: "Mis en place et maintenu des **pipelines CI/CD automatisés** (GitLab CI, Jenkins) couvrant le build, le lint, les tests, la couverture et la livraison des artefacts framework et low-code"
+          - in: [long]
+            text:
+              en: "Ensured **strong test coverage** across frontend and backend with **JaCoCo** (Java), **Karma** and **Jest** (Angular/TypeScript), plus **Cypress** and **Playwright** for end-to-end scenarios"
+              fr: "Garanti une **forte couverture de tests** côté frontend et backend avec **JaCoCo** (Java), **Karma** et **Jest** (Angular/TypeScript), ainsi que **Cypress** et **Playwright** pour les scénarios end-to-end"
+          - in: [long]
+            text:
+              en: "Daily use of **agentic AI tooling** (Claude, Codex) for code generation, refactoring, code reviews, debugging, and accelerating exploratory work on framework and platform features"
+              fr: "Utilisation quotidienne d'**outils d'IA agentique** (Claude, Codex) pour la génération de code, le refactoring, les revues de code, le débogage et l'accélération du travail exploratoire sur les fonctionnalités du framework et de la plateforme"
+    responsibilities: []
+    challenges:
+      - in: [long]
+        text:
+          en: "Micro-frontend integration and **framework backward compatibility** across major Angular version migrations"
+          fr: "Intégration micro-frontends et **rétrocompatibilité du framework** à travers les migrations majeures d'Angular"
+      - in: [long]
+        text:
+          en: "Replacing a rigid declarative legacy system with a **scalable descriptor-based low-code engine** without breaking existing client applications"
+          fr: "Remplacement d'un système déclaratif rigide par un **moteur low-code à base de descripteurs** scalable, sans casser les applications clientes existantes"
+      - in: [long]
+        text:
+          en: "Designing framework APIs **generic enough for many teams** yet simple enough for rapid adoption"
+          fr: "Conception d'APIs de framework **assez génériques pour de nombreuses équipes** tout en restant simples à adopter rapidement"
+    tech: "Angular, TypeScript, Node.js, Electron, SQLite, PowerShell, Java 8/11/21, Spring Boot, Quarkus, Keycloak, Oracle DB, MongoDB, Karma, Jest, JaCoCo, Cypress, Playwright, Webpack, Jenkins, GitLab CI, Claude, Codex, Agile Scrum"
+
+  - in: [short, long]
+    company: "Zsoft Consulting"
+    role:
+      en: "Full Stack Consultant (Java / Angular)"
+      fr: "Consultant Full Stack (Java / Angular)"
+    dates: { en: "October 2022 – September 2023 (1 year)", fr: "Octobre 2022 – Septembre 2023 (1 an)" }
+    client: null
+    context:
+      en: "IT consulting firm. Full-time consultant delivering successive missions for major clients (Société Générale, Colas)."
+      fr: "Société de conseil IT. Consultant à temps plein sur des missions successives pour des clients grands comptes (Société Générale, Colas)."
+    subgroups:
+      - label:
+          en: "Client: Société Générale — Project: KYC"
+          fr: "Client : Société Générale — Projet : KYC"
+        context:
+          en: "A set of backend services dedicated to **Know Your Customer (KYC)** processes, used to evaluate customer trust levels and eligibility, and to support fraud detection workflows."
+          fr: "Un ensemble de services backend dédiés aux processus **Know Your Customer (KYC)**, utilisés pour évaluer les niveaux de confiance et d'éligibilité des clients, et pour supporter les workflows de détection de fraude."
+        responsibilities:
+          - in: [short, long]
+            text:
+              en: "Led a **full-backend mission to extract a standalone, reusable microservice** from a legacy KYC system, consumable by other applications across the organization"
+              fr: "Piloté une **mission full-backend d'extraction d'un microservice autonome et réutilisable** depuis un système KYC legacy, consommable par d'autres applications de l'organisation"
+          - in: [long]
+            text:
+              en: "Decoupled the service from a **database owned by another provider team**, defining clean service boundaries and ownership"
+              fr: "Découplé le service d'une **base de données détenue par une autre équipe fournisseur**, en définissant des frontières et une propriété de service claires"
+          - in: [long]
+            text:
+              en: "Designed and implemented **backend services** with Java and Spring Boot"
+              fr: "Conçu et implémenté des **services backend** avec Java et Spring Boot"
+          - in: [long]
+            text:
+              en: "Developed and exposed REST APIs consumed by other internal systems"
+              fr: "Développé et exposé des APIs REST consommées par d'autres systèmes internes"
+          - in: [short, long]
+            text:
+              en: "Implemented security mechanisms using Spring Security and OAuth2"
+              fr: "Implémenté des mécanismes de sécurité utilisant Spring Security et OAuth2"
+          - in: [short, long]
+            text:
+              en: "Provided **L2 support**, investigating and resolving production incidents"
+              fr: "Assuré le **support N2**, en investiguant et résolvant les incidents de production"
+          - in: [long]
+            text:
+              en: "Ensured quality with unit and integration tests plus **code coverage (JaCoCo)**, for reliability and compliance"
+              fr: "Assuré la qualité avec des tests unitaires et d'intégration ainsi que la **couverture de code (JaCoCo)**, pour la fiabilité et la conformité"
+        challenges:
+          - in: [long]
+            text:
+              en: "Extracting a standalone service from a **tightly coupled legacy KYC system** whose database was owned by another provider team"
+              fr: "Extraire un service autonome depuis un **système KYC legacy fortement couplé** dont la base de données appartenait à une autre équipe fournisseur"
+        tech: "Java 17, Spring Boot, Spring Security, OAuth2, PostgreSQL, Quartz, Flyway, JaCoCo, Docker, Kubernetes, RabbitMQ, Jenkins"
+      - label:
+          en: "Client: Colas — Project: CRM"
+          fr: "Client : Colas — Projet : CRM"
+        context:
+          en: "**CLASS** — a **global CRM / Opportunity Manager** built from scratch and deployed across 55 countries to manage commercial activities, opportunities, and customer data for the Colas group, replacing a legacy **Power Apps / Teams** application with a modern Angular + Java Spring Boot stack."
+          fr: "**CLASS** — un **CRM global / Gestionnaire d'Opportunités** construit de zéro et déployé dans 55 pays pour gérer les activités commerciales, opportunités et données clients du groupe Colas, en remplacement d'une application legacy **Power Apps / Teams** par une stack moderne Angular + Java Spring Boot."
+        responsibilities:
+          - in: [short, long]
+            text:
+              en: "Built the application **from scratch**, from mockups to production deployment"
+              fr: "Construit l'application **de zéro**, des maquettes jusqu'au déploiement en production"
+          - in: [long]
+            text:
+              en: "Drove the **migration from Power Apps / Teams** to a maintainable Angular + Spring Boot app, rebuilding the opportunity-tracking workflows (filtering by type, region and other criteria)"
+              fr: "Piloté la **migration depuis Power Apps / Teams** vers une application Angular + Spring Boot maintenable, en reconstruisant les workflows de suivi d'opportunités (filtrage par type, région et autres critères)"
+          - in: [long]
+            text:
+              en: "Implemented the UI from mockups using **Angular and Ant Design**"
+              fr: "Implémenté l'interface à partir des maquettes avec **Angular et Ant Design**"
+          - in: [short, long]
+            text:
+              en: "Implemented secure authentication with **Azure AD (IAM / SSO)**, integrated via Spring Security"
+              fr: "Implémenté l'authentification sécurisée avec **Azure AD (IAM / SSO)**, intégrée via Spring Security"
+          - in: [long]
+            text:
+              en: "Developed backend services and REST APIs using Java and Spring Boot"
+              fr: "Développé les services backend et APIs REST utilisant Java et Spring Boot"
+          - in: [long]
+            text:
+              en: "Developed batch processes for **data migration** using Spring Batch"
+              fr: "Développé des processus batch pour la **migration de données** utilisant Spring Batch"
+          - in: [short, long]
+            text:
+              en: "Deployed the application on **Azure** across multiple environments — App Services, Front Door, CDN, Blob Storage and Azure Database for PostgreSQL — with CI/CD pipelines"
+              fr: "Déployé l'application sur **Azure** sur plusieurs environnements — App Services, Front Door, CDN, Blob Storage et Azure Database for PostgreSQL — avec des pipelines CI/CD"
+        challenges:
+          - in: [long]
+            text:
+              en: "Replacing a legacy **Power Apps / Teams** application without disrupting commercial workflows across **55 countries**"
+              fr: "Remplacer une application legacy **Power Apps / Teams** sans perturber les workflows commerciaux dans **55 pays**"
+        tech: "Java 11, Spring Boot, Spring Security, Spring Batch, Angular 15, TypeScript, Ant Design, Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL), GitLab CI/CD"
+    responsibilities: []
+    tech: "Java 11/17, Spring Boot, Spring Security, Spring Batch, OAuth2, Angular 15, TypeScript, Ant Design, Azure (AD, App Services, PostgreSQL), Docker, Kubernetes, RabbitMQ, GitLab CI/CD"
+
+  - in: [short, long]
+    company: "Scor"
+    role:
+      en: "Full Stack Developer → Project Lead (Java / Angular)"
+      fr: "Développeur Full Stack → Lead de Projet (Java / Angular)"
+    dates: { en: "June 2019 – September 2022", fr: "Juin 2019 – Septembre 2022" }
+    client: null
+    context:
+      en: "**RiskReveal** — a **heavy data-processing application** for **natural-catastrophe risk assessment**, ingesting and processing large files of historical loss events (**ELT — Event Loss Tables**), each tied to a geographic region and a peril type (flood, hurricane, etc.); reinsurers use the data to assess and price the risk of a given portfolio."
+      fr: "**RiskReveal** — une **application de traitement de données lourd** pour l'**évaluation des risques de catastrophes naturelles**, ingérant et traitant de gros fichiers d'événements de sinistres historiques (**ELT — Event Loss Tables**), chacun rattaché à une région géographique et un type de péril (inondation, ouragan, etc.) ; les réassureurs utilisent ces données pour évaluer et tarifer le risque d'un portefeuille donné."
+    responsibilities:
+      - in: [short, long]
+        text:
+          en: "Grew from full-stack developer into **technical / project lead**, validating backend (Spring) delivery and driving implementation across the team"
+          fr: "Évolué de développeur full-stack à **lead technique / de projet**, validant les livraisons backend (Spring) et pilotant l'implémentation au sein de l'équipe"
+      - in: [long]
+        text:
+          en: "Owned the **calibration model** — statistics-based calculations applied to statistical loss events stored in **PLT files**"
+          fr: "Piloté le **modèle de calibration** — calculs statistiques appliqués aux événements de sinistres stockés dans des fichiers **PLT**"
+      - in: [long]
+        text:
+          en: "Designed and developed backend services and REST APIs with Spring Boot"
+          fr: "Conçu et développé des services backend et APIs REST avec Spring Boot"
+    achievements:
+      - in: [short, long]
+        text:
+          en: "Optimized and evolved the **batch orchestration system** (Spring Batch) on large-volume risk data, with **WebSockets** for real-time job progress"
+          fr: "Optimisé et fait évoluer le **système d'orchestration batch** (Spring Batch) sur de gros volumes de données de risque, avec **WebSockets** pour la progression temps réel"
+      - in: [short, long]
+        text:
+          en: "Set up **SSO authentication** with Spring Security, integrating **Azure AD** and **Keycloak** as identity providers"
+          fr: "Mis en place l'**authentification SSO** avec Spring Security, en intégrant **Azure AD** et **Keycloak** comme fournisseurs d'identité"
+      - in: [short, long]
+        text:
+          en: "Refactored the frontend onto a **single, unified design system (Ant Design)**, removing legacy **PrimeNG** components"
+          fr: "Refactorisé le frontend vers un **design system unique et unifié (Ant Design)**, en supprimant les composants **PrimeNG** legacy"
+      - in: [long]
+        text:
+          en: "Built **data visualization** features and advanced UI customization on large risk datasets"
+          fr: "Construit des fonctionnalités de **visualisation de données** et de personnalisation UI avancée sur de gros volumes de données de risque"
+    challenges:
+      - in: [long]
+        text:
+          en: "Efficient batch processing of **large ELT (Event Loss Table) files** with real-time progress feedback"
+          fr: "Traitement batch efficace de **gros fichiers ELT (Event Loss Tables)** avec retour de progression en temps réel"
+      - in: [long]
+        text:
+          en: "Migrating a live application to a **unified design system** incrementally, without freezing feature delivery"
+          fr: "Migrer une application en production vers un **design system unifié** de façon incrémentale, sans geler les livraisons"
+    tech: "Java 8, Spring Boot, Spring Batch, Spring Security, Angular 12, Ant Design, WebSockets, Azure AD, Keycloak, SQL Server, Azure DevOps, Jenkins"
+
+  - in: [long]
+    company: "Scor"
+    role:
+      en: "Angular Front-End Developer (End-of-Study Internship)"
+      fr: "Développeur Front-End Angular (Stage de Fin d'Études)"
+    dates: { en: "March 2019 – June 2019", fr: "Mars 2019 – Juin 2019" }
+    client: null
+    context:
+      en: "A pricing management platform for internal pricing teams."
+      fr: "Une plateforme de gestion de tarification pour les équipes de tarification internes."
+    responsibilities:
+      - in: [short, long]
+        text:
+          en: "Developed frontend features using Angular"
+          fr: "Développé des fonctionnalités frontend utilisant Angular"
+      - in: [long]
+        text:
+          en: "Designed and styled UI components"
+          fr: "Conçu et stylisé des composants UI"
+      - in: [long]
+        text:
+          en: "Integrated REST APIs"
+          fr: "Intégré des APIs REST"
+      - in: [long]
+        text:
+          en: "Applied best practices in HTML, CSS, and TypeScript"
+          fr: "Appliqué les meilleures pratiques en HTML, CSS et TypeScript"
+    tech: ""
+
+projects:
+  - in: [short, long]
+    name: "Orrery — Multi-Agent Git Orchestrator IDE (Desktop)"
+    role: { en: "Solo Author — Full Stack Developer", fr: "Auteur Unique — Développeur Full Stack" }
+    type: { en: "Personal Open-Source Project", fr: "Projet Personnel Open Source" }
+    repo: "https://github.com/kouji-dev/orrery-releases"
+    context:
+      en: "Orrery is a futuristic, IntelliJ-inspired **multi-agent git orchestrator IDE**, built as a native desktop application with **Tauri (Rust) and Angular 20**. Each project is a git repository, and a project can **spawn multiple AI coding agents** (Claude Code, Codex, Cursor, Gemini) that each run in their own **git worktree, branch, terminal and conversation** — letting a developer drive several agents in parallel from a single cockpit."
+      fr: "Orrery est un **IDE d'orchestration multi-agents Git** futuriste, inspiré d'IntelliJ, conçu comme une application desktop native avec **Tauri (Rust) et Angular 20**. Chaque projet est un dépôt Git, et un projet peut **lancer plusieurs agents de code IA** (Claude Code, Codex, Cursor, Gemini) qui s'exécutent chacun dans leur propre **worktree Git, branche, terminal et conversation** — permettant à un développeur de piloter plusieurs agents en parallèle depuis un cockpit unique."
+    responsibilities:
+      - in: [long]
+        text:
+          en: "Architected the application as a **Tauri 2 desktop shell (Rust)** wrapping an **Angular 20** front-end, with a clean **module-per-domain** structure (projects, agents, workspace, orchestrator dashboard, right panel, sidebar, settings, …)"
+          fr: "Architecturé l'application comme un **shell desktop Tauri 2 (Rust)** encapsulant un frontend **Angular 20**, avec une structure propre **par domaine** (projets, agents, workspace, dashboard d'orchestration, panneau de droite, sidebar, paramètres, …)"
+      - in: [long]
+        text:
+          en: "Built the **orchestrator dashboard** — a hero overview with live stats and multiple visualization metaphors for monitoring agents across projects"
+          fr: "Construit le **dashboard d'orchestration** — une vue d'ensemble avec statistiques en direct et plusieurs métaphores de visualisation pour superviser les agents à travers les projets"
+      - in: [long]
+        text:
+          en: "Implemented the **per-agent workspace** with Diff / Terminal / Chat panes: **WebGL-accelerated integrated terminals**, a diff/merge editor on **CodeMirror 6**, and rich-text / markdown editing via **Lexical**"
+          fr: "Implémenté le **workspace par agent** avec panneaux Diff / Terminal / Chat : **terminaux intégrés accélérés WebGL**, éditeur diff/merge sur **CodeMirror 6**, et édition rich-text / markdown via **Lexical**"
+      - in: [long]
+        text:
+          en: "Designed the **spawn-agent flow** (project, branch, tool, model, effort, prompt) and an **agent-worktree runtime** so each agent is isolated on its own branch and worktree"
+          fr: "Conçu le **flux de lancement d'agent** (projet, branche, outil, modèle, effort, prompt) et un **runtime de worktree par agent** afin que chaque agent soit isolé sur sa propre branche et son worktree"
+      - in: [long]
+        text:
+          en: "Integrated **agent cost tracking** (ccusage) and an **agent hooks / permissions** model to govern what agents are allowed to do"
+          fr: "Intégré le **suivi des coûts par agent** (ccusage) et un modèle de **hooks / permissions d'agent** pour gouverner ce que les agents sont autorisés à faire"
+      - in: [long]
+        text:
+          en: "Built a **design-token-driven design system** with theming, density, colour palettes and motion controls, plus real-time streaming logs and live timers"
+          fr: "Construit un **design system piloté par design tokens** avec thématisation, densité, palettes de couleurs et contrôles de motion, ainsi que des logs en streaming temps réel et des timers en direct"
+      - in: [long]
+        text:
+          en: "Wrote the **Rust backend** pieces (auto-updater, app-icon generation, hooks CLI) and wired the **auto-update** flow via Tauri's updater plugin"
+          fr: "Écrit les éléments du **backend Rust** (auto-updater, génération d'icône d'application, CLI de hooks) et câblé le flux de **mise à jour automatique** via le plugin updater de Tauri"
+      - in: [long]
+        text:
+          en: "Established a **quality & release pipeline**: **Vitest** unit tests, **Playwright** end-to-end suites, a **performance smoke-test** harness with assertions, semantic version-bump scripts, and **GitHub Actions** workflows (including a Render-deployed landing site)"
+          fr: "Établi une **pipeline qualité & release** : tests unitaires **Vitest**, suites end-to-end **Playwright**, un harnais de **smoke-test de performance** avec assertions, scripts de bump de version sémantique, et workflows **GitHub Actions** (incluant un site vitrine déployé sur Render)"
+    tech: "Tauri 2, Rust, Angular 20, TypeScript, CodeMirror 6, Lexical, RxJS, Vitest, Playwright, GitHub Actions"
+
+  - in: [short, long]
+    name: "Vortex — Enterprise LLM Gateway"
+    role: { en: "Solo Author — Full Stack Developer", fr: "Auteur Unique — Développeur Full Stack" }
+    type: { en: "Personal Open-Source Project", fr: "Projet Personnel Open Source" }
+    repo: "https://github.com/kouji-dev/vortex"
+    context:
+      en: "Vortex is a **multi-tenant (SaaS) or self-hostable, OpenAI/Anthropic-compatible LLM gateway** with enterprise governance — per-member budgets, role-based access control, audit trails and cost attribution — giving organisations a single, governed entry point to large language models."
+      fr: "Vortex est une **passerelle LLM compatible OpenAI/Anthropic, multi-tenant (SaaS) ou auto-hébergeable**, dotée d'une gouvernance d'entreprise — budgets par membre, contrôle d'accès basé sur les rôles, journaux d'audit et attribution des coûts — offrant aux organisations un point d'entrée unique et gouverné vers les grands modèles de langage."
+    responsibilities:
+      - in: [long]
+        text:
+          en: "Architected a **pnpm monorepo** (feature-per-folder, hexagonal-lite) with a **Hono** API + gateway, two **Angular 22 (zoneless)** consoles — tenant and platform super-admin — and shared `core`, `db`, `shared`, `sdk` and `cli` packages"
+          fr: "Architecturé un **monorepo pnpm** (feature-per-folder, hexagonal-lite) avec une API + passerelle **Hono**, deux consoles **Angular 22 (zoneless)** — tenant et super-admin plateforme — et des packages partagés `core`, `db`, `shared`, `sdk` et `cli`"
+      - in: [long]
+        text:
+          en: "Built an **OpenAI/Anthropic-compatible gateway** with a **provider registry**, routing all usage through a single governed endpoint with drop-in model substitution"
+          fr: "Construit une **passerelle compatible OpenAI/Anthropic** avec un **registre de providers**, routant tout l'usage à travers un endpoint unique et gouverné avec substitution de modèles transparente"
+      - in: [long]
+        text:
+          en: "Implemented **enterprise governance** — **per-member budgets**, **RBAC**, audit logging and **cost attribution** per acting user / app — enforced across tenants"
+          fr: "Implémenté une **gouvernance d'entreprise** — **budgets par membre**, **RBAC**, journalisation d'audit et **attribution des coûts** par utilisateur / application — appliquée à travers les tenants"
+      - in: [long]
+        text:
+          en: "Designed a **multi-tenant data layer** on **PostgreSQL + Drizzle** with **row-level security (RLS)** for tenant isolation, and **Redis** for caching and real-time usage counters"
+          fr: "Conçu une **couche de données multi-tenant** sur **PostgreSQL + Drizzle** avec **row-level security (RLS)** pour l'isolation des tenants, et **Redis** pour le cache et les compteurs d'usage temps réel"
+      - in: [long]
+        text:
+          en: "Integrated **Stripe billing** (SaaS mode) and **Zod-validated DTOs** shared across apps, and shipped a **Vortex CLI** plus a thin **SDK** with acting-user / acting-app helpers"
+          fr: "Intégré la **facturation Stripe** (mode SaaS) et des **DTOs validés par Zod** partagés entre les apps, et livré un **CLI Vortex** ainsi qu'un **SDK** léger avec helpers acting-user / acting-app"
+      - in: [long]
+        text:
+          en: "Delivered the tenant and platform consoles with **@kouji-ui** (my own design system) and **Angular SSR**, covered by **Playwright** end-to-end tests and Docker-based local infrastructure"
+          fr: "Livré les consoles tenant et plateforme avec **@kouji-ui** (mon propre design system) et **Angular SSR**, couvertes par des tests end-to-end **Playwright** et une infrastructure locale basée sur Docker"
+    tech: "Angular 22 (zoneless), TypeScript, Hono, Node.js, PostgreSQL, Drizzle ORM (RLS), Redis, Zod, Stripe, @kouji-ui, Angular SSR, Playwright, Docker, pnpm, Render"
+
+  - in: [short, long]
+    name: "Kouji UI — Angular Design System & Component Library"
+    role: { en: "Solo Author & Maintainer", fr: "Auteur Unique & Mainteneur" }
+    type: { en: "Personal Open-Source Library", fr: "Bibliothèque Personnelle Open Source" }
+    repo: "https://github.com/kouji-dev/kouji-ui"
+    context:
+      en: "An open-source **Angular 21** design system providing **60+ accessible, themable UI primitives** covering inputs, overlays, navigation, data display, feedback and layout. Maintained as a single-author library to demonstrate end-to-end *frontend platform engineering* — monorepo discipline, publishable package boundaries, accessibility-by-default and rigorous release management."
+      fr: "Design system **Angular 21** open source fournissant **plus de 60 primitives UI accessibles et thémables** couvrant inputs, overlays, navigation, affichage de données, feedback et layout. Maintenu en solo pour démontrer une maîtrise complète du *frontend platform engineering* — discipline monorepo, frontières de packages publiables, accessibilité par défaut et gestion de releases rigoureuse."
+    responsibilities:
+      - in: [long]
+        text:
+          en: "Architected a **pnpm + Turborepo monorepo** with three publishable packages — `components`, `core`, `themes` — plus a dedicated documentation app, sharing tooling, lint rules and a Tailwind v4 foundation"
+          fr: "Architecturé un **monorepo pnpm + Turborepo** avec trois packages publiables — `components`, `core`, `themes` — ainsi qu'un site de documentation dédié, partageant outillage, règles de lint et fondation Tailwind v4"
+      - in: [long]
+        text:
+          en: "Authored **60+ standalone Angular 21 components** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) designed for tree-shakability and signal-based change detection"
+          fr: "Écrit **plus de 60 composants Angular 21 standalone** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) conçus pour le tree-shaking et la détection de changement par signals"
+      - in: [long]
+        text:
+          en: "Built a **decoupled theming layer** (`@kouji-ui/themes`) driven by design tokens, enabling theme switching, dark mode and per-product overrides without forking components"
+          fr: "Construit une **couche de thématisation découplée** (`@kouji-ui/themes`) pilotée par design tokens, permettant le changement de thème, le mode sombre et les overrides par produit sans forker les composants"
+      - in: [long]
+        text:
+          en: "Set up a **strict quality pipeline**: **Vitest** unit tests, **Playwright** end-to-end suites, automated **accessibility audits** (axe-based) producing JSON + HTML reports under `reports/a11y`, plus ESLint, Prettier and Husky pre-commit hooks"
+          fr: "Mis en place une **pipeline qualité stricte** : tests unitaires **Vitest**, suites end-to-end **Playwright**, **audits d'accessibilité** automatisés (basés axe) produisant des rapports JSON + HTML dans `reports/a11y`, plus ESLint, Prettier et hooks Husky pré-commit"
+      - in: [long]
+        text:
+          en: "Established **release engineering** with **Changesets** for semantic versioning and changelog generation across the three packages, wired into GitHub Actions workflows"
+          fr: "Établi le **release engineering** via **Changesets** pour le versioning sémantique et la génération de changelogs sur les trois packages, intégré aux workflows GitHub Actions"
+      - in: [long]
+        text:
+          en: "Wrote contributor documentation and **AI-collaboration guidelines** (`CLAUDE.md`, `RULES.md`) so the library can be extended consistently by both humans and AI coding agents"
+          fr: "Rédigé la documentation contributeur et des **directives de collaboration IA** (`CLAUDE.md`, `RULES.md`) pour que la bibliothèque puisse être étendue de manière cohérente par humains et agents IA"
+    tech: "Angular 21, TypeScript, Angular CLI, pnpm workspaces, Turborepo, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, Changesets, Tailwind CSS, GitHub Actions"
+
+  - in: [long]
+    name: "Pages — Unified Project Management & Documentation Platform"
+    role: { en: "Full Stack Developer", fr: "Développeur Full Stack" }
+    type: { en: "Personal Side Project", fr: "Projet Personnel" }
+    repo: "https://github.com/kouji-dev/pages"
+    context:
+      en: "Pages is an ambitious full-stack platform designed to **replace the traditional Jira + Confluence stack** with a single, cohesive solution. The goal is to eliminate context switching by unifying **issue tracking, sprint management, and technical documentation** into one modern, developer-friendly platform, while laying the foundation for **AI-enhanced workflows**."
+      fr: "Pages est une plateforme full-stack ambitieuse conçue pour **remplacer la stack traditionnelle Jira + Confluence** par une solution unique et cohésive. L'objectif est d'éliminer le changement de contexte en unifiant le **suivi de tickets, la gestion de sprints et la documentation technique** dans une plateforme moderne et conviviale pour les développeurs, tout en posant les bases pour des **workflows améliorés par l'IA**."
+    responsibilities:
+      - in: [long]
+        text:
+          en: "Established a **scalable monorepo architecture** using **Domain-Driven Design (DDD)** principles across frontend and backend"
+          fr: "Établi une **architecture monorepo scalable** utilisant les principes de **Domain-Driven Design (DDD)** entre frontend et backend"
+      - in: [long]
+        text:
+          en: "Delivered a **highly performant, reactive frontend** with **Angular 21** and **Angular Signals** with reusable, responsive components"
+          fr: "Livré un **frontend hautement performant et réactif** avec **Angular 21** et **Angular Signals** avec des composants réutilisables et responsives"
+      - in: [long]
+        text:
+          en: "Engineered a **production-ready REST API** with **FastAPI (Python 3.12)**, integrated with **PostgreSQL** via **SQLAlchemy 2.0** and **Redis**"
+          fr: "Ingéniéré une **API REST prête pour la production** avec **FastAPI (Python 3.12)**, intégrée avec **PostgreSQL** via **SQLAlchemy 2.0** et **Redis**"
+      - in: [long]
+        text:
+          en: "Implemented **end-to-end project management workflows** including sprint planning, issue tracking, Kanban boards, and backlog management with **real-time collaboration** via WebSockets"
+          fr: "Implémenté des **workflows de gestion de projet de bout en bout** incluant la planification de sprints, le suivi de tickets, les tableaux Kanban et la gestion de backlog avec **collaboration en temps réel** via WebSockets"
+      - in: [long]
+        text:
+          en: "Enabled **rich documentation authoring** through **Lexical editor** integration and ensured code quality with comprehensive test coverage (unit, integration, functional) and automated CI/CD workflows"
+          fr: "Activé la **rédaction de documentation riche** grâce à l'intégration de l'**éditeur Lexical** et assuré la qualité du code avec une couverture de tests complète (unitaire, intégration, fonctionnel) et des workflows CI/CD automatisés"
+    tech: "Angular 21, TypeScript 5.7+, Python 3.12, FastAPI, PostgreSQL 17, Redis 8, SQLAlchemy 2.0, Lexical, Tailwind CSS 4, Docker, Docker Compose, Poetry, pnpm, WebSockets, JWT, Pydantic, Alembic, Git, GitHub Actions"
+
+  - in: [long]
+    name: "GamerGG — Gaming Service Platform"
+    role: { en: "Full Stack Developer", fr: "Développeur Full Stack" }
+    type: { en: "Personal Side Project", fr: "Projet Personnel" }
+    repo: "https://github.com/kouji-dev/GamerGG"
+    context:
+      en: "GamerGG is a **full-stack gaming service marketplace** designed to connect players with professional boosters and coaches. The platform enables gamers to purchase **rank boosting, coaching services, and gaming packages** while providing boosters with tools to manage orders, track performance, and engage with clients through integrated **Discord** communication."
+      fr: "GamerGG est un **marché de services gaming full-stack** conçu pour connecter les joueurs avec des boosters et coachs professionnels. La plateforme permet aux joueurs d'acheter des **services de boost de rang, coaching et packages gaming** tout en fournissant aux boosters des outils pour gérer les commandes, suivre les performances et interagir avec les clients via une communication **Discord** intégrée."
+    responsibilities:
+      - in: [long]
+        text:
+          en: "Architected a **Turborepo monorepo** structure enabling shared components and utilities across multiple Next.js applications with optimized build caching"
+          fr: "Architecturé une structure **monorepo Turborepo** permettant des composants et utilitaires partagés à travers plusieurs applications Next.js avec un cache de build optimisé"
+      - in: [long]
+        text:
+          en: "Built a **modern, responsive web application** with **Next.js 13**, **TypeScript**, and **Tailwind CSS**, implementing server-side rendering and API routes"
+          fr: "Construit une **application web moderne et responsive** avec **Next.js 13**, **TypeScript** et **Tailwind CSS**, implémentant le rendu côté serveur et les routes API"
+      - in: [long]
+        text:
+          en: "Designed and implemented **authentication and authorization** using **NextAuth.js** with OAuth providers and secure session management"
+          fr: "Conçu et implémenté l'**authentification et autorisation** utilisant **NextAuth.js** avec des providers OAuth et une gestion de session sécurisée"
+      - in: [long]
+        text:
+          en: "Developed a **robust database layer** using **Prisma ORM** with **PostgreSQL**, implementing migrations, seeding, and type-safe queries"
+          fr: "Développé une **couche de base de données robuste** utilisant **Prisma ORM** avec **PostgreSQL**, implémentant les migrations, seeding et requêtes type-safe"
+      - in: [long]
+        text:
+          en: "Created a **comprehensive order management system** with real-time status tracking, active boost monitoring, and order history for both clients and boosters"
+          fr: "Créé un **système de gestion de commandes complet** avec suivi de statut en temps réel, monitoring de boost actif et historique de commandes pour les clients et boosters"
+      - in: [long]
+        text:
+          en: "Integrated **Discord server** connectivity for seamless communication between clients and boosters within the platform"
+          fr: "Intégré la **connectivité serveur Discord** pour une communication fluide entre clients et boosters au sein de la plateforme"
+      - in: [long]
+        text:
+          en: "Implemented a **user analytics dashboard** featuring top boosters leaderboard, user spending tracking, and performance metrics"
+          fr: "Implémenté un **tableau de bord d'analytics utilisateur** présentant un classement des meilleurs boosters, suivi des dépenses utilisateur et métriques de performance"
+      - in: [long]
+        text:
+          en: "Established a **reusable UI component library** shared across the monorepo with a consistent design system and TypeScript types"
+          fr: "Établi une **bibliothèque de composants UI réutilisables** partagée à travers le monorepo avec un système de design cohérent et des types TypeScript"
+    tech: "Next.js 13, React 18, TypeScript, Prisma, PostgreSQL, NextAuth.js, Tailwind CSS, Turborepo, Yarn Workspaces, OAuth, Discord API, Git, GitHub Actions"
+
+  - in: [long]
+    name: "Acta — Accounting Firm Project Management Platform"
+    role: { en: "Full Stack Developer", fr: "Développeur Full Stack" }
+    type: { en: "Personal Side Project", fr: "Projet Personnel" }
+    context:
+      en: "Acta is a **comprehensive project management platform** designed specifically for accounting firms to streamline **cross-functional production tracking** across multiple teams. The platform enables real-time task planning, time tracking, and ticketing for complex accounting workflows, managing hierarchical structures of **portfolios, files, missions, and tasks** with progressive validation workflows and multi-dimensional progress visualization."
+      fr: "Acta est une **plateforme complète de gestion de projets** conçue spécifiquement pour les cabinets comptables afin de rationaliser le **suivi de production inter-fonctionnel** à travers plusieurs équipes. La plateforme permet la planification de tâches en temps réel, le suivi du temps et le ticketing pour des flux de travail comptables complexes, gérant des structures hiérarchiques de **portefeuilles, dossiers, missions et tâches** avec des workflows de validation progressive et une visualisation multi-dimensionnelle de la progression."
+    responsibilities:
+      - in: [long]
+        text:
+          en: "Architected a **full-stack monorepo** with **Angular 21** frontend and **Express.js** backend, implementing **role-based access control (RBAC)** with granular permissions"
+          fr: "Architecturé un **monorepo full-stack** avec frontend **Angular 21** et backend **Express.js**, implémentant un **contrôle d'accès basé sur les rôles (RBAC)** avec des permissions granulaires"
+      - in: [long]
+        text:
+          en: "Designed a **complex hierarchical data model** using **Prisma ORM** with **PostgreSQL**, supporting portfolios → files → missions → tasks relationships with progressive validation workflows"
+          fr: "Conçu un **modèle de données hiérarchique complexe** utilisant **Prisma ORM** avec **PostgreSQL**, supportant les relations portefeuilles → dossiers → missions → tâches avec workflows de validation progressive"
+      - in: [long]
+        text:
+          en: "Built **multi-dimensional visualization features** including calendar views, progress tracking by collaborator or file, and time tracking dashboards with daily/weekly/monthly/yearly aggregations"
+          fr: "Construit des **fonctionnalités de visualisation multi-dimensionnelles** incluant des vues calendrier, suivi de progression par collaborateur ou dossier, et tableaux de bord de suivi du temps avec agrégations quotidiennes/hebdomadaires/mensuelles/annuelles"
+      - in: [long]
+        text:
+          en: "Developed **real-time task management** with status workflows, a due-date change-request system with approval workflows, and automatic task assignment based on role-based folder assignments"
+          fr: "Développé une **gestion de tâches en temps réel** avec workflows de statut, système de demandes de modification de dates d'échéance avec workflows d'approbation, et attribution automatique de tâches basée sur les affectations de dossiers par rôle"
+      - in: [long]
+        text:
+          en: "Implemented a **comprehensive time tracking system** with detailed reporting, enabling analysis by collaborator, file, task, or mission with flexible filtering and aggregation"
+          fr: "Implémenté un **système complet de suivi du temps** avec capacités de reporting détaillées, permettant l'analyse par collaborateur, dossier, tâche ou mission avec filtrage et agrégation flexibles"
+      - in: [long]
+        text:
+          en: "Created **responsive, data-rich UI components** using **TanStack Table** for complex data grids, **Luxon** for date/time handling, and **Tailwind CSS** for modern, accessible design"
+          fr: "Créé des **composants UI réactifs et riches en données** utilisant **TanStack Table** pour des grilles de données complexes, **Luxon** pour la gestion des dates/heures, et **Tailwind CSS** pour un design moderne et accessible"
+      - in: [long]
+        text:
+          en: "Established **robust authentication and authorization** using **JWT** and **Passport.js** with role-based route guards and permission-based feature access"
+          fr: "Établi une **authentification et autorisation robustes** utilisant **JWT** et **Passport.js** avec gardes de route basés sur les rôles et accès aux fonctionnalités basé sur les permissions"
+    tech: "Angular 21, TypeScript, Express.js, Prisma, PostgreSQL, JWT, Passport.js, TanStack Table, Luxon, Tailwind CSS, Docker, pnpm"
+
+  - in: [long]
+    name: "Chartify — Figma Plugin"
+    role: { en: "Plugin Developer", fr: "Développeur de Plugin" }
+    type: { en: "Figma Community Plugin", fr: "Plugin Communautaire Figma" }
+    link: "https://www.figma.com/community/plugin/1361309122482309141/chartify"
+    context:
+      en: "Chartify is a **Figma community plugin** designed to streamline the creation of data visualizations and charts directly within Figma's design environment. The plugin enables designers to quickly generate various chart types, customize data visualizations, and integrate charts seamlessly into their design workflows without leaving Figma."
+      fr: "Chartify est un **plugin communautaire Figma** conçu pour rationaliser la création de visualisations de données et graphiques directement dans l'environnement de design Figma. Le plugin permet aux designers de générer rapidement différents types de graphiques, personnaliser les visualisations de données et intégrer des graphiques de manière fluide dans leurs workflows de design sans quitter Figma."
+    responsibilities:
+      - in: [long]
+        text:
+          en: "Developed a **Figma plugin** using TypeScript and the Figma Plugin API to extend design-tool capabilities"
+          fr: "Développé un **plugin Figma** utilisant TypeScript et l'API Plugin Figma pour étendre les capacités de l'outil de design"
+      - in: [long]
+        text:
+          en: "Implemented **chart generation functionality** supporting multiple chart types and customizable data visualization options"
+          fr: "Implémenté une **fonctionnalité de génération de graphiques** supportant plusieurs types de graphiques et options de visualisation de données personnalisables"
+      - in: [long]
+        text:
+          en: "Created an **intuitive user interface** within Figma's plugin environment for easy chart configuration and customization"
+          fr: "Créé une **interface utilisateur intuitive** dans l'environnement plugin de Figma pour une configuration et personnalisation faciles des graphiques"
+      - in: [long]
+        text:
+          en: "Ensured **seamless integration** with Figma's design system, allowing charts to be easily incorporated into design files"
+          fr: "Assuré une **intégration fluide** avec le système de design de Figma, permettant aux graphiques d'être facilement incorporés dans les fichiers de design"
+      - in: [long]
+        text:
+          en: "Published and maintained the plugin in the **Figma Community**, making it accessible to designers worldwide"
+          fr: "Publié et maintenu le plugin dans la **Communauté Figma**, le rendant accessible aux designers du monde entier"
+    tech: "Angular, TypeScript, Taiga UI, Figma Plugin API, Figma Community"
+
+education:
+  - in: [short, long]
+    degree:
+      en: "State Engineering Diploma in Computer Science"
+      fr: "Diplôme d'Ingénieur d'État en Informatique"
+    school:
+      en: "National School of Applied Sciences of Tangier"
+      fr: "École Nationale des Sciences Appliquées de Tanger"
+    year: "2019"
+
+languages:
+  - name: { en: "Arabic", fr: "Arabe" }
+    level: { en: "Native", fr: "Natif" }
+  - name: { en: "French", fr: "Français" }
+    level: { en: "Fluent", fr: "Courant" }
+  - name: { en: "English", fr: "Anglais" }
+    level: { en: "Professional", fr: "Professionnel" }

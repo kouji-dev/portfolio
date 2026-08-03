@@ -1,0 +1,11 @@
+# Authoring tooling that lives in the repo but must never be served from the
+# domain root. The static site (index.html, styles.css, cosmos.js, cv/*.pdf)
+# ships as before.
+
+# CV pipeline: YAML sources, generator scripts, node deps.
+# The PDFs it writes into cv/ ARE deployed — the sources behind them are not.
+cv-source/
+
+# Claude Code skills + the kouji job-hunt plugin.
+.claude/
+kouji/

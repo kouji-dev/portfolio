@@ -1,0 +1,18 @@
+{
+  "name": "kouji",
+  "description": "Personal LinkedIn job hunt automation: search, apply, and analyze",
+  "owner": {
+    "name": "Kouji"
+  },
+  "plugins": [
+    {
+      "name": "kouji",
+      "description": "Personal LinkedIn job hunt automation: search, apply, and analyze",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "Kouji"
+      }
+    }
+  ]
+}

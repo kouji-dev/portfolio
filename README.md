@@ -13,19 +13,24 @@ twinkling glitter overlay, fading into deep space as you scroll.
 
 ## Stack
 
-- **Plain static site** — no framework, no build step, no `node_modules`.
+- **Plain static site** — no framework, no build step. The deployed site has zero
+  dependencies; the CV generator under `cv-source/` is authoring-time only and is
+  excluded from the deploy.
 - **[Three.js](https://threejs.org/) 0.160.0** (jsDelivr CDN) for the GLSL cosmos backdrop.
 - **Fonts** (Google Fonts): Space Grotesk (display), Sora (body), JetBrains Mono (mono).
 
 ## Project layout
 
-| File          | Purpose                                                           |
-|---------------|-------------------------------------------------------------------|
-| `index.html`  | All markup and content (nav, hero, about, work, experience, contact). |
-| `styles.css`  | Stellar palette tokens, layout, responsive grids, hover states.   |
-| `cosmos.js`   | WebGL shader backdrop + scroll-reveal (`IntersectionObserver`).   |
-| `favicon.svg` | Orbital mark.                                                     |
-| `vercel.json` | Clean URLs + cache/security headers.                              |
+| Path           | Purpose                                                           |
+|----------------|-------------------------------------------------------------------|
+| `index.html`   | All markup and content (nav, hero, about, work, experience, contact). |
+| `styles.css`   | Stellar palette tokens, layout, responsive grids, hover states.   |
+| `cosmos.js`    | WebGL shader backdrop + scroll-reveal (`IntersectionObserver`).   |
+| `favicon.svg`  | Orbital mark.                                                     |
+| `vercel.json`  | Clean URLs + cache/security headers.                              |
+| `assets/`      | Generated CV PDFs, served and linked from the page. **Never edit by hand.** |
+| `cv-source/`   | CV pipeline: YAML sources + generator that writes into `assets/`. |
+| `.vercelignore`| Keeps authoring tooling (`cv-source/`, `.claude/`, `kouji/`) out of the deploy. |
 
 ## Sections
 
@@ -88,6 +93,35 @@ npx vercel --prod # promote to production
 
 In **Settings → Domains**, add a domain (e.g. `kouji.dev` / `www.kouji.dev`, or a
 subdomain), then add the DNS record Vercel shows at your registrar. TLS is automatic.
+
+## CV pipeline
+
+The downloadable CVs are **generated**, not hand-maintained. `cv-source/main.yaml`
+is the single source of truth; the generator renders it to HTML and prints to PDF
+via Puppeteer, writing straight into `assets/` with the exact filenames
+`index.html` links to — there is no rename step.
+
+```bash
+cd cv-source
+npm install                  # first run only (downloads Chromium)
+npm run convert              # 4 PDFs: en/fr x short/long -> ../assets
+```
+
+| Flag | Effect |
+|------|--------|
+| `--lang=en` / `--version=short` | Build a subset instead of all four. |
+| `--source=frontend.yaml --tag=frontend` | Build a tailored variant → `najih-driss-cv-frontend-en-short.pdf`. |
+| `--out=./build` | Write somewhere other than `../assets`. |
+| `--docx` | Also emit DOCX alongside each PDF. |
+
+Every string in the YAML is an **EN + FR pair**, and `in: [short, long]` tags
+control which variant an entry appears in. Short variants must stay **one page** —
+verify after each build.
+
+`cv-source/` is committed (so a fresh clone can rebuild) but excluded from the
+deploy via `.vercelignore`, so the YAML sources are never served from the domain.
+The Claude Code skills in `.claude/skills/` (`resume-writer`, `resume-tailor`,
+`resume-review`, `resume-knowledge-base`) drive this pipeline.
 
 ## Customizing content
 

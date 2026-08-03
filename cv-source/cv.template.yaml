@@ -1,0 +1,121 @@
+# =============================================================================
+# CV source — single source of truth. Fill this in, then run `npm run convert`.
+#
+# CONVENTIONS
+#   * Localization: every human-readable string is a { en, fr } pair.
+#         title:
+#           en: "Senior Software Engineer"
+#           fr: "Ingénieur Logiciel Senior"
+#     Structural values that are the same in both languages (URLs, emails,
+#     company names, phone) are written once, flat.
+#
+#   * Versions: list items carry an `in:` tag choosing where they appear.
+#         - in: [short, long]   # both the 1-page short CV and the full long CV
+#         - in: [long]          # long CV only
+#     Omit `in:` to always include the item. RULE: short must be a subset of
+#     long — anything tagged `short` should also be tagged `long`.
+#
+#   * Output: `npm run convert` -> 4 PDFs (EN/FR x short/long).
+#             `npm run convert:docx` also emits DOCX (long renders best in Word).
+# =============================================================================
+
+meta:
+  name: ""                       # same in both languages
+  title:
+    en: ""
+    fr: ""
+  contact:
+    location: { en: "", fr: "" }
+    email: ""
+    phone: ""
+    linkedin: ""                 # optional — remove the line if unused
+    github: ""
+    portfolio: ""
+    booking: ""
+
+# Intro paragraphs. Keep paragraph 1 in short; push detail to long.
+about:
+  - in: [short, long]
+    text: { en: "", fr: "" }
+  # - in: [long]
+  #   text: { en: "", fr: "" }
+
+# Optional themed capability list (bullets). Usually long-only.
+aiCapabilities:
+  - in: [long]
+    text: { en: "", fr: "" }
+
+# Skill groups. Tag the strongest few [short, long]; the rest [long].
+# `items` is localized too (usually the same string, but some tech names differ,
+# e.g. "AI/automation" vs "IA/automatisation").
+skills:
+  - in: [short, long]
+    category: { en: "Languages", fr: "Langages" }
+    items: { en: "", fr: "" }    # comma-separated technologies
+  # - in: [long]
+  #   category: { en: "", fr: "" }
+  #   items: { en: "", fr: "" }
+
+experiences:
+  - in: [short, long]
+    company: ""                  # same in both languages
+    role: { en: "", fr: "" }
+    dates: { en: "", fr: "" }
+    client: null                 # e.g. "Société Générale", or null
+    context: { en: "", fr: "" }  # optional short paragraph
+    # Bullets follow the resume-writer logic: Context -> Responsibilities ->
+    # Achievements/Impact -> Technical Challenges -> Technologies.
+    # Either flat lists, OR subgroups (for multi-team roles).
+    responsibilities:            # what you owned / decided / used
+      - in: [short, long]
+        text: { en: "", fr: "" }
+      - in: [long]
+        text: { en: "", fr: "" }
+    achievements:                # Action + Technology + Impact (most important)
+      - in: [short, long]
+        text: { en: "", fr: "" }
+    challenges:                  # difficulty / trade-offs — long CV only
+      - in: [long]
+        text: { en: "", fr: "" }
+    # subgroups:                 # optional — two flavors:
+    #   * team-style (label + bullets only): flattened in the short CV
+    #   * mission-style (has its own `tech`): keeps its label in the short CV
+    #     and renders label + context + bullets + tech in the long CV; the
+    #     entry-level `tech` then serves as the merged line for the short CV
+    #     (the long CV hides it to avoid duplication).
+    #   Subgroups may carry responsibilities / achievements / challenges too.
+    #   - label: { en: "", fr: "" }
+    #     context: { en: "", fr: "" }   # optional, long CV only
+    #     responsibilities:
+    #       - in: [short, long]
+    #         text: { en: "", fr: "" }
+    #     achievements: []
+    #     challenges: []
+    #     tech: ""                      # optional — marks a mission-style subgroup
+    tech: ""                     # comma-separated tech line
+
+projects:
+  - in: [short, long]
+    name: ""                     # same in both languages
+    role: { en: "", fr: "" }
+    type: { en: "", fr: "" }
+    repo: ""                     # repository URL — OR use `link:` for non-repos
+    # link: ""
+    context: { en: "", fr: "" }  # purpose: why the project exists
+    responsibilities:            # architecture + key features
+      - in: [short, long]
+        text: { en: "", fr: "" }
+      - in: [long]
+        text: { en: "", fr: "" }
+    # challenges: []             # optional — engineering challenges, long only
+    tech: ""
+
+education:
+  - in: [short, long]
+    degree: { en: "", fr: "" }
+    school: { en: "", fr: "" }
+    year: ""
+
+languages:
+  - name: { en: "", fr: "" }
+    level: { en: "", fr: "" }
