@@ -88,7 +88,7 @@ skills:
       fr: "Agile Scrum, Git, GitHub, GitLab, Jira, Confluence, Figma, NPM, TDD, Clean Architecture, Architecture Hexagonale"
 
 experiences:
-  - in: [short, long]
+  - in: [long]   # hidden from the short CV (kept in full in the long version)
     company: "Preesm Group"
     role:
       en: "Full Stack Engineer (Angular / Node.js)"
@@ -334,8 +334,37 @@ experiences:
               en: "Extracting a standalone service from a **tightly coupled legacy KYC system** whose database was owned by another provider team"
               fr: "Extraire un service autonome depuis un **système KYC legacy fortement couplé** dont la base de données appartenait à une autre équipe fournisseur"
         tech: "Java 17, Spring Boot, Spring Security, OAuth2, PostgreSQL, Docker, Kubernetes, RabbitMQ, Jenkins"
+      - label:
+          en: "Client: Gloody — Project: HR & Business Management SaaS"
+          fr: "Client : Gloody — Projet : SaaS RH & Gestion d'Entreprise"
+        context:
+          en: "**Gloody** (gloody.co) — a **multi-tenant HR & business management SaaS** centralizing the day-to-day workflows of client companies: absences and holidays, invoicing, expense reports and meeting-room booking."
+          fr: "**Gloody** (gloody.co) — un **SaaS multi-tenant RH & gestion d'entreprise** centralisant les workflows quotidiens des sociétés clientes : absences et congés, facturation, notes de frais et réservation de salles."
+        responsibilities:
+          - in: [short, long]
+            text:
+              en: "Owned the **front-end architecture**, notably a **high-performance calendar** rendering dense scheduling data (absences, holidays, room bookings) with smooth navigation"
+              fr: "Piloté l'**architecture front-end**, en particulier un **calendrier haute performance** affichant des données de planning denses (absences, congés, réservations de salles) avec une navigation fluide"
+          - in: [short, long]
+            text:
+              en: "Delivered **full-stack features** across the suite — absences & holidays, invoicing, expense reports and meeting booking — with **React / Ant Design** front-ends on **Spring Boot** REST APIs"
+              fr: "Livré des **fonctionnalités full-stack** sur l'ensemble de la suite — absences et congés, facturation, notes de frais et réservation de salles — avec des front-ends **React / Ant Design** sur des APIs REST **Spring Boot**"
+          - in: [long]
+            text:
+              en: "Structured the front-end into **reusable Ant Design components** and shared state patterns, keeping the suite's modules consistent"
+              fr: "Structuré le front-end en **composants Ant Design réutilisables** et patterns d'état partagés, garantissant la cohérence entre les modules de la suite"
+          - in: [long]
+            text:
+              en: "Designed and exposed **REST APIs with Java and Spring Boot** on a multi-tenant data model, keeping each client organization's data isolated"
+              fr: "Conçu et exposé des **APIs REST avec Java et Spring Boot** sur un modèle de données multi-tenant, en isolant les données de chaque organisation cliente"
+        challenges:
+          - in: [long]
+            text:
+              en: "Keeping the **calendar fluid** while rendering large volumes of multi-source scheduling data on a multi-tenant model"
+              fr: "Maintenir un **calendrier fluide** tout en affichant de gros volumes de données de planning multi-sources sur un modèle multi-tenant"
+        tech: "React, TypeScript, Ant Design, SCSS, Java, Spring Boot, REST APIs, AWS"
     responsibilities: []
-    tech: "React, TypeScript, Ant Design, SCSS, Java 11/17, Spring Boot, Spring Security, OAuth2, Azure, Docker, Kubernetes, GitLab CI/CD"
+    tech: "React, TypeScript, Ant Design, SCSS, Java 11/17, Spring Boot, Spring Security, OAuth2, Azure, AWS, Docker, Kubernetes, GitLab CI/CD"
 
   - in: [short, long]
     company: "Scor"

@@ -87,8 +87,8 @@ skills:
   - in: [short, long]
     category: { en: "Cloud", fr: "Cloud" }
     items:
-      en: "AWS (Lambda, Step Functions, S3, DynamoDB, EC2, Elastic Beanstalk, CloudFront), Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL)"
-      fr: "AWS (Lambda, Step Functions, S3, DynamoDB, EC2, Elastic Beanstalk, CloudFront), Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL)"
+      en: "AWS (Lambda, Step Functions, S3, DynamoDB, EC2, Elastic Beanstalk, CloudFront), Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL), OVHcloud"
+      fr: "AWS (Lambda, Step Functions, S3, DynamoDB, EC2, Elastic Beanstalk, CloudFront), Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL), OVHcloud"
   - in: [short, long]
     category: { en: "DevOps", fr: "DevOps" }
     items:
@@ -106,7 +106,7 @@ skills:
       fr: "Agile Scrum, Git, GitHub, GitLab, Jira, Maven, NPM, Yarn, IntelliJ, Figma, TDD, DDD, BDD, Clean Architecture, Hexagonal Architecture"
 
 experiences:
-  - in: [short, long]
+  - in: [long]   # hidden from the short CV (kept in full in the long version)
     company: "Preesm Group"
     role:
       en: "Full Stack Developer (Angular / Node.js)"
@@ -330,8 +330,8 @@ experiences:
   - in: [short, long]
     company: "Zsoft Consulting"
     role:
-      en: "Full Stack Consultant (Java / Angular)"
-      fr: "Consultant Full Stack (Java / Angular)"
+      en: "Full Stack Consultant (Java / React)"
+      fr: "Consultant Full Stack (Java / React)"
     dates: { en: "October 2022 – September 2023 (1 year)", fr: "Octobre 2022 – Septembre 2023 (1 an)" }
     client: null
     context:
@@ -383,8 +383,8 @@ experiences:
           en: "Client: Colas — Project: CRM"
           fr: "Client : Colas — Projet : CRM"
         context:
-          en: "**CLASS** — a **global CRM / Opportunity Manager** built from scratch and deployed across 55 countries to manage commercial activities, opportunities, and customer data for the Colas group, replacing a legacy **Power Apps / Teams** application with a modern Angular + Java Spring Boot stack."
-          fr: "**CLASS** — un **CRM global / Gestionnaire d'Opportunités** construit de zéro et déployé dans 55 pays pour gérer les activités commerciales, opportunités et données clients du groupe Colas, en remplacement d'une application legacy **Power Apps / Teams** par une stack moderne Angular + Java Spring Boot."
+          en: "**CLASS** — a **global CRM / Opportunity Manager** built from scratch and deployed across 55 countries to manage commercial activities, opportunities, and customer data for the Colas group, replacing a legacy **Power Apps / Teams** application with a modern React + Java Spring Boot stack."
+          fr: "**CLASS** — un **CRM global / Gestionnaire d'Opportunités** construit de zéro et déployé dans 55 pays pour gérer les activités commerciales, opportunités et données clients du groupe Colas, en remplacement d'une application legacy **Power Apps / Teams** par une stack moderne React + Java Spring Boot."
         responsibilities:
           - in: [short, long]
             text:
@@ -392,12 +392,12 @@ experiences:
               fr: "Construit l'application **de zéro**, des maquettes jusqu'au déploiement en production"
           - in: [long]
             text:
-              en: "Drove the **migration from Power Apps / Teams** to a maintainable Angular + Spring Boot app, rebuilding the opportunity-tracking workflows (filtering by type, region and other criteria)"
-              fr: "Piloté la **migration depuis Power Apps / Teams** vers une application Angular + Spring Boot maintenable, en reconstruisant les workflows de suivi d'opportunités (filtrage par type, région et autres critères)"
-          - in: [long]
+              en: "Drove the **migration from Power Apps / Teams** to a maintainable React + Spring Boot app, rebuilding the opportunity-tracking workflows (filtering by type, region and other criteria)"
+              fr: "Piloté la **migration depuis Power Apps / Teams** vers une application React + Spring Boot maintenable, en reconstruisant les workflows de suivi d'opportunités (filtrage par type, région et autres critères)"
+          - in: [short, long]
             text:
-              en: "Implemented the UI from mockups using **Angular and Ant Design**"
-              fr: "Implémenté l'interface à partir des maquettes avec **Angular et Ant Design**"
+              en: "Implemented the UI from designer mockups using **React and the Ant Design system**, with consistent, reusable components"
+              fr: "Implémenté l'interface à partir des maquettes des designers avec **React et le design system Ant Design**, avec des composants cohérents et réutilisables"
           - in: [short, long]
             text:
               en: "Implemented secure authentication with **Azure AD (IAM / SSO)**, integrated via Spring Security"
@@ -419,9 +419,42 @@ experiences:
             text:
               en: "Replacing a legacy **Power Apps / Teams** application without disrupting commercial workflows across **55 countries**"
               fr: "Remplacer une application legacy **Power Apps / Teams** sans perturber les workflows commerciaux dans **55 pays**"
-        tech: "Java 11, Spring Boot, Spring Security, Spring Batch, Angular 15, TypeScript, Ant Design, Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL), GitLab CI/CD"
+        tech: "React, TypeScript, Ant Design, Java 11, Spring Boot, Spring Security, Spring Batch, Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL), GitLab CI/CD"
+      - label:
+          en: "Client: Gloody — Project: HR & Business Management SaaS"
+          fr: "Client : Gloody — Projet : SaaS RH & Gestion d'Entreprise"
+        context:
+          en: "**Gloody** (gloody.co) — a **multi-tenant HR & business management SaaS** centralizing the day-to-day workflows of client companies: absences and holidays, invoicing, expense reports and meeting-room booking, all served from a single codebase."
+          fr: "**Gloody** (gloody.co) — un **SaaS multi-tenant RH & gestion d'entreprise** centralisant les workflows quotidiens des sociétés clientes : absences et congés, facturation, notes de frais et réservation de salles, servis depuis une base de code unique."
+        responsibilities:
+          - in: [short, long]
+            text:
+              en: "Delivered **full-stack features** across the suite — absences & holidays, invoicing, expense reports and meeting booking — with **React / Ant Design** front-ends on **Java / Spring Boot** REST APIs"
+              fr: "Livré des **fonctionnalités full-stack** sur l'ensemble de la suite — absences et congés, facturation, notes de frais et réservation de salles — avec des front-ends **React / Ant Design** sur des APIs REST **Java / Spring Boot**"
+          - in: [short, long]
+            text:
+              en: "Owned the **front-end architecture**, notably a **high-performance calendar** rendering dense scheduling data (absences, holidays, room bookings) with smooth navigation"
+              fr: "Piloté l'**architecture front-end**, en particulier un **calendrier haute performance** affichant des données de planning denses (absences, congés, réservations de salles) avec une navigation fluide"
+          - in: [long]
+            text:
+              en: "Structured the front-end into **reusable Ant Design components** and shared state patterns, keeping the suite's modules consistent"
+              fr: "Structuré le front-end en **composants Ant Design réutilisables** et patterns d'état partagés, garantissant la cohérence entre les modules de la suite"
+          - in: [long]
+            text:
+              en: "Designed and exposed **REST APIs with Java and Spring Boot** on a multi-tenant data model, keeping each client organization's data isolated"
+              fr: "Conçu et exposé des **APIs REST avec Java et Spring Boot** sur un modèle de données multi-tenant, en isolant les données de chaque organisation cliente"
+          - in: [long]
+            text:
+              en: "Worked on an **AWS-hosted** deployment, contributing to the delivery pipeline"
+              fr: "Travaillé sur un déploiement hébergé sur **AWS**, en contribuant à la chaîne de livraison"
+        challenges:
+          - in: [long]
+            text:
+              en: "Keeping the **calendar fluid** while rendering large volumes of multi-source scheduling data on a multi-tenant model"
+              fr: "Maintenir un **calendrier fluide** tout en affichant de gros volumes de données de planning multi-sources sur un modèle multi-tenant"
+        tech: "React, TypeScript, Ant Design, SCSS, Java, Spring Boot, REST APIs, AWS"
     responsibilities: []
-    tech: "Java 11/17, Spring Boot, Spring Security, Spring Batch, OAuth2, Angular 15, TypeScript, Ant Design, Azure (AD, App Services, PostgreSQL), Docker, Kubernetes, RabbitMQ, GitLab CI/CD"
+    tech: "Java 11/17, Spring Boot, Spring Security, Spring Batch, OAuth2, React, TypeScript, Ant Design, Azure (AD, App Services, PostgreSQL), AWS, Docker, Kubernetes, RabbitMQ, GitLab CI/CD"
 
   - in: [short, long]
     company: "Scor"
