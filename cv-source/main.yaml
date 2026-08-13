@@ -106,41 +106,42 @@ skills:
       fr: "Agile Scrum, Git, GitHub, GitLab, Jira, Maven, NPM, Yarn, IntelliJ, Figma, TDD, DDD, BDD, Clean Architecture, Hexagonal Architecture"
 
 experiences:
-  - in: [long]   # hidden from the short CV (kept in full in the long version)
+  - in: [short, long]
     company: "Preesm Group"
     role:
       en: "Full Stack Developer (Angular / Node.js)"
       fr: "Développeur Full Stack (Angular / Node.js)"
-    dates: { en: "Since May 2026 (ongoing)", fr: "Depuis mai 2026 (en cours)" }
+    dates: { en: "May 2026", fr: "Mai 2026" }
+    period: { start: "2026-05", end: null }
     client: null
     context:
-      en: "**Preesm Portal** (preesm-group.com) — a B2B SaaS platform digitising the complete franchisee lifecycle of a French franchise network, used daily by headquarters staff, franchisors and franchisees. Sole engineer on the product, working directly with the client from requirements through to production operations."
-      fr: "**Preesm Portal** (preesm-group.com) — plateforme SaaS B2B digitalisant le cycle de vie complet des franchisés d'un réseau de franchise français, utilisée au quotidien par le siège, les franchiseurs et les franchisés. Seul ingénieur sur le produit, en direct avec le client, du recueil du besoin à l'exploitation en production."
+      en: "**Preesm Portal** (preesm-group.com) — a **multi-tenant** B2B SaaS platform digitising the complete franchisee lifecycle of French franchise networks, each network isolated as its own tenant and used daily by headquarters staff, franchisors and franchisees. Sole engineer on the product, working directly with the client from requirements through to production operations."
+      fr: "**Preesm Portal** (preesm-group.com) — plateforme SaaS B2B **multi-tenant** digitalisant le cycle de vie complet des franchisés de réseaux de franchise français, chaque réseau étant isolé comme son propre tenant et utilisé au quotidien par le siège, les franchiseurs et les franchisés. Seul ingénieur sur le produit, en direct avec le client, du recueil du besoin à l'exploitation en production."
     responsibilities:
       - in: [short]
         text:
-          en: "Designed and shipped **Preesm Portal** (B2B SaaS for a franchise network) **end to end as sole engineer** — **Angular 22** SPA, **Hono/Node.js** API, PostgreSQL — **first release in production within a month**"
-          fr: "Conçu et livré **Preesm Portal** (SaaS B2B) **de bout en bout en tant que seul ingénieur** — SPA **Angular 22**, API **Hono/Node.js**, PostgreSQL — **première release en production en un mois**"
+          en: "Designed and shipped **Preesm Portal** (**multi-tenant** B2B SaaS for franchise networks) **end to end as sole engineer** — **Angular 22** SPA, **Hono/Node.js** API, PostgreSQL — **first release in production within a month**"
+          fr: "Conçu et livré **Preesm Portal** (SaaS B2B **multi-tenant**) **de bout en bout en tant que seul ingénieur** — SPA **Angular 22**, API **Hono/Node.js**, PostgreSQL — **première release en production en un mois**"
       - in: [short]
         text:
-          en: "Built the **onboarding engine** driving the franchisee journey — a **declarative step catalog** with dependency-based unlocking, server-enforced status transitions, **document generation & signature**, a **file hub** and configurable e-mail notifications"
-          fr: "Construit le **moteur d'onboarding** qui pilote le parcours franchisé — **catalogue d'étapes déclaratif** avec déblocage par dépendances, transitions de statut contrôlées côté serveur, **génération et signature de documents**, **hub documentaire** et notifications e-mail configurables"
+          en: "Built the **onboarding engine** driving the franchisee journey — **declarative step catalog**, dependency-based unlocking, server-enforced statuses, **document generation & signature** and a **file hub**"
+          fr: "Construit le **moteur d'onboarding** du parcours franchisé — **catalogue d'étapes déclaratif**, déblocage par dépendances, statuts contrôlés côté serveur, **génération et signature de documents** et **hub documentaire**"
       - in: [short]
         text:
-          en: "Secured the platform with **passkey/MFA authentication** and **team-based, deny-by-default RBAC**, and ship through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
-          fr: "Sécurisé la plateforme avec l'authentification **passkey/MFA** et un **RBAC par équipes, deny-by-default**, et livré via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
+          en: "Secured the platform with **passkey/MFA authentication** and a **tenant-scoped, deny-by-default RBAC**, and ship through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
+          fr: "Sécurisé la plateforme avec l'authentification **passkey/MFA** et un **RBAC deny-by-default scopé par tenant**, et livré via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
       - in: [long]
         text:
-          en: "Designed the architecture: **Angular 22** SPA (zoneless, signals) and a **Hono/Node.js** API in a pnpm monorepo, sharing one typed contract package (**Drizzle** schema + **Zod** DTOs)"
-          fr: "Conçu l'architecture : SPA **Angular 22** (zoneless, signals) et API **Hono/Node.js** dans un monorepo pnpm, partageant un package de contrat typé (schéma **Drizzle** + DTOs **Zod**)"
+          en: "Designed the **multi-tenant architecture**: an **Angular 22** SPA (zoneless, signals) and a **Hono/Node.js** API in a pnpm monorepo, sharing one typed contract package (**Drizzle** schema + **Zod** DTOs)"
+          fr: "Conçu l'**architecture multi-tenant** : SPA **Angular 22** (zoneless, signals) et API **Hono/Node.js** dans un monorepo pnpm, partageant un package de contrat typé (schéma **Drizzle** + DTOs **Zod**)"
       - in: [long]
         text:
           en: "Built the **onboarding engine** — declarative step catalog, dependency-based unlocking and a server-enforced status state machine with automatic progress tracking"
           fr: "Construit le **moteur d'onboarding** — catalogue d'étapes déclaratif, déblocage par dépendances et machine à états de statut contrôlée côté serveur avec suivi d'avancement automatique"
       - in: [long]
         text:
-          en: "Developed the **franchisee portfolio back-office** (search, filters, archiving, network scoping) and the franchisee-facing space built on the same engine"
-          fr: "Développé le **back-office portefeuille franchisés** (recherche, filtres, archivage, cadrage par réseau) et l'espace franchisé bâti sur le même moteur"
+          en: "Developed the **franchisee portfolio back-office** (search, filters, archiving, **tenant scoping** via a network selector) and the franchisee-facing space built on the same engine"
+          fr: "Développé le **back-office portefeuille franchisés** (recherche, filtres, archivage, **cadrage par tenant** via un sélecteur de réseau) et l'espace franchisé bâti sur le même moteur"
       - in: [long]
         text:
           en: "Implemented **server-side document generation** with **pdf-lib**, signed-counterpart storage, and a **file hub** on S3-compatible object storage with presigned upload/download"
@@ -151,8 +152,8 @@ experiences:
           fr: "Livré le **mailing transactionnel** en SMTP et un panneau d'administration où les équipes configurent les destinataires des notifications par déclencheur métier, sans modification de code"
       - in: [long]
         text:
-          en: "Secured the platform with **BetterAuth** — WebAuthn passkeys, mandatory **TOTP MFA** — and a **deny-by-default RBAC** derived from a two-level team model, plus rate limiting and hashed invitation tokens"
-          fr: "Sécurisé la plateforme avec **BetterAuth** — passkeys WebAuthn, **MFA TOTP obligatoire** — et un **RBAC deny-by-default** dérivé d'un modèle d'équipes à deux niveaux, avec rate limiting et tokens d'invitation hachés"
+          en: "Secured the platform with **BetterAuth** (WebAuthn passkeys, mandatory **TOTP MFA**) and a **deny-by-default RBAC** over a two-level tenant/team model, with every API query **tenant-scoped**"
+          fr: "Sécurisé la plateforme avec **BetterAuth** (passkeys WebAuthn, **MFA TOTP** obligatoire) et un **RBAC deny-by-default** sur un modèle tenant/équipes à deux niveaux, chaque requête API étant **scopée par tenant**"
       - in: [long]
         text:
           en: "Set up **CI/CD on GitHub Actions** — lint, build, **Vitest** unit tests and a **Playwright E2E** suite run against a real PostgreSQL container — with Docker images published to GHCR"
@@ -185,7 +186,8 @@ experiences:
     role:
       en: "Senior Full Stack Developer (Angular / Java)"
       fr: "Développeur Full Stack Senior (Angular / Java)"
-    dates: { en: "Since September 2023", fr: "Depuis septembre 2023" }
+    dates: { en: "September 2023", fr: "Septembre 2023" }
+    period: { start: "2023-09", end: null }
     client: null
     context:
       en: "Amundi ITS develops shared platforms and frameworks used by multiple internal and client-facing applications. A major product is the **Maestro framework**, an Angular-based solution enabling backend teams to rapidly integrate consistent, enterprise-grade user interfaces."
@@ -269,8 +271,8 @@ experiences:
               fr: "Contribué à l'**architecture d'applications clientes** d'autres équipes, en apportant expertise technique et bonnes pratiques"
           - in: [short, long]
             text:
-              en: "Built the **Web Designer from scratch** and integrated an **AI agent** enabling **natural-language-driven generation of dynamic web applications** — users describe screens or flows in plain language and it scaffolds the corresponding JSON-defined views, components and bindings, ready for further refinement"
-              fr: "Développé le **Web Designer de zéro** et intégré un **agent IA** permettant la **génération d'applications web dynamiques en langage naturel** — l'utilisateur décrit des écrans ou des flux en langage simple et l'outil produit les vues, composants et bindings définis en JSON, prêts à être affinés"
+              en: "Built the **Web Designer from scratch** with an **AI agent** for **natural-language generation of web applications** — describe a screen, it scaffolds the JSON-defined views, components and bindings"
+              fr: "Développé le **Web Designer de zéro** avec un **agent IA** de **génération d'applications web en langage naturel** — l'utilisateur décrit un écran, l'outil produit vues, composants et bindings JSON"
           - in: [long]
             text:
               en: "Defined the product **UX in close collaboration with the Product Owner**, shaping user flows and interaction patterns end to end"
@@ -279,8 +281,8 @@ experiences:
         responsibilities:
           - in: [short, long]
             text:
-              en: "Currently building the **Vibe Toolbox**, an internal **desktop application (Electron + Angular, Node.js/TypeScript backend, SQLite, PowerShell automation)** that **provisions AI-ready development environments** — managing **agent skills, MCP servers and artifact installation** — for engineers across the organisation, reducing time-to-productivity from days to minutes"
-              fr: "Développe actuellement la **Vibe Toolbox**, une **application desktop interne (Electron + Angular, backend Node.js/TypeScript, SQLite, automatisation PowerShell)** qui **provisionne des environnements de développement prêts pour l'IA** — gérant les **skills d'agents, serveurs MCP et l'installation d'artefacts** — pour les ingénieurs de l'organisation, réduisant le time-to-productivity de plusieurs jours à quelques minutes"
+              en: "Building the **Vibe Toolbox**, an internal **Electron + Angular** desktop app **provisioning AI-ready dev environments** (agent skills, MCP servers), cutting time-to-productivity from days to minutes"
+              fr: "Développe la **Vibe Toolbox**, application desktop interne **Electron + Angular** **provisionnant des environnements de dev prêts pour l'IA** (skills d'agents, MCP), réduisant le time-to-productivity de jours à minutes"
           - in: [long]
             text:
               en: "Implemented **skills management** — installation, versioning and sharing of reusable AI skills (prompts, workflows, agent definitions) so teams adopt validated patterns instead of rebuilding them per project"
@@ -332,7 +334,8 @@ experiences:
     role:
       en: "Full Stack Consultant (Java / React)"
       fr: "Consultant Full Stack (Java / React)"
-    dates: { en: "October 2022 – September 2023 (1 year)", fr: "Octobre 2022 – Septembre 2023 (1 an)" }
+    dates: { en: "October 2022 – September 2023", fr: "Octobre 2022 – Septembre 2023" }
+    period: { start: "2022-10", end: "2023-09" }
     client: null
     context:
       en: "IT consulting firm. Full-time consultant delivering successive missions for major clients (Société Générale, Colas)."
@@ -347,8 +350,8 @@ experiences:
         responsibilities:
           - in: [short, long]
             text:
-              en: "Led a **full-backend mission to extract a standalone, reusable microservice** from a legacy KYC system, consumable by other applications across the organization"
-              fr: "Piloté une **mission full-backend d'extraction d'un microservice autonome et réutilisable** depuis un système KYC legacy, consommable par d'autres applications de l'organisation"
+              en: "Led a **full-backend mission to extract a standalone, reusable microservice** from a legacy **KYC** system, consumable across the organization"
+              fr: "Piloté une **mission full-backend d'extraction d'un microservice autonome et réutilisable** depuis un système **KYC** legacy"
           - in: [long]
             text:
               en: "Decoupled the service from a **database owned by another provider team**, defining clean service boundaries and ownership"
@@ -361,11 +364,11 @@ experiences:
             text:
               en: "Developed and exposed REST APIs consumed by other internal systems"
               fr: "Développé et exposé des APIs REST consommées par d'autres systèmes internes"
-          - in: [short, long]
+          - in: [long]
             text:
               en: "Implemented security mechanisms using Spring Security and OAuth2"
               fr: "Implémenté des mécanismes de sécurité utilisant Spring Security et OAuth2"
-          - in: [short, long]
+          - in: [long]
             text:
               en: "Provided **L2 support**, investigating and resolving production incidents"
               fr: "Assuré le **support N2**, en investiguant et résolvant les incidents de production"
@@ -386,7 +389,7 @@ experiences:
           en: "**CLASS** — a **global CRM / Opportunity Manager** built from scratch and deployed across 55 countries to manage commercial activities, opportunities, and customer data for the Colas group, replacing a legacy **Power Apps / Teams** application with a modern React + Java Spring Boot stack."
           fr: "**CLASS** — un **CRM global / Gestionnaire d'Opportunités** construit de zéro et déployé dans 55 pays pour gérer les activités commerciales, opportunités et données clients du groupe Colas, en remplacement d'une application legacy **Power Apps / Teams** par une stack moderne React + Java Spring Boot."
         responsibilities:
-          - in: [short, long]
+          - in: [long]
             text:
               en: "Built the application **from scratch**, from mockups to production deployment"
               fr: "Construit l'application **de zéro**, des maquettes jusqu'au déploiement en production"
@@ -394,11 +397,11 @@ experiences:
             text:
               en: "Drove the **migration from Power Apps / Teams** to a maintainable React + Spring Boot app, rebuilding the opportunity-tracking workflows (filtering by type, region and other criteria)"
               fr: "Piloté la **migration depuis Power Apps / Teams** vers une application React + Spring Boot maintenable, en reconstruisant les workflows de suivi d'opportunités (filtrage par type, région et autres critères)"
-          - in: [short, long]
+          - in: [long]
             text:
               en: "Implemented the UI from designer mockups using **React and the Ant Design system**, with consistent, reusable components"
               fr: "Implémenté l'interface à partir des maquettes des designers avec **React et le design system Ant Design**, avec des composants cohérents et réutilisables"
-          - in: [short, long]
+          - in: [long]
             text:
               en: "Implemented secure authentication with **Azure AD (IAM / SSO)**, integrated via Spring Security"
               fr: "Implémenté l'authentification sécurisée avec **Azure AD (IAM / SSO)**, intégrée via Spring Security"
@@ -412,8 +415,8 @@ experiences:
               fr: "Développé des processus batch pour la **migration de données** utilisant Spring Batch"
           - in: [short, long]
             text:
-              en: "Deployed the application on **Azure** across multiple environments — App Services, Front Door, CDN, Blob Storage and Azure Database for PostgreSQL — with CI/CD pipelines"
-              fr: "Déployé l'application sur **Azure** sur plusieurs environnements — App Services, Front Door, CDN, Blob Storage et Azure Database for PostgreSQL — avec des pipelines CI/CD"
+              en: "Deployed the application on **Azure** (App Services, Front Door, CDN, Blob Storage, PostgreSQL) with **CI/CD pipelines**"
+              fr: "Déployé l'application sur **Azure** (App Services, Front Door, CDN, Blob Storage, PostgreSQL) avec des **pipelines CI/CD**"
         challenges:
           - in: [long]
             text:
@@ -458,10 +461,12 @@ experiences:
 
   - in: [short, long]
     company: "Scor"
+    project: "RiskReveal"
     role:
       en: "Full Stack Developer → Project Lead (Java / Angular)"
       fr: "Développeur Full Stack → Lead de Projet (Java / Angular)"
     dates: { en: "June 2019 – September 2022", fr: "Juin 2019 – Septembre 2022" }
+    period: { start: "2019-06", end: "2022-09" }
     client: null
     context:
       en: "**RiskReveal** — a **heavy data-processing application** for **natural-catastrophe risk assessment**, ingesting and processing large files of historical loss events (**ELT — Event Loss Tables**), each tied to a geographic region and a peril type (flood, hurricane, etc.); reinsurers use the data to assess and price the risk of a given portfolio."
@@ -471,10 +476,18 @@ experiences:
         text:
           en: "Grew from full-stack developer into **technical / project lead**, validating backend (Spring) delivery and driving implementation across the team"
           fr: "Évolué de développeur full-stack à **lead technique / de projet**, validant les livraisons backend (Spring) et pilotant l'implémentation au sein de l'équipe"
+      - in: [short, long]
+        text:
+          en: "Built the **data-heavy risk UI** on **AG Grid** — virtualised grids, grouping and aggregation over large **PLT loss datasets**"
+          fr: "Construit l'**UI de risque data-heavy** sur **AG Grid** — grilles virtualisées, groupement et agrégation sur de gros volumes de sinistres **PLT**"
       - in: [long]
         text:
           en: "Owned the **calibration model** — statistics-based calculations applied to statistical loss events stored in **PLT files**"
           fr: "Piloté le **modèle de calibration** — calculs statistiques appliqués aux événements de sinistres stockés dans des fichiers **PLT**"
+      - in: [long]
+        text:
+          en: "Developed **statistics dashboards** over PLT loss data — aggregated loss indicators per peril and region, fed by the calibration calculations"
+          fr: "Développé des **dashboards statistiques** sur les données de sinistres PLT — indicateurs de perte agrégés par péril et par région, alimentés par les calculs de calibration"
       - in: [long]
         text:
           en: "Designed and developed backend services and REST APIs with Spring Boot"
@@ -488,24 +501,15 @@ experiences:
         text:
           en: "Set up **SSO authentication** with Spring Security, integrating **Azure AD** and **Keycloak** as identity providers"
           fr: "Mis en place l'**authentification SSO** avec Spring Security, en intégrant **Azure AD** et **Keycloak** comme fournisseurs d'identité"
-      - in: [short, long]
+      - in: [long]
         text:
           en: "Refactored the frontend onto a **single, unified design system (Ant Design)**, removing legacy **PrimeNG** components"
           fr: "Refactorisé le frontend vers un **design system unique et unifié (Ant Design)**, en supprimant les composants **PrimeNG** legacy"
       - in: [long]
         text:
-          en: "Built **data visualization** features and advanced UI customization on large risk datasets"
-          fr: "Construit des fonctionnalités de **visualisation de données** et de personnalisation UI avancée sur de gros volumes de données de risque"
-    challenges:
-      - in: [long]
-        text:
-          en: "Efficient batch processing of **large ELT (Event Loss Table) files** with real-time progress feedback"
-          fr: "Traitement batch efficace de **gros fichiers ELT (Event Loss Tables)** avec retour de progression en temps réel"
-      - in: [long]
-        text:
-          en: "Migrating a live application to a **unified design system** incrementally, without freezing feature delivery"
-          fr: "Migrer une application en production vers un **design system unifié** de façon incrémentale, sans geler les livraisons"
-    tech: "Java 8, Spring Boot, Spring Batch, Spring Security, Angular 12, Ant Design, WebSockets, Azure AD, Keycloak, SQL Server, Azure DevOps, Jenkins"
+          en: "Made **large risk datasets workable in the browser** — virtualised grid rendering and data visualization on the heavy loss-data screens"
+          fr: "Rendu les **gros volumes de données de risque exploitables dans le navigateur** — rendu de grilles virtualisées et visualisation de données sur les écrans de sinistres lourds"
+    tech: "Java 8, Spring Boot, Spring Batch, Spring Security, Angular 12, Ant Design, AG Grid, WebSockets, Azure AD, Keycloak, SQL Server, Azure DevOps, Jenkins"
 
   - in: [long]
     company: "Scor"
@@ -513,6 +517,7 @@ experiences:
       en: "Angular Front-End Developer (End-of-Study Internship)"
       fr: "Développeur Front-End Angular (Stage de Fin d'Études)"
     dates: { en: "March 2019 – June 2019", fr: "Mars 2019 – Juin 2019" }
+    period: { start: "2019-03", end: "2019-06" }
     client: null
     context:
       en: "A pricing management platform for internal pricing teams."
