@@ -59,8 +59,16 @@ skills:
 experiences:
   - in: [short, long]
     company: ""                  # same in both languages
+    project: ""                  # optional product name, e.g. "RiskReveal" — shown
+                                 # next to the company in the short CV, which has
+                                 # no `context:` paragraph to name it
     role: { en: "", fr: "" }
     dates: { en: "", fr: "" }
+    period: { start: "YYYY-MM", end: "YYYY-MM" }
+    # ^ drives the "(3 years 4 months)" suffix appended to `dates` in both CVs.
+    #   Omit `end` (or set it to null) for an ongoing mission — it is then
+    #   measured against the build date. Months are counted inclusively, the
+    #   LinkedIn convention: 2022-10 -> 2023-09 reads as 1 year.
     client: null                 # e.g. "Société Générale", or null
     context: { en: "", fr: "" }  # optional short paragraph
     # Bullets follow the resume-writer logic: Context -> Responsibilities ->

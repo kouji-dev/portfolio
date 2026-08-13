@@ -83,6 +83,8 @@ Every mission uses exactly four parts, in this order — **Context → Responsib
 
 **YAML mapping**: `context:` → Context; `responsibilities:` → Responsibilities; `achievements:` → Key Achievements; `tech:` → Technical Environment. Short variants pick bullets via `in:` tags from responsibilities and achievements.
 
+**Entry header fields**: `project:` (optional) names the product next to the company — required whenever the mission is known by its product name, because the short CV drops `context:` and would otherwise show the employer alone. `period: { start: "YYYY-MM", end: "YYYY-MM" }` drives the computed "(3 years 4 months)" suffix on `dates:` in both variants; omit `end` for an ongoing mission (measured against the build date). Never hand-write a duration inside the `dates:` string — it goes stale.
+
 **`challenges:` is deprecated** — "what was hard" is interview material (see the STAR companion below), not dossier material. Don't add it to new entries; strip it when reworking an existing one.
 
 ### Density budget (hard limits)

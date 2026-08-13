@@ -7,6 +7,7 @@
 const { escapeHtml, inlineMd } = require("../format");
 const { longCss } = require("./styles");
 const LABELS = require("./labels");
+const { datesWithDuration } = require("../duration");
 
 const esc = escapeHtml;
 
@@ -57,9 +58,10 @@ function sectionedBullets(x, L) {
   return parts.join("");
 }
 
-function experienceEntry(x, L) {
+function experienceEntry(x, L, lang) {
   const parts = [`<h3>${esc(x.company)} — ${esc(x.role)}</h3>`];
-  if (x.dates) parts.push(`<p class="dates">${esc(x.dates)}</p>`);
+  if (x.dates)
+    parts.push(`<p class="dates">${esc(datesWithDuration(x.dates, x.period, lang, { present: L.present }))}</p>`);
   if (x.client) parts.push(`<p class="client">${L.client}: ${esc(x.client)}</p>`);
   if (x.context)
     parts.push(`<p class="context"><strong>${L.context}:</strong> ${inlineMd(x.context)}</p>`);
@@ -145,7 +147,7 @@ function renderLong(model, lang) {
 
   if (model.experiences && model.experiences.length) {
     s.push(`<h2>${L.experience}</h2>`);
-    s.push(model.experiences.map((x) => experienceEntry(x, L)).join(""));
+    s.push(model.experiences.map((x) => experienceEntry(x, L, lang)).join(""));
   }
 
   if (model.projects && model.projects.length) {

@@ -8,6 +8,7 @@
 const { escapeHtml, inlineMd } = require("../format");
 const { shortCss } = require("./styles");
 const LABELS = require("./labels");
+const { datesWithDuration } = require("../duration");
 
 const esc = escapeHtml;
 
@@ -56,15 +57,24 @@ function bulletList(items) {
   return `<ul>${items.map((r) => `<li>${inlineMd(r.text)}</li>`).join("")}</ul>`;
 }
 
-function experienceEntry(x) {
+function experienceEntry(x, lang) {
+  const L = LABELS[lang] || LABELS.en;
   const parts = [
     `<div class="entry-head"><span class="entry-role">${esc(x.role)}</span>` +
       `<span class="entry-org">${esc(x.company)}</span></div>`,
   ];
-  const meta = [x.dates && esc(x.dates), x.client && esc(x.client)]
+  const meta = [
+    x.dates && esc(datesWithDuration(x.dates, x.period, lang, { present: L.present })),
+    x.client && esc(x.client),
+  ]
     .filter(Boolean)
     .join(" · ");
   if (meta) parts.push(`<div class="entry-meta">${meta}</div>`);
+
+  // The short CV drops `context:`, so a mission known by its product name would
+  // lose it. `project:` restores it as a sub-label, matching the mission-style
+  // sub-groups below; the right-hand column stays the employer/client alone.
+  if (x.project) parts.push(`<div class="sub-label">${L.project} ${esc(x.project)}</div>`);
 
   const bl = flatBullets(x);
   if (bl.length) parts.push(bulletList(bl));
@@ -130,7 +140,7 @@ function renderShort(model, lang) {
   // Experience
   if (model.experiences && model.experiences.length) {
     s.push(`<section><div class="slabel">${L.experience}</div>`);
-    s.push(model.experiences.map(experienceEntry).join(""));
+    s.push(model.experiences.map((x) => experienceEntry(x, lang)).join(""));
     s.push(`</section>`);
   }
 
