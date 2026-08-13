@@ -335,11 +335,11 @@ experiences:
               fr: "Extraire un service autonome depuis un **système KYC legacy fortement couplé** dont la base de données appartenait à une autre équipe fournisseur"
         tech: "Java 17, Spring Boot, Spring Security, OAuth2, PostgreSQL, Docker, Kubernetes, RabbitMQ, Jenkins"
       - label:
-          en: "Client: Gloody — Project: HR & Business Management SaaS"
-          fr: "Client : Gloody — Projet : SaaS RH & Gestion d'Entreprise"
+          en: "Client: gloody.co — Project: HR & Business Management SaaS"
+          fr: "Client : gloody.co — Projet : SaaS RH & Gestion d'Entreprise"
         context:
-          en: "**Gloody** (gloody.co) — a **multi-tenant HR & business management SaaS** centralizing the day-to-day workflows of client companies: absences and holidays, invoicing, expense reports and meeting-room booking."
-          fr: "**Gloody** (gloody.co) — un **SaaS multi-tenant RH & gestion d'entreprise** centralisant les workflows quotidiens des sociétés clientes : absences et congés, facturation, notes de frais et réservation de salles."
+          en: "**gloody.co** — a **multi-tenant HR & business management SaaS** centralizing the day-to-day workflows of client companies: absences and holidays, invoicing, expense reports and meeting-room booking."
+          fr: "**gloody.co** — un **SaaS multi-tenant RH & gestion d'entreprise** centralisant les workflows quotidiens des sociétés clientes : absences et congés, facturation, notes de frais et réservation de salles."
         responsibilities:
           - in: [short, long]
             text:

@@ -421,11 +421,11 @@ experiences:
               fr: "Remplacer une application legacy **Power Apps / Teams** sans perturber les workflows commerciaux dans **55 pays**"
         tech: "React, TypeScript, Ant Design, Java 11, Spring Boot, Spring Security, Spring Batch, Azure (AD, App Services, CDN, Front Door, Blob Storage, PostgreSQL), GitLab CI/CD"
       - label:
-          en: "Client: Gloody — Project: HR & Business Management SaaS"
-          fr: "Client : Gloody — Projet : SaaS RH & Gestion d'Entreprise"
+          en: "Client: gloody.co — Project: HR & Business Management SaaS"
+          fr: "Client : gloody.co — Projet : SaaS RH & Gestion d'Entreprise"
         context:
-          en: "**Gloody** (gloody.co) — a **multi-tenant HR & business management SaaS** centralizing the day-to-day workflows of client companies: absences and holidays, invoicing, expense reports and meeting-room booking, all served from a single codebase."
-          fr: "**Gloody** (gloody.co) — un **SaaS multi-tenant RH & gestion d'entreprise** centralisant les workflows quotidiens des sociétés clientes : absences et congés, facturation, notes de frais et réservation de salles, servis depuis une base de code unique."
+          en: "**gloody.co** — a **multi-tenant HR & business management SaaS** centralizing the day-to-day workflows of client companies: absences and holidays, invoicing, expense reports and meeting-room booking, all served from a single codebase."
+          fr: "**gloody.co** — un **SaaS multi-tenant RH & gestion d'entreprise** centralisant les workflows quotidiens des sociétés clientes : absences et congés, facturation, notes de frais et réservation de salles, servis depuis une base de code unique."
         responsibilities:
           - in: [short, long]
             text:
