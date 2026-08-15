@@ -118,6 +118,47 @@ test.describe('page index (⌘K palette)', () => {
   });
 });
 
+test.describe('analytics (GA4 dataLayer)', () => {
+  const eventNames = (page) => page.evaluate(() =>
+    (window.dataLayer || [])
+      .filter((e) => e && e[0] === 'event')
+      .map((e) => e[1]));
+
+  test('blogs page sends a manual page_view after routing', async ({ page }) => {
+    await page.goto('/blogs');
+    const events = await page.evaluate(() =>
+      (window.dataLayer || [])
+        .filter((e) => e && e[0] === 'event' && e[1] === 'page_view')
+        .map((e) => e[2] || {}));
+    expect(events.length).toBeGreaterThan(0);
+    expect(events[0].page_title).toContain('Blog');
+  });
+
+  test('article page_view carries post dimensions', async ({ page }) => {
+    await page.goto('/blogs');
+    const posts = await getPosts(page);
+    test.skip(!posts.length, 'no posts published yet');
+
+    await page.goto('/blogs?id=' + posts[0].slug);
+    const pv = await page.evaluate(() =>
+      (window.dataLayer || [])
+        .filter((e) => e && e[0] === 'event' && e[1] === 'page_view')
+        .map((e) => e[2] || {})[0]);
+    expect(pv.post_slug).toBe(posts[0].slug);
+    expect(pv.post_category).toBe(posts[0].category);
+  });
+
+  test('palette open and CV download are tracked', async ({ page }) => {
+    await page.goto('/');
+    await page.keyboard.press('Control+k');
+    await page.keyboard.press('Escape');
+    await page.click('a[download][href*="cv-en-short"]');
+    const names = await eventNames(page);
+    expect(names).toContain('palette_open');
+    expect(names).toContain('file_download');
+  });
+});
+
 test.describe('file:// fallback (site opened straight from disk)', () => {
   test('blog links fall back to blogs.html', async ({ page }) => {
     await page.goto(fileUrl('index.html'));

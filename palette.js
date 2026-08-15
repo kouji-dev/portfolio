@@ -115,6 +115,9 @@
     sel = 0;
     render();
     setTimeout(function () { input.focus(); }, 20);
+    if (window.track) window.track('palette_open', {
+      page: document.body.getAttribute('data-page') || ''
+    });
   }
   function close() {
     root.hidden = true;
@@ -123,6 +126,7 @@
   function toggle() { root.hidden ? open() : close(); }
 
   function navigate(href) {
+    if (window.track) window.track('palette_select', { link_url: href });
     close();
     if (/^https?:/.test(href)) { window.open(href, '_blank', 'noopener'); return; }
     if (/^mailto:/.test(href)) { location.href = href; return; }

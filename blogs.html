@@ -23,7 +23,9 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-YJ4W6QWCMZ');
+    // page_view is sent manually from blog.js once routing has resolved the
+    // view (index vs article) and set the real document title.
+    gtag('config', 'G-YJ4W6QWCMZ', { send_page_view: false });
   </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -173,6 +175,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="analytics.js" defer></script>
   <script src="blog-data.js" defer></script>
   <script src="blog.js" defer></script>
   <script src="cosmos.js" defer></script>

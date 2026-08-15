@@ -61,6 +61,11 @@
   function renderIndex() {
     viewIndex.hidden = false;
     document.title = 'Blog — Driss Najih · Notes from the build';
+    // manual page_view (config uses send_page_view:false)
+    window.track('page_view', {
+      page_title: document.title,
+      page_location: location.href
+    });
 
     var list = viewIndex.querySelector('[data-blog-list]');
     var empty = viewIndex.querySelector('[data-blog-empty]');
@@ -104,14 +109,24 @@
     renderChips();
     renderList(true);
 
+    var searchTimer = null;
     search.addEventListener('input', function () {
       state.q = search.value;
       renderList(false);
+      // report the term once typing settles, not per keystroke
+      clearTimeout(searchTimer);
+      var term = search.value.trim().toLowerCase();
+      if (term.length >= 2) {
+        searchTimer = setTimeout(function () {
+          window.track('search', { search_term: term });
+        }, 900);
+      }
     });
     chipHost.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-tag]');
       if (!btn) return;
       state.tag = btn.getAttribute('data-tag');
+      window.track('select_content', { content_type: 'tag', content_id: state.tag });
       renderChips();
       renderList(false);
     });
@@ -146,6 +161,14 @@
     document.title = post.title + ' — Driss Najih';
     var metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', post.dek);
+    // manual page_view with post dimensions (config uses send_page_view:false)
+    window.track('page_view', {
+      page_title: document.title,
+      page_location: location.href,
+      post_slug: post.slug,
+      post_category: post.category,
+      read_time: post.read
+    });
 
     viewPost.querySelector('[data-post-meta]').innerHTML =
       '<span class="c-accent">' + esc(post.category) + '</span>' +
@@ -186,17 +209,21 @@
       return '<a href="#h-' + i + '" data-toclink="h-' + i + '">' + esc(b.text) + '</a>';
     }).join('');
 
-    setupCopy(article);
+    setupCopy(article, post);
     highlightPending(article);
-    setupReadingFX(article);
+    setupReadingFX(article, post);
   }
 
-  function setupCopy(article) {
+  function setupCopy(article, post) {
     article.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-copy]');
       if (!btn) return;
       var code = btn.closest('.codebox').querySelector('code');
       var src = code.getAttribute('data-src') || code.textContent;
+      window.track('copy_code', {
+        post_slug: post.slug,
+        lang: code.getAttribute('data-lang') || ''
+      });
       try {
         navigator.clipboard.writeText(src);
         btn.textContent = 'copied';
@@ -235,19 +262,31 @@
     });
   }
 
-  /* reading progress bar + active TOC heading */
-  function setupReadingFX(article) {
+  /* reading progress bar + active TOC heading + read-depth milestones */
+  function setupReadingFX(article, post) {
     var bar = document.querySelector('[data-readbar]');
     var tocLinks = Array.prototype.slice.call(document.querySelectorAll('[data-toclink]'));
     var raf = null;
+    var milestones = [
+      { at: 25, name: 'read_25' },
+      { at: 50, name: 'read_50' },
+      { at: 75, name: 'read_75' },
+      { at: 98, name: 'read_complete' }
+    ];
 
     function update() {
       var vh = window.innerHeight || 800;
+      var r = article.getBoundingClientRect();
+      var p = Math.min(Math.max((vh * 0.5 - r.top) / Math.max(r.height - vh * 0.5, 1), 0), 1);
       if (bar) {
-        var r = article.getBoundingClientRect();
-        var p = Math.min(Math.max((vh * 0.5 - r.top) / Math.max(r.height - vh * 0.5, 1), 0), 1);
         bar.style.display = 'block';
         bar.style.width = (p * 100) + '%';
+      }
+      while (milestones.length && p * 100 >= milestones[0].at) {
+        window.track(milestones.shift().name, {
+          post_slug: post.slug,
+          post_category: post.category
+        });
       }
       var cur = null;
       Array.prototype.slice.call(article.querySelectorAll('h2[id]')).forEach(function (h) {
