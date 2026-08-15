@@ -32,7 +32,7 @@
 
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-page="home">
 
   <div class="page">
 
@@ -43,31 +43,43 @@
          the relative .page so it spans the FULL document height (not just 1 viewport). -->
     <div class="cosmos-fade" aria-hidden="true"></div>
 
-    <!-- ===== NAV ===== -->
-    <nav class="nav">
-      <a href="#top" class="brand">
-        <span class="brand-orb">
-          <svg width="32" height="32" viewBox="0 0 32 32" class="brand-ring" aria-hidden="true">
-            <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
-            <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
-          </svg>
-          <span class="brand-orb-core"></span>
-        </span>
-        <span>Driss&nbsp;Najih</span>
-      </a>
-      <div class="nav-right">
-        <div class="navlinks">
-          <a href="#about">About</a>
-          <a href="#work">Work</a>
-          <a href="#stack">AI Stack</a>
-          <a href="#experience">Experience</a>
-          <a href="#contact">Contact</a>
+    <!-- ===== TOP BAR ===== -->
+    <div class="topbar-wrap">
+      <div class="topbar" data-topbar>
+        <a href="#top" class="brand">
+          <span class="brand-orb">
+            <svg width="30" height="30" viewBox="0 0 32 32" class="brand-ring" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
+              <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
+            </svg>
+            <span class="brand-orb-core"></span>
+          </span>
+          <span class="brand-name">Driss&nbsp;Najih</span>
+        </a>
+
+        <nav class="navpill" data-navpill aria-label="Primary">
+          <span class="navpill-ind" data-navind aria-hidden="true"></span>
+          <a href="#about" data-navlink="about">About</a>
+          <a href="#work" data-navlink="work">Work</a>
+          <a href="#stack" data-navlink="stack">AI Stack</a>
+          <a href="#experience" data-navlink="experience">Experience</a>
+          <a href="/blogs" data-navlink="writing">Blog</a>
+          <a href="#contact" data-navlink="contact">Contact</a>
+        </nav>
+
+        <div class="topbar-right">
+          <button type="button" class="indexbtn" data-palette-open aria-label="Open page index">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span class="indexbtn-label">Index</span>
+            <kbd class="indexbtn-kbd">⌘K</kbd>
+          </button>
+          <a href="#contact" class="navcta">Get in touch</a>
+          <button type="button" data-menubtn class="menubtn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
         </div>
-        <button type="button" data-menubtn class="menubtn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        </button>
       </div>
-    </nav>
+    </div>
 
     <!-- ===== MOBILE MENU ===== -->
     <div id="mobile-menu" class="mobile-menu" data-mobile-menu hidden>
@@ -78,6 +90,7 @@
       <a href="#work">Work</a>
       <a href="#stack">AI Stack</a>
       <a href="#experience">Experience</a>
+      <a href="/blogs">Blog</a>
       <a href="#contact">Contact</a>
       <div class="mobile-menu-foot mono">DRISS NAJIH · SENIOR SOFTWARE ENGINEER</div>
     </div>
@@ -509,11 +522,29 @@
       </div>
     </section>
 
+    <!-- ===== WRITING / BLOG ===== -->
+    <section id="writing" class="section writing">
+      <div data-reveal class="writing-head">
+        <div>
+          <div class="section-num">05 — Blog</div>
+          <h2 class="section-title">Notes from the build</h2>
+          <p class="section-intro writing-intro">Engineering notes on agents, retrieval and the platform work underneath them — written from things that shipped.</p>
+        </div>
+        <a href="/blogs" class="writing-all mono">
+          All posts
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="post-list" data-latest-posts>
+        <!-- latest 3 posts rendered from blog-data.js -->
+      </div>
+    </section>
+
     <!-- ===== CONTACT ===== -->
     <section id="contact" class="section contact">
       <div class="contact-glow" aria-hidden="true"></div>
       <div data-reveal class="contact-inner">
-        <div class="section-num">05 — Contact</div>
+        <div class="section-num">06 — Contact</div>
         <h2 class="contact-title">Let's build something<br>worth orbiting.</h2>
         <p class="contact-sub">Open to senior engineering roles and collaboration on AI-driven platforms. Based in France.</p>
         <div class="contact-actions">
@@ -555,6 +586,21 @@
       <span class="mono">© 2026 — built in orbit</span>
     </footer>
 
+    <!-- ===== PAGE INDEX (⌘K palette, opened from JS) ===== -->
+    <div class="palette" data-palette hidden>
+      <div class="palette-box" role="dialog" aria-modal="true" aria-label="Page index">
+        <div class="palette-head">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input data-palette-input type="text" placeholder="Jump to a section, post or link…" autocomplete="off" spellcheck="false">
+          <kbd class="mono">ESC</kbd>
+        </div>
+        <div class="palette-list" data-palette-list></div>
+        <div class="palette-foot mono">
+          <span>↑↓ navigate</span><span>↵ open</span><span>⌘K toggle</span>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== CUSTOM CURSOR (fine pointers only, enabled from JS) ===== -->
     <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
     <div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
@@ -562,6 +608,33 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="blog-data.js" defer></script>
   <script src="cosmos.js" defer></script>
+  <script src="palette.js" defer></script>
+  <script>
+    // latest 3 posts on the home page, from the shared blog data
+    // (runs at DOMContentLoaded, after the deferred blog-data.js)
+    document.addEventListener('DOMContentLoaded', function () {
+      var host = document.querySelector('[data-latest-posts]');
+      var posts = window.BLOG_POSTS_SORTED || [];
+      if (!host) return;
+      if (!posts.length) {
+        // no posts yet — the whole section stays hidden
+        var section = document.getElementById('writing');
+        if (section) section.hidden = true;
+        return;
+      }
+      host.innerHTML = posts.slice(0, 3).map(function (p) {
+        return '<a class="post-row" href="' + window.SITE_LINKS.blogs(p.slug) + '">' +
+          '<span class="post-row-date mono">' + p.dateLabel + '</span>' +
+          '<span class="post-row-main">' +
+            '<span class="post-row-title">' + p.title + '</span>' +
+            '<span class="post-row-dek">' + p.dek + '</span>' +
+          '</span>' +
+          '<span class="post-row-read mono">' + p.read + '</span>' +
+        '</a>';
+      }).join('');
+    });
+  </script>
 </body>
 </html>

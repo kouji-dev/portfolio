@@ -8,6 +8,11 @@ Thumbs.db
 .vscode/
 *.log
 
-# Dependencies (none currently — static site)
+# Dependencies (e2e tooling only — the site itself stays static)
 node_modules/
 .vercel
+package-lock.json
+
+# Playwright artifacts
+test-results/
+playwright-report/

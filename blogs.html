@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog — Driss Najih · Notes from the build</title>
+  <meta name="description" content="Engineering notes on agents, retrieval and the platform work underneath them — written from things that shipped. By Driss Najih, senior software engineer.">
+  <meta name="author" content="Driss Najih">
+  <meta name="theme-color" content="#05060B">
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blog — Driss Najih · Notes from the build">
+  <meta property="og:description" content="Agents, retrieval, and the platform engineering underneath them. Everything here comes out of something that shipped.">
+  <meta property="og:url" content="https://kouji.dev/blogs">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ4W6QWCMZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YJ4W6QWCMZ');
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="blogs" data-nav-active="writing">
+
+  <div class="page">
+
+    <!-- ===== GLOBAL COSMOS (fixed, behind the whole page for continuity) ===== -->
+    <div data-hero-bg class="cosmos"></div>
+    <div class="cosmos-fade" aria-hidden="true"></div>
+    <!-- extra veil: content pages sit on much calmer, darker space -->
+    <div class="cosmos-veil" aria-hidden="true"></div>
+
+    <!-- ===== TOP BAR ===== -->
+    <div class="topbar-wrap">
+      <div class="topbar" data-topbar>
+        <a href="/" class="brand">
+          <span class="brand-orb">
+            <svg width="30" height="30" viewBox="0 0 32 32" class="brand-ring" aria-hidden="true">
+              <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
+              <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
+            </svg>
+            <span class="brand-orb-core"></span>
+          </span>
+          <span class="brand-name">Driss&nbsp;Najih</span>
+        </a>
+
+        <nav class="navpill" data-navpill aria-label="Primary">
+          <span class="navpill-ind" data-navind aria-hidden="true"></span>
+          <a href="/#about" data-navlink="about">About</a>
+          <a href="/#work" data-navlink="work">Work</a>
+          <a href="/#stack" data-navlink="stack">AI Stack</a>
+          <a href="/#experience" data-navlink="experience">Experience</a>
+          <a href="/blogs" data-navlink="writing">Blog</a>
+          <a href="/#contact" data-navlink="contact">Contact</a>
+        </nav>
+
+        <div class="topbar-right">
+          <button type="button" class="indexbtn" data-palette-open aria-label="Open page index">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span class="indexbtn-label">Index</span>
+            <kbd class="indexbtn-kbd">⌘K</kbd>
+          </button>
+          <a href="/#contact" class="navcta">Get in touch</a>
+          <button type="button" data-menubtn class="menubtn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- reading progress (article view only, driven from blog.js) -->
+    <div class="readbar" data-readbar aria-hidden="true"></div>
+
+    <!-- ===== MOBILE MENU ===== -->
+    <div id="mobile-menu" class="mobile-menu" data-mobile-menu hidden>
+      <button type="button" data-menuclose class="menuclose" aria-label="Close menu">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+      <a href="/#about">About</a>
+      <a href="/#work">Work</a>
+      <a href="/#stack">AI Stack</a>
+      <a href="/#experience">Experience</a>
+      <a href="/blogs">Blog</a>
+      <a href="/#contact">Contact</a>
+      <div class="mobile-menu-foot mono">DRISS NAJIH · SENIOR SOFTWARE ENGINEER</div>
+    </div>
+
+    <!-- ===== BLOG INDEX ===== -->
+    <main data-view-index class="blog-index" hidden>
+      <div data-reveal class="section-num">Blog</div>
+      <h1 data-reveal class="blog-title">Notes from the build.</h1>
+      <p data-reveal class="blog-sub">Agents, retrieval, and the platform engineering underneath them. Everything here comes out of something that shipped — no tutorials, no roundups.</p>
+
+      <div data-reveal class="blog-filters">
+        <label class="blog-search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input data-blog-search type="text" placeholder="Search posts" autocomplete="off" spellcheck="false">
+        </label>
+        <div class="blog-chips" data-blog-chips></div>
+      </div>
+
+      <div class="post-list post-list-full" data-blog-list></div>
+      <div class="blog-empty mono" data-blog-empty hidden>No posts match that filter.</div>
+    </main>
+
+    <!-- ===== ARTICLE ===== -->
+    <main data-view-post class="post" hidden>
+      <div class="post-head">
+        <a href="/blogs" class="post-back mono">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          All posts
+        </a>
+        <div class="post-meta mono" data-post-meta></div>
+        <h1 class="post-title" data-post-title></h1>
+        <p class="post-dek" data-post-dek></p>
+        <div class="post-author">
+          <span class="post-avatar">DN</span>
+          <span class="post-author-names">
+            <span class="post-author-name">Driss Najih</span>
+            <span class="post-author-role mono">Senior Software Engineer</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="article-grid">
+        <article class="article" data-article data-post-body></article>
+
+        <aside class="toc" data-toc>
+          <div class="toc-label mono">On this page</div>
+          <nav class="toc-links" data-toc-links></nav>
+          <a href="/blogs" class="toc-index mono">Index of posts</a>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span class="mono">Driss Najih · Senior Software Engineer</span>
+      <span class="mono">© 2026 — built in orbit</span>
+    </footer>
+
+    <!-- ===== PAGE INDEX (⌘K palette, opened from JS) ===== -->
+    <div class="palette" data-palette hidden>
+      <div class="palette-box" role="dialog" aria-modal="true" aria-label="Page index">
+        <div class="palette-head">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input data-palette-input type="text" placeholder="Jump to a section, post or link…" autocomplete="off" spellcheck="false">
+          <kbd class="mono">ESC</kbd>
+        </div>
+        <div class="palette-list" data-palette-list></div>
+        <div class="palette-foot mono">
+          <span>↑↓ navigate</span><span>↵ open</span><span>⌘K toggle</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== CUSTOM CURSOR (fine pointers only, enabled from JS) ===== -->
+    <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
+    <div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
+  <script src="blog-data.js" defer></script>
+  <script src="blog.js" defer></script>
+  <script src="cosmos.js" defer></script>
+  <script src="palette.js" defer></script>
+</body>
+</html>
