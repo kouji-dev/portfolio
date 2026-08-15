@@ -1467,13 +1467,15 @@ pre::-webkit-scrollbar-thumb { background: #1b2030; border-radius: 8px; }
 /* =========================================================================
    Custom cursor (fine pointers only — JS enables and drives transforms)
    ========================================================================= */
+/* above every overlay (palette is 120, mobile menu 90) — pointer-events:none
+   keeps them harmless */
 .cursor-dot {
   position: fixed;
   left: 0; top: 0;
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--accent);
-  z-index: 99;
+  z-index: 200;
   pointer-events: none;
   display: none;
   will-change: transform;
@@ -1485,7 +1487,7 @@ pre::-webkit-scrollbar-thumb { background: #1b2030; border-radius: 8px; }
   border-radius: 50%;
   border: 1.5px solid var(--accent);
   opacity: .55;
-  z-index: 99;
+  z-index: 200;
   pointer-events: none;
   display: none;
   will-change: transform;
