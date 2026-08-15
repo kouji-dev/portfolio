@@ -77,6 +77,15 @@ body::-webkit-scrollbar-thumb { background: #1b2030; border-radius: 8px; }
 
 .page { position: relative; width: 100%; min-height: 100vh; background: transparent; }
 
+/* blogs page: pin the footer to the bottom even when content is short
+   (e.g. the empty post list) */
+body[data-page="blogs"] .page {
+  display: flex;
+  flex-direction: column;
+}
+body[data-page="blogs"] main { flex: 1 0 auto; }
+body[data-page="blogs"] .footer { margin-top: auto; }
+
 /* =========================================================================
    Top bar — floating glass pill, condenses on scroll (.on from JS)
    ========================================================================= */
