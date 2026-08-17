@@ -50,7 +50,8 @@
       { label: 'AI Toolbox',    href: section('stack'),      glyph: '04', hint: 'home' },
       { label: 'Experience',    href: section('experience'), glyph: '05', hint: 'home' },
       { label: 'Blog',          href: section('writing'),    glyph: '06', hint: 'home' },
-      { label: 'Contact',       href: section('contact'),    glyph: '07', hint: 'home' }
+      { label: 'Contact',       href: section('contact'),    glyph: '07', hint: 'home' },
+      { label: 'Commit trajectory', href: section('trajectory'), glyph: '◆', hint: 'inside experience' }
     ] });
 
     var posts = window.BLOG_POSTS_SORTED || [];

@@ -437,6 +437,40 @@
     <section id="experience" class="section experience">
       <div data-reveal class="section-num">04 — Experience</div>
       <h2 data-reveal class="section-title exp-title">Seven years across enterprise platforms</h2>
+
+      <div id="trajectory" class="trajectory">
+        <h3 data-reveal class="traj-title">Nine months, seven repositories</h3>
+        <p data-reveal class="traj-intro">December 2025 to now, stacked by repository week by week, with months marked on the axis. Height is commit volume; where bands sit on top of each other the work ran in parallel, and where a band drops to zero that project was parked.</p>
+
+        <div data-reveal class="traj-stats">
+          <div class="traj-stat">
+            <div class="traj-stat-label">Commits</div>
+            <div class="traj-stat-value"><span data-count data-target="0">0</span></div>
+          </div>
+          <div class="traj-stat">
+            <div class="traj-stat-label">Repositories</div>
+            <div class="traj-stat-value"><span data-count data-target="0">0</span><span class="traj-stat-sub" data-traj-weeks></span></div>
+          </div>
+        </div>
+
+        <div data-reveal class="traj-card">
+          <div class="traj-legend" data-traj-legend></div>
+          <div class="traj-chart-wrap" data-traj-chart-wrap>
+            <svg class="traj-chart" data-traj-chart viewBox="0 0 1000 290" role="img" aria-label="Weekly commits stacked by repository, December 2025 to now">
+              <line x1="0" y1="72" x2="1000" y2="72" class="traj-grid"></line>
+              <line x1="0" y1="145" x2="1000" y2="145" class="traj-grid"></line>
+              <line x1="0" y1="218" x2="1000" y2="218" class="traj-grid"></line>
+              <line x1="0" y1="280" x2="1000" y2="280" class="traj-grid traj-grid-base"></line>
+            </svg>
+            <div class="traj-tip" data-traj-tip hidden></div>
+          </div>
+          <div class="traj-ticks" data-traj-ticks></div>
+        </div>
+
+        <div data-reveal class="traj-lanes" data-traj-lanes></div>
+      </div>
+
+      <div data-reveal class="traj-roles-label">Roles</div>
       <div class="timeline" data-timeline-wrap>
         <div class="timeline-rail" aria-hidden="true"></div>
         <div class="timeline-fill" data-timeline-fill aria-hidden="true"></div>
@@ -611,6 +645,7 @@
   <script src="analytics.js" defer></script>
   <script src="blog-data.js" defer></script>
   <script src="cosmos.js" defer></script>
+  <script src="trajectory.js" defer></script>
   <script src="palette.js" defer></script>
   <script>
     // latest 3 posts on the home page, from the shared blog data
