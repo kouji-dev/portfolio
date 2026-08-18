@@ -2,9 +2,11 @@
  * cv.yaml loader: parse -> validate -> resolve(lang, version).
  *
  * The YAML holds every human string as a localized leaf `{ en, fr }` and every
- * selectable list item as `{ in: [short, long], ... }`. `resolve` walks the tree
- * once, collapsing each leaf to the chosen language and dropping items excluded
- * from the chosen version, returning a plain view-model the templates consume.
+ * selectable list item as `{ in: [short, long], ... }`. An item may also carry
+ * `visible: false` to keep its content in the source while excluding it from
+ * every output. `resolve` walks the tree once, collapsing each leaf to the
+ * chosen language and dropping hidden/excluded items, returning a plain
+ * view-model the templates consume.
  */
 
 const fs = require("fs");
@@ -24,17 +26,19 @@ function isLocalizedLeaf(node) {
   return keys.length > 0 && keys.every((k) => k === "en" || k === "fr");
 }
 
-// An item is kept for a version if it has no `in` tag, or the tag lists it.
+// An item is kept for a version if it is not hidden (`visible: false`) and
+// either has no `in` tag or the tag lists the version.
 function includeItem(item, version) {
-  if (item && typeof item === "object" && Array.isArray(item.in)) {
-    return item.in.includes(version);
+  if (item && typeof item === "object") {
+    if (item.visible === false) return false;
+    if (Array.isArray(item.in)) return item.in.includes(version);
   }
   return true;
 }
 
 /**
- * Deep-clone + localize + version-filter. Strips `in` metadata so templates
- * stay dumb. Returns a plain object mirroring the YAML shape.
+ * Deep-clone + localize + version-filter. Strips `in`/`visible` metadata so
+ * templates stay dumb. Returns a plain object mirroring the YAML shape.
  */
 function resolve(data, lang, version) {
   function walk(node) {
@@ -47,7 +51,7 @@ function resolve(data, lang, version) {
     if (node && typeof node === "object") {
       const out = {};
       for (const [k, v] of Object.entries(node)) {
-        if (k === "in") continue;
+        if (k === "in" || k === "visible") continue;
         out[k] = walk(v);
       }
       return out;
@@ -81,6 +85,9 @@ function validate(data) {
     if (Array.isArray(node)) {
       node.forEach((item, i) => {
         const itemPath = `${pathStr}[${i}]`;
+        if (item && typeof item === "object" && "visible" in item && typeof item.visible !== "boolean") {
+          errors.push(`${itemPath}.visible must be a boolean`);
+        }
         if (item && typeof item === "object" && Array.isArray(item.in)) {
           item.in.forEach((v) => {
             if (!VERSIONS.includes(v)) {
