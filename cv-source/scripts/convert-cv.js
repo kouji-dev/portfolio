@@ -26,6 +26,7 @@ const { loadYaml, validate, resolve } = require("./lib/loader");
 const { renderLong } = require("./lib/templates/long");
 const { renderShort } = require("./lib/templates/short");
 const { renderDocx } = require("./lib/templates/docx");
+const { repairDocx } = require("./lib/docx-repair");
 
 const ROOT = path.resolve(__dirname, "..");
 
@@ -90,6 +91,19 @@ async function toPdf(browser, html, outputPath) {
 // which the PDFs never were.
 const A4_TWIPS = { width: 11906, height: 16838 };
 
+// Every key matters: html-to-docx writes this object straight into <w:pgMar>
+// without filling gaps, so an omitted `header`/`footer`/`gutter` lands in the
+// XML as the literal string "undefined" and Word refuses to open the file.
+const DOCX_MARGINS = {
+  top: 907,
+  right: 1020,
+  bottom: 1020,
+  left: 1020,
+  header: 720,
+  footer: 720,
+  gutter: 0,
+};
+
 async function toDocx(html, outputPath, { title, lang }) {
   const buffer = await HTMLtoDOCX(html, null, {
     table: { row: { cantSplit: true } },
@@ -97,7 +111,7 @@ async function toDocx(html, outputPath, { title, lang }) {
     pageNumber: false,
     font: "Segoe UI",
     fontSize: 21, // 10.5pt -> half-points
-    margins: { top: 907, right: 1020, bottom: 1020, left: 1020 },
+    margins: DOCX_MARGINS,
     orientation: "portrait",
     pageSize: A4_TWIPS,
     defaultLang: lang === "fr" ? "fr-FR" : "en-US",
@@ -105,7 +119,10 @@ async function toDocx(html, outputPath, { title, lang }) {
     creator: title,
     lastModifiedBy: title,
   });
-  fs.writeFileSync(outputPath, buffer);
+  // html-to-docx emits document.xml that Word rejects (sectPr first in the
+  // body, w:rPr children out of schema order); lenient readers like Google Docs
+  // show it anyway. See lib/docx-repair.js.
+  fs.writeFileSync(outputPath, await repairDocx(buffer));
 }
 
 (async () => {

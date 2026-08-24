@@ -8,11 +8,14 @@
     "convert:docx": "node scripts/convert-cv.js --docx",
     "convert:np": "node scripts/convert-cv.js --source=np.yaml --docx",
     "convert:all": "npm run convert:docx && npm run convert:np",
-    "test": "node scripts/test-loader.js"
+    "test": "npm run test:loader && npm run test:docx",
+    "test:loader": "node scripts/test-loader.js",
+    "test:docx": "node scripts/test-docx.js"
   },
   "dependencies": {
     "html-to-docx": "^1.8.0",
     "js-yaml": "^4.1.0",
+    "jszip": "^3.10.1",
     "puppeteer": "^24.0.0"
   }
 }

@@ -156,6 +156,15 @@ short variant is not pinned to one page there, and the two-column entry heads
 become `Role — COMPANY` lines. Nothing on the site links the DOCX; it exists for
 recruiters and ATS uploads that demand Word.
 
+`scripts/lib/docx-repair.js` then patches the package html-to-docx produces,
+because Word validates document.xml against the WordprocessingML schema and
+refuses the file on any violation — while Google Docs, LibreOffice and macOS
+Preview open the very same bytes without complaint. Three things get fixed:
+`<w:sectPr>` is moved from the first child of `<w:body>` to the last, `<w:rPr>`
+children are sorted into schema order, and any attribute that arrived as the
+string `"undefined"` is dropped. `npm run test:docx` re-checks every built file,
+so a regression here fails the build instead of reaching a recruiter's inbox.
+
 Every string in the YAML is an **EN + FR pair**, and `in: [short, long]` tags
 control which variant an entry appears in. Short variants must stay **one page** —
 verify after each build.
