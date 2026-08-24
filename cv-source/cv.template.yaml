@@ -16,7 +16,8 @@
 #     long — anything tagged `short` should also be tagged `long`.
 #
 #   * Output: `npm run convert` -> 4 PDFs (EN/FR x short/long).
-#             `npm run convert:docx` also emits DOCX (long renders best in Word).
+#             `npm run convert:docx` also emits DOCX (its own Word-native
+#             template — see scripts/lib/templates/docx.js).
 # =============================================================================
 
 meta:

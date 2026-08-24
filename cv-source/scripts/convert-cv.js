@@ -24,6 +24,7 @@ const HTMLtoDOCX = require("html-to-docx");
 const { loadYaml, validate, resolve } = require("./lib/loader");
 const { renderLong } = require("./lib/templates/long");
 const { renderShort } = require("./lib/templates/short");
+const { renderDocx } = require("./lib/templates/docx");
 
 const ROOT = path.resolve(__dirname, "..");
 
@@ -84,7 +85,11 @@ async function toPdf(browser, html, outputPath) {
   }
 }
 
-async function toDocx(html, outputPath) {
+// A4 in twips (210 x 297 mm). Without this html-to-docx defaults to US Letter,
+// which the PDFs never were.
+const A4_TWIPS = { width: 11906, height: 16838 };
+
+async function toDocx(html, outputPath, { title, lang }) {
   const buffer = await HTMLtoDOCX(html, null, {
     table: { row: { cantSplit: true } },
     footer: false,
@@ -93,14 +98,19 @@ async function toDocx(html, outputPath) {
     fontSize: 21, // 10.5pt -> half-points
     margins: { top: 907, right: 1020, bottom: 1020, left: 1020 },
     orientation: "portrait",
+    pageSize: A4_TWIPS,
+    defaultLang: lang === "fr" ? "fr-FR" : "en-US",
+    title,
+    creator: title,
+    lastModifiedBy: title,
   });
   fs.writeFileSync(outputPath, buffer);
 }
 
 (async () => {
-  console.log("CV generator (YAML -> PDF" + ")");
-
   const opts = parseArgs(process.argv.slice(2));
+  console.log(`CV generator (YAML -> PDF${opts.docx ? " + DOCX" : ""})`);
+
   const source = path.isAbsolute(opts.source) ? opts.source : path.join(ROOT, opts.source);
 
   if (!fs.existsSync(source)) {
@@ -142,14 +152,14 @@ async function toDocx(html, outputPath) {
         }
 
         if (opts.docx) {
-          if (version === "short") {
-            console.warn(
-              "     [warn] short DOCX linearizes the compact layout (Word has no CSS grid/flex)"
-            );
-          }
+          // Not the PDF HTML: html-to-docx ignores <style> blocks entirely, so
+          // the DOCX gets its own inline-styled rendering of the same model.
           process.stdout.write(`  -> ${base}.docx ... `);
           try {
-            await toDocx(html, path.join(opts.out, `${base}.docx`));
+            await toDocx(renderDocx(model, lang, version), path.join(opts.out, `${base}.docx`), {
+              title: name,
+              lang,
+            });
             console.log("done");
           } catch (err) {
             console.log("FAILED");

@@ -1,6 +1,8 @@
-# Convert CV markdown to PDF.
-# Run from anywhere:
+# Generate the CV PDFs (and optionally DOCX) from main.yaml.
+# Run from anywhere; every argument is forwarded to convert-cv.js:
 #   ./scripts/convert-cv.ps1
+#   ./scripts/convert-cv.ps1 --docx
+#   ./scripts/convert-cv.ps1 --lang=en --version=short --docx
 
 $ErrorActionPreference = "Stop"
 
@@ -17,5 +19,5 @@ if (-not (Test-Path "node_modules")) {
     }
 }
 
-node "scripts/convert-cv.js"
+node "scripts/convert-cv.js" @args
 exit $LASTEXITCODE

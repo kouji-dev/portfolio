@@ -105,6 +105,7 @@ via Puppeteer, writing straight into `assets/` with the exact filenames
 cd cv-source
 npm install                  # first run only (downloads Chromium)
 npm run convert              # 4 PDFs: en/fr x short/long -> ../assets
+npm run convert:docx         # the same 4, plus a DOCX for each
 ```
 
 | Flag | Effect |
@@ -113,6 +114,15 @@ npm run convert              # 4 PDFs: en/fr x short/long -> ../assets
 | `--source=frontend.yaml --tag=frontend` | Build a tailored variant → `najih-driss-cv-frontend-en-short.pdf`. |
 | `--out=./build` | Write somewhere other than `../assets`. |
 | `--docx` | Also emit DOCX alongside each PDF. |
+
+The DOCX files are **not** the PDF HTML fed to a converter: `html-to-docx`
+ignores `<style>` blocks entirely, so the PDF stylesheets would be dropped
+wholesale. `scripts/lib/templates/docx.js` renders the same model separately
+using only the inline CSS Word understands. It carries the same content and
+section order as its PDF counterpart, but it is a flowing Word document — the
+short variant is not pinned to one page there, and the two-column entry heads
+become `Role — COMPANY` lines. Nothing on the site links the DOCX; it exists for
+recruiters and ATS uploads that demand Word.
 
 Every string in the YAML is an **EN + FR pair**, and `in: [short, long]` tags
 control which variant an entry appears in. Short variants must stay **one page** —
