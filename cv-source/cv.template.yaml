@@ -15,9 +15,26 @@
 #     Omit `in:` to always include the item. RULE: short must be a subset of
 #     long — anything tagged `short` should also be tagged `long`.
 #
+#   * Visibility: any list item may carry `visible: false` to keep its content
+#     in the source while excluding it from every output, regardless of `in:`.
+#
 #   * Output: `npm run convert` -> 4 PDFs (EN/FR x short/long).
 #             `npm run convert:docx` also emits DOCX (its own Word-native
 #             template — see scripts/lib/templates/docx.js).
+#
+#   * Inheritance: a variant file can build on another instead of copying it.
+#         extends: main.yaml        # path relative to the variant file
+#         output:                   # names this variant's files
+#           tag: np                 #   -> najih-driss-cv-np-en-short.pdf
+#         overrides:                # surgical patches applied after the merge
+#           - path: experiences[company=Preesm Group].visible
+#             value: false
+#     Other top-level keys in the variant deep-merge over the base (mappings
+#     merge key by key; arrays and scalars replace wholesale). Override paths
+#     use dots for mappings and [n] or [field=value] for array items — a
+#     selector must match exactly one item. `output` is never inherited, so a
+#     variant can never overwrite its base's files; `--tag=` overrides it.
+#     Build a variant with `--source=<variant>.yaml`.
 # =============================================================================
 
 meta:

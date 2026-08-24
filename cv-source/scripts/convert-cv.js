@@ -8,9 +8,10 @@
  *   node scripts/convert-cv.js                     # 4 PDFs (en/fr x short/long)
  *   node scripts/convert-cv.js --docx              # + DOCX for each
  *   node scripts/convert-cv.js --lang=en --version=short
- *   node scripts/convert-cv.js --source=frontend.yaml --tag=frontend   # alternate source, tagged output filenames
+ *   node scripts/convert-cv.js --source=np.yaml --docx   # variant; its own `output.tag` names the files
+ *   node scripts/convert-cv.js --source=frontend.yaml --tag=frontend   # tag from the command line instead
  *   node scripts/convert-cv.js --out=./build       # write elsewhere instead of ../cv
- *   npm run convert  /  npm run convert:docx
+ *   npm run convert  /  npm run convert:docx  /  npm run convert:np
  *
  * Or via the PowerShell wrapper (auto-installs deps on first run):
  *   ./scripts/convert-cv.ps1
@@ -123,6 +124,9 @@ async function toDocx(html, outputPath, { title, lang }) {
   validate(data);
 
   const name = data.meta.name;
+  // A variant names its own files via `output.tag`; --tag= still wins so a
+  // one-off build can be redirected without editing the YAML.
+  const tag = opts.tag || (data.output && data.output.tag) || "";
 
   fs.mkdirSync(opts.out, { recursive: true });
   console.log(`  out: ${opts.out}`);
@@ -136,8 +140,8 @@ async function toDocx(html, outputPath, { title, lang }) {
       for (const version of opts.versions) {
         const model = resolve(data, lang, version);
         const html = version === "short" ? renderShort(model, lang) : renderLong(model, lang);
-        // e.g. najih-driss-cv-en-short.pdf / najih-driss-cv-frontend-en-short.pdf
-        const base = [slug(name), "cv", opts.tag && slug(opts.tag), lang, version]
+        // e.g. najih-driss-cv-en-short.pdf / najih-driss-cv-np-en-short.pdf
+        const base = [slug(name), "cv", tag && slug(tag), lang, version]
           .filter(Boolean)
           .join("-");
 

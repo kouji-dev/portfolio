@@ -2,10 +2,13 @@
   "name": "cv-converter",
   "version": "2.0.0",
   "private": true,
-  "description": "Generate localized, short/long CV PDFs (and optional DOCX) from a single main.yaml.",
+  "description": "Generate localized, short/long CV PDFs (and optional DOCX) from a single main.yaml, plus inheriting variants.",
   "scripts": {
     "convert": "node scripts/convert-cv.js",
-    "convert:docx": "node scripts/convert-cv.js --docx"
+    "convert:docx": "node scripts/convert-cv.js --docx",
+    "convert:np": "node scripts/convert-cv.js --source=np.yaml --docx",
+    "convert:all": "npm run convert:docx && npm run convert:np",
+    "test": "node scripts/test-loader.js"
   },
   "dependencies": {
     "html-to-docx": "^1.8.0",

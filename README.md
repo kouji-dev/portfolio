@@ -106,14 +106,46 @@ cd cv-source
 npm install                  # first run only (downloads Chromium)
 npm run convert              # 4 PDFs: en/fr x short/long -> ../assets
 npm run convert:docx         # the same 4, plus a DOCX for each
+npm run convert:np           # the `np` variant (no Preesm), PDF + DOCX
+npm run convert:all          # both variants, 16 files
+npm test                     # loader tests (inheritance, overrides) — no browser
 ```
 
 | Flag | Effect |
 |------|--------|
 | `--lang=en` / `--version=short` | Build a subset instead of all four. |
-| `--source=frontend.yaml --tag=frontend` | Build a tailored variant → `najih-driss-cv-frontend-en-short.pdf`. |
+| `--source=np.yaml` | Build a variant; its own `output.tag` names the files. |
+| `--tag=frontend` | Override the tag → `najih-driss-cv-frontend-en-short.pdf`. |
 | `--out=./build` | Write somewhere other than `../assets`. |
 | `--docx` | Also emit DOCX alongside each PDF. |
+
+### Variants: `extends` + `overrides`
+
+A variant file inherits a base instead of duplicating it. `np.yaml` is the whole
+pattern — *main minus the Preesm Group mission*:
+
+```yaml
+extends: main.yaml
+output:
+  tag: np                    # -> najih-driss-cv-np-en-short.pdf
+overrides:
+  - path: experiences[company=Preesm Group].visible
+    value: false
+```
+
+Top-level keys written in the variant deep-merge over the base (mappings merge
+key by key; arrays and scalars replace wholesale). `overrides` then patches
+individual paths: dots address mappings, `[n]` or `[field=value]` address array
+items, and a selector must match **exactly one** item or the build fails loudly.
+`visible: false` drops an item from every output regardless of its `in:` tags.
+
+`output` is deliberately **not** inherited — a variant that picked up its base's
+filenames would silently overwrite the base's own build. Only the file named on
+the command line contributes one, and `--tag=` still wins over it.
+
+So `main.yaml` **includes** Preesm and owns the untagged filenames the site links;
+`np.yaml` is the Preesm-free cut, parked alongside under `-np-` names and linked
+from nowhere.
 
 The DOCX files are **not** the PDF HTML fed to a converter: `html-to-docx`
 ignores `<style>` blocks entirely, so the PDF stylesheets would be dropped

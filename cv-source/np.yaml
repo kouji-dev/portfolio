@@ -1,0 +1,20 @@
+# CV variant: np ("no Preesm") — identical to main.yaml, minus the Preesm Group
+# mission. Build FR + EN, PDF + DOCX: `npm run convert:np` (or add --docx to
+# `node scripts/convert-cv.js --source=np.yaml`).
+#
+# Inheritance: `extends` pulls in a base file; top-level keys written here are
+# deep-merged over it, and `overrides` patches individual paths afterwards.
+# Path syntax: dots for mappings, [n] or [field=value] for array items.
+# `output.tag` names this variant's files — najih-driss-cv-np-en-short.pdf —
+# so the build never collides with main.yaml's. It is not inherited, and a
+# `--tag=` on the command line overrides it.
+# Schema/conventions: see cv.template.yaml.
+
+extends: main.yaml
+
+output:
+  tag: np
+
+overrides:
+  - path: experiences[company=Preesm Group].visible
+    value: false

@@ -107,7 +107,6 @@ skills:
 
 experiences:
   - in: [short, long]
-    visible: false
     company: "Preesm Group"
     role:
       en: "Full Stack Developer (Angular / Node.js)"
