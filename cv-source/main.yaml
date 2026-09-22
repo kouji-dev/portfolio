@@ -19,8 +19,8 @@ meta:
 about:
   - in: [short, long]
     text:
-      en: "Senior Software Engineer with **7+ years of experience** designing and building large-scale web platforms and backend frameworks. Extensive experience across JavaScript/TypeScript, Java, Angular, React, and cloud-native architectures."
-      fr: "Ingénieur Logiciel Senior avec **plus de 7 ans d'expérience** dans la conception et le développement de plateformes web à grande échelle et de frameworks backend. Expérience approfondie en JavaScript/TypeScript, Java, Angular, React et architectures cloud-native."
+      en: "Senior Software Engineer with **8 years of experience** designing and building large-scale web platforms and backend frameworks. Extensive experience across JavaScript/TypeScript, Java, Angular, React, and cloud-native architectures."
+      fr: "Ingénieur Logiciel Senior avec **8 ans d'expérience** dans la conception et le développement de plateformes web à grande échelle et de frameworks backend. Expérience approfondie en JavaScript/TypeScript, Java, Angular, React et architectures cloud-native."
   - in: [long]
     text:
       en: "Specialized in **complex frontend frameworks, backend systems, and platform-level development**, with experience working on **shared frameworks, low-code-like systems, and enterprise tooling** used by multiple teams and products."
@@ -120,16 +120,20 @@ experiences:
     responsibilities:
       - in: [short]
         text:
-          en: "Designed and shipped **Preesm Portal** (**multi-tenant** B2B SaaS for franchise networks) **end to end as sole engineer** — **Angular 22** SPA, **Hono/Node.js** API, PostgreSQL — **first release in production within a month**"
-          fr: "Conçu et livré **Preesm Portal** (SaaS B2B **multi-tenant**) **de bout en bout en tant que seul ingénieur** — SPA **Angular 22**, API **Hono/Node.js**, PostgreSQL — **première release en production en un mois**"
+          en: "Created **Preesm Portal** end to end — product design, **architecture, tech choices and infrastructure**"
+          fr: "Création de **Preesm Portal** de bout en bout — conception, **architecture, choix techniques et infrastructure**"
       - in: [short]
         text:
-          en: "Built the **onboarding engine** driving the franchisee journey — **declarative step catalog**, dependency-based unlocking, server-enforced statuses, **document generation & signature** and a **file hub**"
-          fr: "Construit le **moteur d'onboarding** du parcours franchisé — **catalogue d'étapes déclaratif**, déblocage par dépendances, statuts contrôlés côté serveur, **génération et signature de documents** et **hub documentaire**"
+          en: "Delivered the core modules: **franchisee onboarding**, **document generation with e-signature**, **file deposit**, **users, roles and access**, **billing**, **reporting** and **mailing campaigns**"
+          fr: "Livré les modules clés : **onboarding** franchisé, **génération de documents avec signature électronique**, **dépôt de fichiers**, **utilisateurs, rôles et accès**, **facturation**, **reporting** et **campagnes de mailing**"
       - in: [short]
         text:
-          en: "Secured the platform with **passkey/MFA authentication** and a **tenant-scoped, deny-by-default RBAC**, and ship through **GitHub Actions CI/CD** — **Render.com** staging, **OVH** production — with **Playwright E2E tests** gating every release"
-          fr: "Sécurisé la plateforme avec l'authentification **passkey/MFA** et un **RBAC deny-by-default scopé par tenant**, et livré via une **CI/CD GitHub Actions** — staging **Render.com**, production **OVH** — avec des **tests E2E Playwright** validant chaque release"
+          en: "Produced the **mockups and full design proposal**, then a fast **Angular 22** SPA on **@kouji-ui**, my own public library, with a **Hono/Node.js** API and PostgreSQL"
+          fr: "Réalisé les **maquettes et la proposition de design complète**, puis une SPA **Angular 22** performante sur **@kouji-ui**, ma librairie publique, avec une API **Hono/Node.js** et PostgreSQL"
+      - in: [short]
+        text:
+          en: "Secured the platform (**passkey/MFA**, **deny-by-default RBAC**) and shipped to **staging and production** with **Playwright E2E tests** and quality gates"
+          fr: "Sécurisé la plateforme (**passkey/MFA**, **RBAC deny-by-default**) et livré en **recette et production** avec **tests E2E Playwright** et contrôles qualité"
       - in: [long]
         text:
           en: "Designed the **multi-tenant architecture**: an **Angular 22** SPA (zoneless, signals) and a **Hono/Node.js** API in a pnpm monorepo, sharing one typed contract package (**Drizzle** schema + **Zod** DTOs)"
@@ -179,7 +183,7 @@ experiences:
         text:
           en: "Turned the business process into **configuration rather than code**: new steps and notification recipients no longer require a release"
           fr: "Transformé le processus métier en **configuration plutôt qu'en code** : nouvelles étapes et destinataires de notifications ne nécessitent plus de release"
-    tech: "Angular 22 (zoneless, signals), TypeScript, Tailwind CSS 4, Hono, Node.js, BetterAuth (passkeys, TOTP), PostgreSQL 17, Drizzle ORM, Zod, pdf-lib, nodemailer, S3-compatible storage, Playwright, Vitest, Docker, GitHub Actions, Render, OVH, Caddy, pgBackRest"
+    tech: "Angular 22 (zoneless, signals), kouji-ui, TypeScript, Tailwind CSS 4, Node.js, Hono, BetterAuth (passkeys, TOTP), Zod, pdf-lib, nodemailer, PostgreSQL 17, Drizzle ORM, S3-compatible storage, Vitest, Playwright, Docker, GitHub Actions, Render, OVH, Caddy, pgBackRest"
 
   - in: [short, long]
     company: "Amundi ITS"
@@ -327,7 +331,7 @@ experiences:
         text:
           en: "Designing framework APIs **generic enough for many teams** yet simple enough for rapid adoption"
           fr: "Conception d'APIs de framework **assez génériques pour de nombreuses équipes** tout en restant simples à adopter rapidement"
-    tech: "Angular, TypeScript, Node.js, Electron, SQLite, PowerShell, Java 8/11/21, Spring Boot, Quarkus, Keycloak, Oracle DB, MongoDB, Karma, Jest, JaCoCo, Cypress, Playwright, Webpack, Jenkins, GitLab CI, Claude, Codex, Agile Scrum"
+    tech: "Angular, TypeScript, Electron, Node.js, Java 8/11/21, Spring Boot, Quarkus, Keycloak, Oracle DB, MongoDB, SQLite, Karma, Jest, Cypress, Playwright, JaCoCo, Webpack, PowerShell, Jenkins, GitLab CI, Claude, Codex, Agile Scrum"
 
   - in: [short, long]
     company: "Zsoft Consulting"
@@ -381,7 +385,7 @@ experiences:
             text:
               en: "Extracting a standalone service from a **tightly coupled legacy KYC system** whose database was owned by another provider team"
               fr: "Extraire un service autonome depuis un **système KYC legacy fortement couplé** dont la base de données appartenait à une autre équipe fournisseur"
-        tech: "Java 17, Spring Boot, Spring Security, OAuth2, PostgreSQL, Quartz, Flyway, JaCoCo, Docker, Kubernetes, RabbitMQ, Jenkins"
+        tech: "Java 17, Spring Boot, Spring Security, OAuth2, Quartz, RabbitMQ, PostgreSQL, Flyway, JaCoCo, Docker, Kubernetes, Jenkins"
       - label:
           en: "Client: Colas — Project: CRM"
           fr: "Client : Colas — Projet : CRM"
@@ -457,7 +461,7 @@ experiences:
               fr: "Maintenir un **calendrier fluide** tout en affichant de gros volumes de données de planning multi-sources sur un modèle multi-tenant"
         tech: "React, TypeScript, Ant Design, SCSS, Java, Spring Boot, REST APIs, AWS"
     responsibilities: []
-    tech: "Java 11/17, Spring Boot, Spring Security, Spring Batch, OAuth2, React, TypeScript, Ant Design, Azure (AD, App Services, PostgreSQL), AWS, Docker, Kubernetes, RabbitMQ, GitLab CI/CD"
+    tech: "React, TypeScript, Ant Design, Java 11/17, Spring Boot, Spring Security, Spring Batch, OAuth2, RabbitMQ, Azure (AD, App Services, PostgreSQL), AWS, Docker, Kubernetes, GitLab CI/CD"
 
   - in: [short, long]
     company: "Scor"
@@ -509,7 +513,7 @@ experiences:
         text:
           en: "Made **large risk datasets workable in the browser** — virtualised grid rendering and data visualization on the heavy loss-data screens"
           fr: "Rendu les **gros volumes de données de risque exploitables dans le navigateur** — rendu de grilles virtualisées et visualisation de données sur les écrans de sinistres lourds"
-    tech: "Java 8, Spring Boot, Spring Batch, Spring Security, Angular 12, Ant Design, AG Grid, WebSockets, Azure AD, Keycloak, SQL Server, Azure DevOps, Jenkins"
+    tech: "Angular 12, Ant Design, AG Grid, WebSockets, Java 8, Spring Boot, Spring Batch, Spring Security, Keycloak, Azure AD, SQL Server, Azure DevOps, Jenkins"
 
   - in: [long]
     company: "Scor"
@@ -583,7 +587,7 @@ projects:
         text:
           en: "Established a **quality & release pipeline**: **Vitest** unit tests, **Playwright** end-to-end suites, a **performance smoke-test** harness with assertions, semantic version-bump scripts, and **GitHub Actions** workflows (including a Render-deployed landing site)"
           fr: "Établi une **pipeline qualité & release** : tests unitaires **Vitest**, suites end-to-end **Playwright**, un harnais de **smoke-test de performance** avec assertions, scripts de bump de version sémantique, et workflows **GitHub Actions** (incluant un site vitrine déployé sur Render)"
-    tech: "Tauri 2, Rust, Angular 20, TypeScript, CodeMirror 6, Lexical, RxJS, Vitest, Playwright, GitHub Actions"
+    tech: "Angular 20, TypeScript, RxJS, CodeMirror 6, Lexical, Tauri 2, Rust, Vitest, Playwright, GitHub Actions"
 
   - in: [short, long]
     name: "Vortex — Enterprise LLM Gateway"
@@ -618,7 +622,7 @@ projects:
         text:
           en: "Delivered the tenant and platform consoles with **@kouji-ui** (my own design system) and **Angular SSR**, covered by **Playwright** end-to-end tests and Docker-based local infrastructure"
           fr: "Livré les consoles tenant et plateforme avec **@kouji-ui** (mon propre design system) et **Angular SSR**, couvertes par des tests end-to-end **Playwright** et une infrastructure locale basée sur Docker"
-    tech: "Angular 22 (zoneless), TypeScript, Hono, Node.js, PostgreSQL, Drizzle ORM (RLS), Redis, Zod, Stripe, @kouji-ui, Angular SSR, Playwright, Docker, pnpm, Render"
+    tech: "Angular 22 (zoneless), Angular SSR, TypeScript, @kouji-ui, Node.js, Hono, Zod, Stripe, PostgreSQL, Drizzle ORM (RLS), Redis, Playwright, pnpm, Docker, Render"
 
   - in: [short, long]
     name: "Kouji UI — Angular Design System & Component Library"
@@ -653,7 +657,7 @@ projects:
         text:
           en: "Wrote contributor documentation and **AI-collaboration guidelines** (`CLAUDE.md`, `RULES.md`) so the library can be extended consistently by both humans and AI coding agents"
           fr: "Rédigé la documentation contributeur et des **directives de collaboration IA** (`CLAUDE.md`, `RULES.md`) pour que la bibliothèque puisse être étendue de manière cohérente par humains et agents IA"
-    tech: "Angular 21, TypeScript, Angular CLI, pnpm workspaces, Turborepo, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, Changesets, Tailwind CSS, GitHub Actions"
+    tech: "Angular 21, TypeScript, Tailwind CSS, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, Angular CLI, pnpm workspaces, Turborepo, Changesets, GitHub Actions"
 
   - in: [long]
     name: "Pages — Unified Project Management & Documentation Platform"
@@ -684,7 +688,7 @@ projects:
         text:
           en: "Enabled **rich documentation authoring** through **Lexical editor** integration and ensured code quality with comprehensive test coverage (unit, integration, functional) and automated CI/CD workflows"
           fr: "Activé la **rédaction de documentation riche** grâce à l'intégration de l'**éditeur Lexical** et assuré la qualité du code avec une couverture de tests complète (unitaire, intégration, fonctionnel) et des workflows CI/CD automatisés"
-    tech: "Angular 21, TypeScript 5.7+, Python 3.12, FastAPI, PostgreSQL 17, Redis 8, SQLAlchemy 2.0, Lexical, Tailwind CSS 4, Docker, Docker Compose, Poetry, pnpm, WebSockets, JWT, Pydantic, Alembic, Git, GitHub Actions"
+    tech: "Angular 21, TypeScript 5.7+, Tailwind CSS 4, Lexical, WebSockets, Python 3.12, FastAPI, Pydantic, JWT, PostgreSQL 17, SQLAlchemy 2.0, Alembic, Redis 8, Poetry, pnpm, Git, Docker, Docker Compose, GitHub Actions"
 
   - in: [long]
     name: "GamerGG — Gaming Service Platform"
@@ -727,7 +731,7 @@ projects:
         text:
           en: "Established a **reusable UI component library** shared across the monorepo with a consistent design system and TypeScript types"
           fr: "Établi une **bibliothèque de composants UI réutilisables** partagée à travers le monorepo avec un système de design cohérent et des types TypeScript"
-    tech: "Next.js 13, React 18, TypeScript, Prisma, PostgreSQL, NextAuth.js, Tailwind CSS, Turborepo, Yarn Workspaces, OAuth, Discord API, Git, GitHub Actions"
+    tech: "Next.js 13, React 18, TypeScript, Tailwind CSS, NextAuth.js, OAuth, Discord API, PostgreSQL, Prisma, Turborepo, Yarn Workspaces, Git, GitHub Actions"
 
   - in: [long]
     name: "Acta — Accounting Firm Project Management Platform"
@@ -765,7 +769,7 @@ projects:
         text:
           en: "Established **robust authentication and authorization** using **JWT** and **Passport.js** with role-based route guards and permission-based feature access"
           fr: "Établi une **authentification et autorisation robustes** utilisant **JWT** et **Passport.js** avec gardes de route basés sur les rôles et accès aux fonctionnalités basé sur les permissions"
-    tech: "Angular 21, TypeScript, Express.js, Prisma, PostgreSQL, JWT, Passport.js, TanStack Table, Luxon, Tailwind CSS, Docker, pnpm"
+    tech: "Angular 21, TypeScript, TanStack Table, Luxon, Tailwind CSS, Express.js, Passport.js, JWT, PostgreSQL, Prisma, pnpm, Docker"
 
   - in: [long]
     name: "Chartify — Figma Plugin"

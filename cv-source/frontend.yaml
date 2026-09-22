@@ -20,8 +20,8 @@ meta:
 about:
   - in: [short, long]
     text:
-      en: "Senior Frontend Engineer with **7+ years of experience**, specialized in **Angular, TypeScript and CSS/SCSS** — designing, building and distributing **large-scale component libraries and design systems** consumed by multiple teams and products."
-      fr: "Ingénieur Frontend Senior avec **plus de 7 ans d'expérience**, spécialisé en **Angular, TypeScript et CSS/SCSS** — conception, développement et distribution de **bibliothèques de composants et design systems à grande échelle** utilisés par plusieurs équipes et produits."
+      en: "Senior Frontend Engineer with **8 years of experience**, specialized in **Angular, TypeScript and CSS/SCSS** — designing, building and distributing **large-scale component libraries and design systems** consumed by multiple teams and products."
+      fr: "Ingénieur Frontend Senior avec **8 ans d'expérience**, spécialisé en **Angular, TypeScript et CSS/SCSS** — conception, développement et distribution de **bibliothèques de composants et design systems à grande échelle** utilisés par plusieurs équipes et produits."
   - in: [long]
     text:
       en: "Currently evolving **Maestro**, Amundi's shared Angular component framework: reusable enterprise components, **major Angular migrations (15 → 20)**, micro-frontend compatibility, release management and level-3 support for consuming teams."
@@ -162,7 +162,7 @@ experiences:
         text:
           en: "Eliminated API/frontend contract drift with the shared type package — a schema change now surfaces at compile time on both sides instead of in production"
           fr: "Éliminé la dérive de contrat API/frontend grâce au package de types partagé — un changement de schéma se voit désormais à la compilation des deux côtés plutôt qu'en production"
-    tech: "Angular 22 (zoneless, signals), TypeScript, @kouji-ui, Tailwind CSS 4, Angular CDK, RxJS, Hono, Node.js, BetterAuth (passkeys, TOTP), PostgreSQL 17, Drizzle ORM, Zod, pdf-lib, S3-compatible storage, Playwright, Vitest, Docker, GitHub Actions, Render, OVH, Caddy"
+    tech: "Angular 22 (zoneless, signals), @kouji-ui, TypeScript, RxJS, Angular CDK, Tailwind CSS 4, Node.js, Hono, BetterAuth (passkeys, TOTP), Zod, pdf-lib, PostgreSQL 17, Drizzle ORM, S3-compatible storage, Vitest, Playwright, Docker, GitHub Actions, Render, OVH, Caddy"
 
   - in: [short, long]
     company: "Amundi ITS"
@@ -262,7 +262,7 @@ experiences:
         text:
           en: "Designing framework APIs **generic enough for many teams** yet simple enough for rapid adoption"
           fr: "Conception d'APIs de framework **assez génériques pour de nombreuses équipes** tout en restant simples à adopter rapidement"
-    tech: "Angular 15 → 20, TypeScript, RxJS, SCSS, AG-Grid, Signals, Standalone Components, Micro-frontends, NPM, Karma, Jest, Cypress, Playwright, JaCoCo, TestRail, Webpack, GitLab CI, Jenkins, ArgoCD, Artifactory, Vault, Node.js, Electron, Java/Spring Boot, Quarkus, Agile Scrum"
+    tech: "Angular 15 → 20, Signals, Standalone Components, Micro-frontends, TypeScript, RxJS, SCSS, AG-Grid, Electron, Node.js, Java/Spring Boot, Quarkus, Karma, Jest, Cypress, Playwright, JaCoCo, TestRail, NPM, Webpack, Artifactory, GitLab CI, Jenkins, ArgoCD, Vault, Agile Scrum"
 
   - in: [short, long]
     company: "Zsoft Consulting"
@@ -337,7 +337,7 @@ experiences:
             text:
               en: "Extracting a standalone service from a **tightly coupled legacy KYC system** whose database was owned by another provider team"
               fr: "Extraire un service autonome depuis un **système KYC legacy fortement couplé** dont la base de données appartenait à une autre équipe fournisseur"
-        tech: "Java 17, Spring Boot, Spring Security, OAuth2, PostgreSQL, Docker, Kubernetes, RabbitMQ, Jenkins"
+        tech: "Java 17, Spring Boot, Spring Security, OAuth2, RabbitMQ, PostgreSQL, Docker, Kubernetes, Jenkins"
       - label:
           en: "Client: gloody.co — Project: HR & Business Management SaaS"
           fr: "Client : gloody.co — Projet : SaaS RH & Gestion d'Entreprise"
@@ -416,7 +416,7 @@ experiences:
         text:
           en: "Set up **SSO authentication** with Spring Security, integrating **Azure AD** and **Keycloak** as identity providers"
           fr: "Mis en place l'**authentification SSO** avec Spring Security, en intégrant **Azure AD** et **Keycloak** comme fournisseurs d'identité"
-    tech: "Angular 12, TypeScript, Ant Design, AG Grid, SCSS, WebSockets, Java 8, Spring Boot, Spring Batch, Spring Security, Azure AD, Keycloak, SQL Server, Azure DevOps, Jenkins"
+    tech: "Angular 12, TypeScript, Ant Design, AG Grid, SCSS, WebSockets, Java 8, Spring Boot, Spring Batch, Spring Security, Keycloak, Azure AD, SQL Server, Azure DevOps, Jenkins"
 
   - in: [long]
     company: "Scor"
@@ -474,7 +474,7 @@ projects:
         text:
           en: "Wrote contributor documentation and **AI-collaboration guidelines** (`CLAUDE.md`, `RULES.md`) so the library can be extended consistently by both humans and AI coding agents"
           fr: "Rédigé la documentation contributeur et des **directives de collaboration IA** (`CLAUDE.md`, `RULES.md`) pour que la bibliothèque puisse être étendue de manière cohérente par humains et agents IA"
-    tech: "Angular 21, TypeScript, SCSS, Tailwind CSS, design tokens, pnpm workspaces, Turborepo, NPM, Changesets, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, GitHub Actions"
+    tech: "Angular 21, TypeScript, SCSS, Tailwind CSS, design tokens, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, pnpm workspaces, Turborepo, NPM, Changesets, GitHub Actions"
 
   - in: [long]
     name: "Chartify — Figma Plugin"
@@ -524,7 +524,7 @@ projects:
         text:
           en: "Established a **quality & release pipeline**: **Vitest** unit tests, **Playwright** end-to-end suites, a performance smoke-test harness, semantic version-bump scripts, and **GitHub Actions** workflows"
           fr: "Établi une **pipeline qualité & release** : tests unitaires **Vitest**, suites end-to-end **Playwright**, un harnais de smoke-test de performance, scripts de bump de version sémantique, et workflows **GitHub Actions**"
-    tech: "Tauri 2, Rust, Angular 20, TypeScript, design tokens, CodeMirror 6, Lexical, RxJS, Vitest, Playwright, GitHub Actions"
+    tech: "Angular 20, TypeScript, RxJS, design tokens, CodeMirror 6, Lexical, Tauri 2, Rust, Vitest, Playwright, GitHub Actions"
 
   - in: [short, long]
     name: "Vortex — Enterprise LLM Gateway"
@@ -547,7 +547,7 @@ projects:
         text:
           en: "Implemented **enterprise governance** — per-member budgets, **RBAC**, audit logging and cost attribution — on a **PostgreSQL + Drizzle** multi-tenant data layer with row-level security"
           fr: "Implémenté une **gouvernance d'entreprise** — budgets par membre, **RBAC**, journalisation d'audit et attribution des coûts — sur une couche de données multi-tenant **PostgreSQL + Drizzle** avec row-level security"
-    tech: "Angular 22 (zoneless), TypeScript, @kouji-ui, Angular SSR, Hono, Node.js, PostgreSQL, Drizzle ORM, Redis, Zod, Stripe, Playwright, Docker, pnpm"
+    tech: "Angular 22 (zoneless), Angular SSR, TypeScript, @kouji-ui, Node.js, Hono, Zod, Stripe, PostgreSQL, Drizzle ORM, Redis, Playwright, pnpm, Docker"
 
   - in: [long]
     name: "Pages — Unified Project Management & Documentation Platform"
@@ -574,7 +574,7 @@ projects:
         text:
           en: "Engineered a **production-ready REST API** with **FastAPI (Python 3.12)**, PostgreSQL and Redis, with comprehensive test coverage and automated CI/CD workflows"
           fr: "Ingéniéré une **API REST prête pour la production** avec **FastAPI (Python 3.12)**, PostgreSQL et Redis, avec une couverture de tests complète et des workflows CI/CD automatisés"
-    tech: "Angular 21, TypeScript, Storybook 8, Tailwind CSS 4, Lexical, WebSockets, Python 3.12, FastAPI, PostgreSQL, Redis, Docker, pnpm, GitHub Actions"
+    tech: "Angular 21, TypeScript, Tailwind CSS 4, Storybook 8, Lexical, WebSockets, Python 3.12, FastAPI, PostgreSQL, Redis, pnpm, Docker, GitHub Actions"
 
   - in: [long]
     name: "GamerGG — Gaming Service Platform"
@@ -597,7 +597,7 @@ projects:
         text:
           en: "Implemented **authentication and authorization** with **NextAuth.js** (OAuth providers) and a type-safe data layer with **Prisma + PostgreSQL**"
           fr: "Implémenté l'**authentification et autorisation** avec **NextAuth.js** (providers OAuth) et une couche de données type-safe avec **Prisma + PostgreSQL**"
-    tech: "Next.js 13, React 18, TypeScript, Tailwind CSS, Turborepo, Prisma, PostgreSQL, NextAuth.js, GitHub Actions"
+    tech: "Next.js 13, React 18, TypeScript, Tailwind CSS, NextAuth.js, PostgreSQL, Prisma, Turborepo, GitHub Actions"
 
 education:
   - in: [short, long]
