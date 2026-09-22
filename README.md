@@ -103,12 +103,12 @@ via Puppeteer, writing straight into `assets/` with the exact filenames
 
 ```bash
 cd cv-source
-npm install                  # first run only (downloads Chromium)
-npm run convert              # 4 PDFs: en/fr x short/long -> ../assets
-npm run convert:docx         # the same 4, plus a DOCX for each
-npm run convert:np           # the `np` variant (no Preesm), PDF + DOCX
-npm run convert:all          # both variants, 16 files
-npm test                     # loader tests (inheritance, overrides) — no browser
+pnpm install                 # first run only (downloads Chromium)
+pnpm run convert              # 4 PDFs: en/fr x short/long -> ../assets
+pnpm run convert:docx         # the same 4, plus a DOCX for each
+pnpm run convert:np           # the `np` variant (no Preesm), PDF + DOCX
+pnpm run convert:all          # both variants, 16 files
+pnpm test                     # loader tests (inheritance, overrides) — no browser
 ```
 
 | Flag | Effect |
@@ -162,7 +162,7 @@ refuses the file on any violation — while Google Docs, LibreOffice and macOS
 Preview open the very same bytes without complaint. Three things get fixed:
 `<w:sectPr>` is moved from the first child of `<w:body>` to the last, `<w:rPr>`
 children are sorted into schema order, and any attribute that arrived as the
-string `"undefined"` is dropped. `npm run test:docx` re-checks every built file,
+string `"undefined"` is dropped. `pnpm run test:docx` re-checks every built file,
 so a regression here fails the build instead of reaching a recruiter's inbox.
 
 Every string in the YAML is an **EN + FR pair**, and `in: [short, long]` tags

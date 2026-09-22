@@ -1,5 +1,5 @@
 # =============================================================================
-# CV source — single source of truth. Fill this in, then run `npm run convert`.
+# CV source — single source of truth. Fill this in, then run `pnpm run convert`.
 #
 # CONVENTIONS
 #   * Localization: every human-readable string is a { en, fr } pair.
@@ -18,8 +18,8 @@
 #   * Visibility: any list item may carry `visible: false` to keep its content
 #     in the source while excluding it from every output, regardless of `in:`.
 #
-#   * Output: `npm run convert` -> 4 PDFs (EN/FR x short/long).
-#             `npm run convert:docx` also emits DOCX (its own Word-native
+#   * Output: `pnpm run convert` -> 4 PDFs (EN/FR x short/long).
+#             `pnpm run convert:docx` also emits DOCX (its own Word-native
 #             template — see scripts/lib/templates/docx.js).
 #
 #   * Inheritance: a variant file can build on another instead of copying it.

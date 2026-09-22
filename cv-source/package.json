@@ -7,8 +7,8 @@
     "convert": "node scripts/convert-cv.js",
     "convert:docx": "node scripts/convert-cv.js --docx",
     "convert:np": "node scripts/convert-cv.js --source=np.yaml --docx",
-    "convert:all": "npm run convert:docx && npm run convert:np",
-    "test": "npm run test:loader && npm run test:docx",
+    "convert:all": "pnpm run convert:docx && pnpm run convert:np",
+    "test": "pnpm run test:loader && pnpm run test:docx",
     "test:loader": "node scripts/test-loader.js",
     "test:docx": "node scripts/test-docx.js"
   },
