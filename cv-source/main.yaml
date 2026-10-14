@@ -148,12 +148,12 @@ experiences:
           fr: "Développé le **back-office portefeuille franchisés** (recherche, filtres, archivage, **cadrage par tenant** via un sélecteur de réseau) et l'espace franchisé bâti sur le même moteur"
       - in: [long]
         text:
-          en: "Implemented **server-side document generation** with **pdf-lib**, signed-counterpart storage, and a **file hub** on S3-compatible object storage with presigned upload/download"
-          fr: "Implémenté la **génération de documents côté serveur** avec **pdf-lib**, le stockage des contreparties signées, et un **hub documentaire** sur stockage objet compatible S3 avec upload/download présignés"
+          en: "Implemented **server-side document generation**, signed-counterpart storage, and a **file hub** on **Supabase** with presigned upload/download"
+          fr: "Implémenté la **génération de documents côté serveur**, le stockage des contreparties signées, et un **hub documentaire** sur **Supabase** avec upload/download présignés"
       - in: [long]
         text:
-          en: "Delivered **transactional mailing** over SMTP and an admin panel where staff configure notification recipients per business trigger, without a code change"
-          fr: "Livré le **mailing transactionnel** en SMTP et un panneau d'administration où les équipes configurent les destinataires des notifications par déclencheur métier, sans modification de code"
+          en: "Delivered **transactional mailing** with **Brevo** and an admin panel where staff configure notification recipients per business trigger, without a code change"
+          fr: "Livré le **mailing transactionnel** avec **Brevo** et un panneau d'administration où les équipes configurent les destinataires des notifications par déclencheur métier, sans modification de code"
       - in: [long]
         text:
           en: "Secured the platform with **BetterAuth** (WebAuthn passkeys, mandatory **TOTP MFA**) and a **deny-by-default RBAC** over a two-level tenant/team model, with every API query **tenant-scoped**"
@@ -183,7 +183,7 @@ experiences:
         text:
           en: "Turned the business process into **configuration rather than code**: new steps and notification recipients no longer require a release"
           fr: "Transformé le processus métier en **configuration plutôt qu'en code** : nouvelles étapes et destinataires de notifications ne nécessitent plus de release"
-    tech: "Angular 22 (zoneless, signals), kouji-ui, TypeScript, Tailwind CSS 4, Node.js, Hono, BetterAuth (passkeys, TOTP), Zod, pdf-lib, nodemailer, PostgreSQL 17, Drizzle ORM, S3-compatible storage, Vitest, Playwright, Docker, GitHub Actions, Render, OVH, Caddy, pgBackRest"
+    tech: "Angular 22 (zoneless, signals), kouji-ui, TypeScript, Tailwind CSS 4, Node.js, Hono, BetterAuth (passkeys, TOTP), Zod, Brevo, PostgreSQL 17, Drizzle ORM, Supabase, Vitest, Playwright, Docker, GitHub Actions, Render, OVH, Caddy, pgBackRest"
 
   - in: [short, long]
     company: "Amundi ITS"
@@ -286,7 +286,7 @@ experiences:
           - in: [short, long]
             text:
               en: "Building the **Vibe Toolbox**, an internal **Electron + Angular** desktop app **provisioning AI-ready dev environments** (agent skills, MCP servers), cutting time-to-productivity from days to minutes"
-              fr: "Développe la **Vibe Toolbox**, application desktop interne **Electron + Angular** **provisionnant des environnements de dev prêts pour l'IA** (skills d'agents, MCP), réduisant le time-to-productivity de jours à minutes"
+              fr: "Développe la **Vibe Toolbox**, une application de bureau interne **Electron + Angular** qui **déploie des environnements de développement prêts pour l'IA** (skills d'agents, serveurs MCP) et ramène le temps de prise en main de plusieurs jours à quelques minutes"
           - in: [long]
             text:
               en: "Implemented **skills management** — installation, versioning and sharing of reusable AI skills (prompts, workflows, agent definitions) so teams adopt validated patterns instead of rebuilding them per project"
@@ -299,6 +299,14 @@ experiences:
             text:
               en: "Designed the toolbox as a **single entry point** for developers to bootstrap model access, credentials, MCP configuration and skill bundles, bringing consistency to how AI tooling is adopted across teams"
               fr: "Conçu la toolbox comme **point d'entrée unique** pour les développeurs pour configurer accès aux modèles, credentials, configuration MCP et bundles de skills, apportant une cohérence dans l'adoption de l'outillage IA à travers les équipes"
+          - in: [short, long]
+            text:
+              en: "Built **xHarness**, a benchmarking platform comparing **coding agents** (Claude Code, Codex, OpenCode) across model tiers (Opus, Sonnet, GPT Sol, GPT Terra) on the public **SWE-bench** framework, orchestrating parallel runs in **Docker** with a **cost and usage dashboard**"
+              fr: "Conçu **xHarness**, une plateforme de benchmark qui compare des **agents de code** (Claude Code, Codex, OpenCode) selon différents niveaux de modèles (Opus, Sonnet, GPT Sol, GPT Terra) sur le framework public **SWE-bench** : exécutions parallèles orchestrées sous **Docker** et **tableau de bord** de suivi des coûts et de la consommation"
+          - in: [short, long]
+            text:
+              en: "Built **xShifu**, a **session analytics tool** that analyses developers' local **Claude Code and Codex sessions** to surface how they use coding agents, flag wasteful habits and give **actionable recommendations to cut token consumption**"
+              fr: "Conçu **xShifu**, un **outil d'analyse des sessions** locales **Claude Code et Codex** : il met en lumière les usages des développeurs, identifie les mauvaises pratiques et propose des **recommandations concrètes pour réduire la consommation de tokens**"
       - label: { en: "Cross-team contributions", fr: "Contributions transverses" }
         responsibilities:
           - in: [long]
@@ -552,13 +560,13 @@ projects:
     type: { en: "Personal Open-Source Project", fr: "Projet Personnel Open Source" }
     repo: "https://github.com/kouji-dev/orrery-releases"
     context:
-      en: "Orrery is a futuristic, IntelliJ-inspired **multi-agent git orchestrator IDE**, built as a native desktop application with **Tauri (Rust) and Angular 20**. Each project is a git repository, and a project can **spawn multiple AI coding agents** (Claude Code, Codex, Cursor, Gemini) that each run in their own **git worktree, branch, terminal and conversation** — letting a developer drive several agents in parallel from a single cockpit."
-      fr: "Orrery est un **IDE d'orchestration multi-agents Git** futuriste, inspiré d'IntelliJ, conçu comme une application desktop native avec **Tauri (Rust) et Angular 20**. Chaque projet est un dépôt Git, et un projet peut **lancer plusieurs agents de code IA** (Claude Code, Codex, Cursor, Gemini) qui s'exécutent chacun dans leur propre **worktree Git, branche, terminal et conversation** — permettant à un développeur de piloter plusieurs agents en parallèle depuis un cockpit unique."
+      en: "Orrery is a futuristic, IntelliJ-inspired **multi-agent git orchestrator IDE**, built as a native desktop application with **Tauri (Rust) and Angular 22**. Each project is a git repository, and a project can **spawn multiple AI coding agents** (Claude Code, Codex, Cursor, Gemini) that each run in their own **git worktree, branch, terminal and conversation** — letting a developer drive several agents in parallel from a single cockpit."
+      fr: "Orrery est un **IDE d'orchestration multi-agents Git** futuriste, inspiré d'IntelliJ, conçu comme une application desktop native avec **Tauri (Rust) et Angular 22**. Chaque projet est un dépôt Git, et un projet peut **lancer plusieurs agents de code IA** (Claude Code, Codex, Cursor, Gemini) qui s'exécutent chacun dans leur propre **worktree Git, branche, terminal et conversation** — permettant à un développeur de piloter plusieurs agents en parallèle depuis un cockpit unique."
     responsibilities:
       - in: [long]
         text:
-          en: "Architected the application as a **Tauri 2 desktop shell (Rust)** wrapping an **Angular 20** front-end, with a clean **module-per-domain** structure (projects, agents, workspace, orchestrator dashboard, right panel, sidebar, settings, …)"
-          fr: "Architecturé l'application comme un **shell desktop Tauri 2 (Rust)** encapsulant un frontend **Angular 20**, avec une structure propre **par domaine** (projets, agents, workspace, dashboard d'orchestration, panneau de droite, sidebar, paramètres, …)"
+          en: "Architected the application as a **Tauri 2 desktop shell (Rust)** wrapping an **Angular 22** front-end, with a clean **module-per-domain** structure (projects, agents, workspace, orchestrator dashboard, right panel, sidebar, settings, …)"
+          fr: "Architecturé l'application comme un **shell desktop Tauri 2 (Rust)** encapsulant un frontend **Angular 22**, avec une structure propre **par domaine** (projets, agents, workspace, dashboard d'orchestration, panneau de droite, sidebar, paramètres, …)"
       - in: [long]
         text:
           en: "Built the **orchestrator dashboard** — a hero overview with live stats and multiple visualization metaphors for monitoring agents across projects"
@@ -587,7 +595,7 @@ projects:
         text:
           en: "Established a **quality & release pipeline**: **Vitest** unit tests, **Playwright** end-to-end suites, a **performance smoke-test** harness with assertions, semantic version-bump scripts, and **GitHub Actions** workflows (including a Render-deployed landing site)"
           fr: "Établi une **pipeline qualité & release** : tests unitaires **Vitest**, suites end-to-end **Playwright**, un harnais de **smoke-test de performance** avec assertions, scripts de bump de version sémantique, et workflows **GitHub Actions** (incluant un site vitrine déployé sur Render)"
-    tech: "Angular 20, TypeScript, RxJS, CodeMirror 6, Lexical, Tauri 2, Rust, Vitest, Playwright, GitHub Actions"
+    tech: "Angular 22, TypeScript, RxJS, CodeMirror 6, Lexical, Tauri 2, Rust, Vitest, Playwright, GitHub Actions"
 
   - in: [short, long]
     name: "Vortex — Enterprise LLM Gateway"
@@ -630,8 +638,8 @@ projects:
     type: { en: "Personal Open-Source Library", fr: "Bibliothèque Personnelle Open Source" }
     repo: "https://github.com/kouji-dev/kouji-ui"
     context:
-      en: "An open-source **Angular 21** design system providing **60+ accessible, themable UI primitives** covering inputs, overlays, navigation, data display, feedback and layout. Maintained as a single-author library to demonstrate end-to-end *frontend platform engineering* — monorepo discipline, publishable package boundaries, accessibility-by-default and rigorous release management."
-      fr: "Design system **Angular 21** open source fournissant **plus de 60 primitives UI accessibles et thémables** couvrant inputs, overlays, navigation, affichage de données, feedback et layout. Maintenu en solo pour démontrer une maîtrise complète du *frontend platform engineering* — discipline monorepo, frontières de packages publiables, accessibilité par défaut et gestion de releases rigoureuse."
+      en: "An open-source **Angular 22** design system providing **60+ accessible, themable UI primitives** covering inputs, overlays, navigation, data display, feedback and layout. Maintained as a single-author library to demonstrate end-to-end *frontend platform engineering* — monorepo discipline, publishable package boundaries, accessibility-by-default and rigorous release management."
+      fr: "Design system **Angular 22** open source fournissant **plus de 60 primitives UI accessibles et thémables** couvrant inputs, overlays, navigation, affichage de données, feedback et layout. Maintenu en solo pour démontrer une maîtrise complète du *frontend platform engineering* — discipline monorepo, frontières de packages publiables, accessibilité par défaut et gestion de releases rigoureuse."
     responsibilities:
       - in: [long]
         text:
@@ -639,8 +647,8 @@ projects:
           fr: "Architecturé un **monorepo pnpm + Turborepo** avec trois packages publiables — `components`, `core`, `themes` — ainsi qu'un site de documentation dédié, partageant outillage, règles de lint et fondation Tailwind v4"
       - in: [long]
         text:
-          en: "Authored **60+ standalone Angular 21 components** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) designed for tree-shakability and signal-based change detection"
-          fr: "Écrit **plus de 60 composants Angular 21 standalone** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) conçus pour le tree-shaking et la détection de changement par signals"
+          en: "Authored **60+ standalone Angular 22 components** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) designed for tree-shakability and signal-based change detection"
+          fr: "Écrit **plus de 60 composants Angular 22 standalone** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) conçus pour le tree-shaking et la détection de changement par signals"
       - in: [long]
         text:
           en: "Built a **decoupled theming layer** (`@kouji-ui/themes`) driven by design tokens, enabling theme switching, dark mode and per-product overrides without forking components"
@@ -657,7 +665,7 @@ projects:
         text:
           en: "Wrote contributor documentation and **AI-collaboration guidelines** (`CLAUDE.md`, `RULES.md`) so the library can be extended consistently by both humans and AI coding agents"
           fr: "Rédigé la documentation contributeur et des **directives de collaboration IA** (`CLAUDE.md`, `RULES.md`) pour que la bibliothèque puisse être étendue de manière cohérente par humains et agents IA"
-    tech: "Angular 21, TypeScript, Tailwind CSS, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, Angular CLI, pnpm workspaces, Turborepo, Changesets, GitHub Actions"
+    tech: "Angular 22, TypeScript, Tailwind CSS, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, Angular CLI, pnpm workspaces, Turborepo, Changesets, GitHub Actions"
 
   - in: [long]
     name: "Pages — Unified Project Management & Documentation Platform"

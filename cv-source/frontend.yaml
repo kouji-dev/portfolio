@@ -162,7 +162,7 @@ experiences:
         text:
           en: "Eliminated API/frontend contract drift with the shared type package — a schema change now surfaces at compile time on both sides instead of in production"
           fr: "Éliminé la dérive de contrat API/frontend grâce au package de types partagé — un changement de schéma se voit désormais à la compilation des deux côtés plutôt qu'en production"
-    tech: "Angular 22 (zoneless, signals), @kouji-ui, TypeScript, RxJS, Angular CDK, Tailwind CSS 4, Node.js, Hono, BetterAuth (passkeys, TOTP), Zod, pdf-lib, PostgreSQL 17, Drizzle ORM, S3-compatible storage, Vitest, Playwright, Docker, GitHub Actions, Render, OVH, Caddy"
+    tech: "Angular 22 (zoneless, signals), @kouji-ui, TypeScript, RxJS, Angular CDK, Tailwind CSS 4, Node.js, Hono, BetterAuth (passkeys, TOTP), Zod, PostgreSQL 17, Drizzle ORM, Supabase, Vitest, Playwright, Docker, GitHub Actions, Render, OVH, Caddy"
 
   - in: [short, long]
     company: "Amundi ITS"
@@ -447,8 +447,8 @@ projects:
     type: { en: "Personal Open-Source Library", fr: "Bibliothèque Personnelle Open Source" }
     repo: "https://github.com/kouji-dev/kouji-ui"
     context:
-      en: "An open-source **Angular 21** design system providing **60+ accessible, themable UI primitives** covering inputs, overlays, navigation, data display, feedback and layout. Maintained as a single-author library to demonstrate end-to-end *frontend platform engineering* — monorepo discipline, publishable package boundaries, accessibility-by-default and rigorous release management."
-      fr: "Design system **Angular 21** open source fournissant **plus de 60 primitives UI accessibles et thémables** couvrant inputs, overlays, navigation, affichage de données, feedback et layout. Maintenu en solo pour démontrer une maîtrise complète du *frontend platform engineering* — discipline monorepo, frontières de packages publiables, accessibilité par défaut et gestion de releases rigoureuse."
+      en: "An open-source **Angular 22** design system providing **60+ accessible, themable UI primitives** covering inputs, overlays, navigation, data display, feedback and layout. Maintained as a single-author library to demonstrate end-to-end *frontend platform engineering* — monorepo discipline, publishable package boundaries, accessibility-by-default and rigorous release management."
+      fr: "Design system **Angular 22** open source fournissant **plus de 60 primitives UI accessibles et thémables** couvrant inputs, overlays, navigation, affichage de données, feedback et layout. Maintenu en solo pour démontrer une maîtrise complète du *frontend platform engineering* — discipline monorepo, frontières de packages publiables, accessibilité par défaut et gestion de releases rigoureuse."
     responsibilities:
       - in: [long]
         text:
@@ -456,8 +456,8 @@ projects:
           fr: "Architecturé un **monorepo pnpm + Turborepo** avec trois packages NPM publiables — `components`, `core`, `themes` — ainsi qu'un site de documentation dédié, partageant outillage, règles de lint et fondation Tailwind v4"
       - in: [long]
         text:
-          en: "Authored **60+ standalone Angular 21 components** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) designed for tree-shakability and signal-based change detection"
-          fr: "Écrit **plus de 60 composants Angular 21 standalone** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) conçus pour le tree-shaking et la détection de changement par signals"
+          en: "Authored **60+ standalone Angular 22 components** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) designed for tree-shakability and signal-based change detection"
+          fr: "Écrit **plus de 60 composants Angular 22 standalone** (calendar, combobox, command palette, date/time pickers, dialog, drawer, file upload, form, OTP input, popover, stepper, toast, tooltip, tree-select, …) conçus pour le tree-shaking et la détection de changement par signals"
       - in: [long]
         text:
           en: "Built a **decoupled theming layer** (`@kouji-ui/themes`) driven by **design tokens**, enabling theme switching, dark mode and per-product (multi-brand) overrides without forking components"
@@ -474,7 +474,7 @@ projects:
         text:
           en: "Wrote contributor documentation and **AI-collaboration guidelines** (`CLAUDE.md`, `RULES.md`) so the library can be extended consistently by both humans and AI coding agents"
           fr: "Rédigé la documentation contributeur et des **directives de collaboration IA** (`CLAUDE.md`, `RULES.md`) pour que la bibliothèque puisse être étendue de manière cohérente par humains et agents IA"
-    tech: "Angular 21, TypeScript, SCSS, Tailwind CSS, design tokens, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, pnpm workspaces, Turborepo, NPM, Changesets, GitHub Actions"
+    tech: "Angular 22, TypeScript, SCSS, Tailwind CSS, design tokens, Vitest, Playwright, axe-core, ESLint, Prettier, Husky, pnpm workspaces, Turborepo, NPM, Changesets, GitHub Actions"
 
   - in: [long]
     name: "Chartify — Figma Plugin"
@@ -505,8 +505,8 @@ projects:
     type: { en: "Personal Open-Source Project", fr: "Projet Personnel Open Source" }
     repo: "https://github.com/kouji-dev/orrery-releases"
     context:
-      en: "Orrery is a futuristic, IntelliJ-inspired **multi-agent git orchestrator IDE**, built as a native desktop application with **Tauri (Rust) and Angular 20**. Each project can **spawn multiple AI coding agents** (Claude Code, Codex, Cursor, Gemini) that each run in their own **git worktree, branch, terminal and conversation**."
-      fr: "Orrery est un **IDE d'orchestration multi-agents Git** futuriste, inspiré d'IntelliJ, conçu comme une application desktop native avec **Tauri (Rust) et Angular 20**. Chaque projet peut **lancer plusieurs agents de code IA** (Claude Code, Codex, Cursor, Gemini) qui s'exécutent chacun dans leur propre **worktree Git, branche, terminal et conversation**."
+      en: "Orrery is a futuristic, IntelliJ-inspired **multi-agent git orchestrator IDE**, built as a native desktop application with **Tauri (Rust) and Angular 22**. Each project can **spawn multiple AI coding agents** (Claude Code, Codex, Cursor, Gemini) that each run in their own **git worktree, branch, terminal and conversation**."
+      fr: "Orrery est un **IDE d'orchestration multi-agents Git** futuriste, inspiré d'IntelliJ, conçu comme une application desktop native avec **Tauri (Rust) et Angular 22**. Chaque projet peut **lancer plusieurs agents de code IA** (Claude Code, Codex, Cursor, Gemini) qui s'exécutent chacun dans leur propre **worktree Git, branche, terminal et conversation**."
     responsibilities:
       - in: [long]
         text:
@@ -514,8 +514,8 @@ projects:
           fr: "Construit un **design system piloté par design tokens** avec thématisation, densité, palettes de couleurs et contrôles de motion, ainsi que des logs en streaming temps réel et des timers en direct"
       - in: [long]
         text:
-          en: "Architected the application as a **Tauri 2 desktop shell (Rust)** wrapping an **Angular 20** front-end, with a clean **module-per-domain** structure (projects, agents, workspace, orchestrator dashboard, settings, …)"
-          fr: "Architecturé l'application comme un **shell desktop Tauri 2 (Rust)** encapsulant un frontend **Angular 20**, avec une structure propre **par domaine** (projets, agents, workspace, dashboard d'orchestration, paramètres, …)"
+          en: "Architected the application as a **Tauri 2 desktop shell (Rust)** wrapping an **Angular 22** front-end, with a clean **module-per-domain** structure (projects, agents, workspace, orchestrator dashboard, settings, …)"
+          fr: "Architecturé l'application comme un **shell desktop Tauri 2 (Rust)** encapsulant un frontend **Angular 22**, avec une structure propre **par domaine** (projets, agents, workspace, dashboard d'orchestration, paramètres, …)"
       - in: [long]
         text:
           en: "Implemented the **per-agent workspace** with Diff / Terminal / Chat panes: **WebGL-accelerated integrated terminals**, a diff/merge editor on **CodeMirror 6**, and rich-text / markdown editing via **Lexical**"
@@ -524,7 +524,7 @@ projects:
         text:
           en: "Established a **quality & release pipeline**: **Vitest** unit tests, **Playwright** end-to-end suites, a performance smoke-test harness, semantic version-bump scripts, and **GitHub Actions** workflows"
           fr: "Établi une **pipeline qualité & release** : tests unitaires **Vitest**, suites end-to-end **Playwright**, un harnais de smoke-test de performance, scripts de bump de version sémantique, et workflows **GitHub Actions**"
-    tech: "Angular 20, TypeScript, RxJS, design tokens, CodeMirror 6, Lexical, Tauri 2, Rust, Vitest, Playwright, GitHub Actions"
+    tech: "Angular 22, TypeScript, RxJS, design tokens, CodeMirror 6, Lexical, Tauri 2, Rust, Vitest, Playwright, GitHub Actions"
 
   - in: [short, long]
     name: "Vortex — Enterprise LLM Gateway"
