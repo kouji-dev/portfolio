@@ -12,7 +12,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
 <style>
+  .hljs-keyword,.hljs-selector-tag,.hljs-literal,.hljs-section{color:#C792EA}
+  .hljs-string,.hljs-attr,.hljs-selector-attr,.hljs-addition{color:#9BE8A0}
+  .hljs-title,.hljs-title.function_,.hljs-name{color:#7AA2FF}
+  .hljs-title.class_,.hljs-type,.hljs-built_in{color:#FFB454}
+  .hljs-number,.hljs-symbol{color:#F2A6E8}
+  .hljs-comment,.hljs-quote{color:#5A6076;font-style:italic}
+  .hljs-variable,.hljs-template-variable,.hljs-params{color:#C7CEDD}
+  .hljs-meta,.hljs-doctag{color:#6C87C7}
+  .hljs-deletion{color:#FF8080}
+  pre::-webkit-scrollbar{height:8px}
+  pre::-webkit-scrollbar-track{background:transparent}
+  pre::-webkit-scrollbar-thumb{background:#1b2030;border-radius:8px}
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;background:#05060B;color:#E6E9F0;font-family:'Sora',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
@@ -29,6 +42,9 @@
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
   @keyframes shimmer{to{background-position:240% center}}
   @keyframes menuIn{from{opacity:0}to{opacity:1}}
+  @keyframes dotPop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes tipIn{from{opacity:0;transform:translate(-50%,-6px)}to{opacity:1;transform:translate(-50%,0)}}
+  @keyframes guideIn{from{opacity:0}to{opacity:1}}
 </style>
 </helmet>
 
@@ -39,31 +55,48 @@
   <!-- fade: clear over the hero (top), settling into deep space behind content so the glitter keeps twinkling subtly the whole way down -->
   <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg, rgba(5,6,11,0) 0, rgba(5,6,11,0) 76vh, rgba(5,6,11,0.5) 100vh, rgba(5,6,11,0.8) 140vh, rgba(5,6,11,0.85) 230vh);"></div>
 
-  <!-- ===== NAV ===== -->
-  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,64px);background:linear-gradient(180deg,rgba(5,6,11,.62) 0%,rgba(5,6,11,.2) 65%,rgba(5,6,11,0) 100%);">
-    <a href="#top" style="display:flex;align-items:center;gap:11px;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.2px;">
-      <span style="display:inline-flex;width:32px;height:32px;align-items:center;justify-content:center;position:relative;">
-        <svg width="32" height="32" viewBox="0 0 32 32" style="position:absolute;inset:0;transform:rotate(-90deg);">
-          <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
-          <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent,#7AA2FF)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
-        </svg>
-        <span style="width:7px;height:7px;border-radius:50%;background:var(--accent,#7AA2FF);box-shadow:0 0 12px var(--glow,rgba(122,162,255,.5));"></span>
-      </span>
-      <span>Driss&nbsp;Najih</span>
-    </a>
-    <div style="display:flex;align-items:center;gap:clamp(14px,2.4vw,34px);">
-      <div style="display:none;gap:28px;font-size:14px;color:var(--muted,#8A90A2);" data-navlinks>
-        <a href="#about" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">About</a>
-        <a href="#work" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">Work</a>
-        <a href="#stack" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">AI Stack</a>
-        <a href="#experience" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">Experience</a>
-        <a href="#contact" style="transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">Contact</a>
+  <sc-if value="{{ notHome }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(5,6,11,.84) 0%,rgba(5,6,11,.91) 45%,rgba(5,6,11,.95) 100%);"></div>
+  </sc-if>
+
+  <!-- ===== TOP BAR ===== -->
+  <div style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;justify-content:center;padding:14px clamp(12px,3vw,26px);pointer-events:none;">
+    <div data-topbar style="pointer-events:auto;width:100%;max-width:1200px;display:flex;align-items:center;gap:12px;padding:8px 8px 8px 14px;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(8,10,18,.42);backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);box-shadow:0 18px 50px -32px rgba(0,0,0,.9);transition:background .35s,border-color .35s,box-shadow .35s;">
+
+      <a href="#/" style="display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14.5px;letter-spacing:.1px;white-space:nowrap;flex:0 0 auto;">
+        <span style="display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;position:relative;">
+          <svg width="30" height="30" viewBox="0 0 32 32" style="position:absolute;inset:0;transform:rotate(-90deg);">
+            <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
+            <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent,#7AA2FF)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
+          </svg>
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--accent,#7AA2FF);box-shadow:0 0 12px var(--glow,rgba(122,162,255,.5));"></span>
+        </span>
+        <span data-brandname>Driss&nbsp;Najih</span>
+      </a>
+
+      <div data-navpill style="position:relative;display:none;align-items:center;margin:0 auto;padding:3px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);">
+        <div data-navind style="position:absolute;top:3px;left:0;height:calc(100% - 6px);width:0;border-radius:9px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);box-shadow:0 2px 12px -4px rgba(0,0,0,.6);opacity:0;transition:transform .38s cubic-bezier(.2,.8,.2,1),width .38s cubic-bezier(.2,.8,.2,1),opacity .25s;"></div>
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="6">
+          <a href="{{ n.href }}" data-navlink="{{ n.key }}" style="position:relative;z-index:1;padding:7px 11px;border-radius:9px;font-size:12.5px;letter-spacing:.1px;color:var(--muted,#8A90A2);transition:color .2s;white-space:nowrap;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ navOut }}">{{ n.label }}</a>
+        </sc-for>
       </div>
-      <button data-menubtn onClick="{{ toggleMenu }}" aria-label="Menu" style="display:none;width:42px;height:42px;align-items:center;justify-content:center;background:rgba(5,6,11,.4);border:1px solid var(--border,rgba(255,255,255,.14));border-radius:10px;color:var(--text,#E6E9F0);cursor:pointer;">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-      </button>
+
+      <div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex:0 0 auto;">
+        <button onClick="{{ openPalette }}" data-indexbtn aria-label="Open page index" style="display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 10px 0 11px;border-radius:11px;border:1px solid var(--border,rgba(255,255,255,.1));background:rgba(255,255,255,.03);color:var(--muted,#8A90A2);font-family:'Sora',sans-serif;font-size:13px;cursor:pointer;transition:color .2s,border-color .2s,background .2s;" onMouseOver="{{ indexOn }}" onMouseOut="{{ indexOff }}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span data-indexlabel>Index</span>
+          <kbd data-indexkbd style="font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1;padding:4px 5px;border-radius:5px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--muted,#8A90A2);">⌘K</kbd>
+        </button>
+        <a href="#contact" data-navcta style="display:none;align-items:center;height:36px;padding:0 16px;border-radius:11px;background:var(--accent,#7AA2FF);color:#05060B;font-weight:600;font-size:13px;white-space:nowrap;box-shadow:0 8px 24px -10px var(--glow,rgba(122,162,255,.6));">Get in touch</a>
+        <button data-menubtn onClick="{{ toggleMenu }}" aria-label="Menu" style="display:none;width:36px;height:36px;align-items:center;justify-content:center;background:rgba(255,255,255,.03);border:1px solid var(--border,rgba(255,255,255,.12));border-radius:11px;color:var(--text,#E6E9F0);cursor:pointer;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
     </div>
-  </nav>
+  </div>
+
+  <!-- reading progress (article view) -->
+  <div data-readbar style="position:fixed;top:0;left:0;height:2px;width:0%;z-index:70;background:linear-gradient(90deg,var(--accent,#7AA2FF),var(--accent2,#C792EA));box-shadow:0 0 12px var(--glow,rgba(122,162,255,.6));display:none;"></div>
 
   <!-- ===== MOBILE MENU ===== -->
   <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
@@ -71,15 +104,14 @@
       <button onClick="{{ closeMenu }}" aria-label="Close menu" style="position:absolute;top:18px;right:20px;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border,rgba(255,255,255,.16));border-radius:10px;color:var(--text,#E6E9F0);cursor:pointer;">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
-      <a href="#about" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">About</a>
-      <a href="#work" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">Work</a>
-      <a href="#stack" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">AI Stack</a>
-      <a href="#experience" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">Experience</a>
-      <a href="#contact" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">Contact</a>
+      <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="6">
+        <a href="{{ n.href }}" onClick="{{ closeMenu }}" style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.5px;">{{ n.label }}</a>
+      </sc-for>
       <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--muted,#8A90A2);margin-top:14px;">DRISS NAJIH · SENIOR SOFTWARE ENGINEER</div>
     </div>
   </sc-if>
 
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
   <!-- ===== HERO ===== -->
   <header id="top" style="position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px clamp(20px,5vw,64px) 80px;overflow:hidden;">
     <!-- soft scrim behind hero text for legibility over the bright nebula -->
@@ -272,9 +304,110 @@
   </section>
 
   <!-- ===== EXPERIENCE ===== -->
-  <section id="experience" style="position:relative;z-index:2;max-width:980px;margin:0 auto;padding:clamp(50px,7vw,100px) clamp(20px,5vw,64px);">
+  <section id="experience" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:clamp(50px,7vw,100px) clamp(20px,5vw,64px);">
     <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:14px;">04 — Experience</div>
-    <h2 data-reveal style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,46px);font-weight:600;letter-spacing:-1px;margin:0 0 50px;">Seven years across enterprise platforms</h2>
+    <h2 data-reveal style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,46px);font-weight:600;letter-spacing:-1px;margin:0 0 34px;">Seven years across enterprise platforms</h2>
+    <div id="trajectory" style="scroll-margin-top:100px;">
+
+    <h3 data-reveal style="font-family:'Space Grotesk',sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:600;letter-spacing:-.5px;margin:0 0 12px;">Nine months, seven repositories</h3>
+    <p data-reveal style="font-size:16px;color:var(--muted,#8A90A2);max-width:640px;margin:0 0 34px;line-height:1.6;text-wrap:pretty;">December 2025 to now, stacked by repository week by week, with months marked on the axis. Height is commit volume; where bands sit on top of each other the work ran in parallel, and where a band drops to zero that project was parked.</p>
+
+    <div data-reveal data-trajstats style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--border,rgba(255,255,255,.09));border:1px solid var(--border,rgba(255,255,255,.09));border-radius:14px;overflow:hidden;margin-bottom:22px;">
+      <div data-reveal style="background:var(--surface,rgba(255,255,255,.02));padding:20px 22px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted,#8A90A2);margin-bottom:10px;">Commits</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,3.2vw,36px);font-weight:600;letter-spacing:-1.2px;line-height:1;"><span data-count data-target="{{ totCommits }}">0</span></div>
+      </div>
+      <div data-reveal style="background:var(--surface,rgba(255,255,255,.02));padding:20px 22px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted,#8A90A2);margin-bottom:10px;">Repositories</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:clamp(24px,3.2vw,36px);font-weight:600;letter-spacing:-1.2px;line-height:1;"><span data-count data-target="{{ totRepos }}">0</span><span style="font-size:.5em;color:var(--muted,#8A90A2);margin-left:7px;font-family:'JetBrains Mono',monospace;letter-spacing:0;">in {{ totWeeks }} weeks</span></div>
+      </div>
+    </div>
+
+    <div data-reveal style="border:1px solid var(--border,rgba(255,255,255,.09));border-radius:16px;padding:22px clamp(16px,2.4vw,26px) 16px;background:var(--surface,rgba(255,255,255,.02));">
+      <div data-trajlegend style="display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:16px;">
+        <sc-for list="{{ trajBands }}" as="r" hint-placeholder-count="5">
+          <div data-reveal style="display:flex;align-items:center;gap:8px;">
+            <svg width="9" height="9" viewBox="0 0 10 10" style="display:block;border-radius:50%;"><circle cx="5" cy="5" r="5" fill="{{ r.color }}"></circle></svg>
+            <span style="font-size:13px;color:var(--text,#E6E9F0);">{{ r.name }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted,#8A90A2);">{{ r.share }}</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="position:relative;" onMouseLeave="{{ trajLeave }}">
+        <svg data-chart viewBox="0 0 1000 290" style="width:100%;height:auto;display:block;overflow:visible;">
+          <line x1="0" y1="72" x2="1000" y2="72" stroke="rgba(255,255,255,.05)" stroke-width="1"></line>
+          <line x1="0" y1="145" x2="1000" y2="145" stroke="rgba(255,255,255,.05)" stroke-width="1"></line>
+          <line x1="0" y1="218" x2="1000" y2="218" stroke="rgba(255,255,255,.05)" stroke-width="1"></line>
+          <line x1="0" y1="280" x2="1000" y2="280" stroke="rgba(255,255,255,.14)" stroke-width="1"></line>
+          <sc-for list="{{ trajYears }}" as="yr" hint-placeholder-count="1">
+            <line x1="{{ yr.x }}" y1="0" x2="{{ yr.x }}" y2="280" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="2 6"></line>
+          </sc-for>
+          <sc-for list="{{ trajBands }}" as="b" hint-placeholder-count="5">
+            <path data-band-fill d="{{ b.dFill }}" fill="{{ b.color }}" opacity=".42" style="transform-box:fill-box;transform-origin:bottom center;"></path>
+          </sc-for>
+          <sc-for list="{{ trajBands }}" as="b2" hint-placeholder-count="5">
+            <path data-band-line d="{{ b2.dLine }}" fill="none" stroke="{{ b2.color }}" stroke-width="2" stroke-linecap="round"></path>
+          </sc-for>
+          <sc-if value="{{ hoverVisible }}" hint-placeholder-val="{{ false }}">
+            <line x1="{{ hoverX }}" y1="0" x2="{{ hoverX }}" y2="280" stroke="rgba(255,255,255,.4)" stroke-width="1" style="animation:guideIn .16s ease-out both;"></line>
+          </sc-if>
+          <sc-for list="{{ hoverDots }}" as="d" hint-placeholder-count="0">
+            <circle cx="{{ d.cx }}" cy="{{ d.cy }}" r="4.5" fill="#05060B" stroke="{{ d.color }}" stroke-width="2.5" style="transform-box:fill-box;transform-origin:center;animation:dotPop .2s cubic-bezier(.2,.8,.2,1) both;"></circle>
+          </sc-for>
+          <sc-for list="{{ trajCols }}" as="c" hint-placeholder-count="20">
+            <rect x="{{ c.x }}" y="0" width="{{ c.w }}" height="280" fill="transparent" data-i="{{ c.i }}" onMouseEnter="{{ trajEnter }}" onMouseMove="{{ trajEnter }}" style="cursor:crosshair;"></rect>
+          </sc-for>
+        </svg>
+
+        <sc-if value="{{ hoverVisible }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ tipStyle }}">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted,#8A90A2);margin-bottom:10px;">{{ hoverLabel }}</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+              <sc-for list="{{ hoverRows }}" as="h" hint-placeholder-count="2">
+                <div style="display:grid;grid-template-columns:9px minmax(84px,1fr) auto;gap:10px;align-items:center;">
+                  <svg width="9" height="9" viewBox="0 0 10 10" style="display:block;"><circle cx="5" cy="5" r="5" fill="{{ h.color }}"></circle></svg>
+                  <span style="font-size:12.5px;color:var(--text,#E6E9F0);white-space:nowrap;">{{ h.name }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted,#8A90A2);white-space:nowrap;">{{ h.detail }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top:10px;padding-top:9px;border-top:1px solid var(--border,rgba(255,255,255,.1));display:flex;justify-content:space-between;gap:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent,#7AA2FF);">
+              <span>total</span>
+              <span>{{ hoverTotal }}</span>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="position:relative;height:18px;margin-top:8px;">
+        <sc-for list="{{ trajTicks }}" as="t" hint-placeholder-count="7">
+          <span style="{{ t.style }}">{{ t.label }}</span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div data-reveal data-lanes style="margin-top:28px;">
+      <sc-for list="{{ trajLanes }}" as="l" hint-placeholder-count="5">
+        <div data-reveal data-trajlane style="display:grid;grid-template-columns:170px minmax(0,1fr) 140px;gap:clamp(12px,2vw,22px);align-items:center;padding:12px 0;border-top:1px solid var(--border,rgba(255,255,255,.07));">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text,#E6E9F0);">{{ l.name }}</div>
+            <div style="font-size:11.5px;color:var(--muted,#8A90A2);margin-top:4px;line-height:1.4;">{{ l.role }}</div>
+          </div>
+          <svg viewBox="0 0 1000 42" preserveAspectRatio="none" style="width:100%;height:42px;display:block;">
+            <line x1="0" y1="21" x2="1000" y2="21" stroke="rgba(255,255,255,.06)" stroke-width="1"></line>
+            <path data-vein d="{{ l.d }}" fill="{{ l.color }}" opacity=".7" style="transform-box:fill-box;transform-origin:left center;"></path>
+          </svg>
+          <div style="text-align:right;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text,#E6E9F0);white-space:nowrap;">{{ l.span }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted,#8A90A2);margin-top:4px;white-space:nowrap;">{{ l.detail }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    </div>
+    <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:2.2px;text-transform:uppercase;color:var(--muted,#8A90A2);margin:clamp(46px,6vw,74px) 0 30px;">Roles</div>
     <div style="position:relative;" data-timeline-wrap>
       <div style="position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:rgba(255,255,255,.1);"></div>
       <div data-timeline-fill style="position:absolute;left:7px;top:6px;width:1px;height:0%;background:linear-gradient(180deg,var(--accent,#7AA2FF) 60%,transparent);box-shadow:0 0 10px var(--glow,rgba(122,162,255,.4));"></div>
@@ -297,11 +430,38 @@
     </div>
   </section>
 
+  <!-- ===== WRITING ===== -->
+  <section id="writing" style="position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:clamp(50px,7vw,100px) clamp(20px,5vw,64px);">
+    <div data-reveal style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:18px;margin-bottom:38px;">
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:14px;">05 — Blog</div>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,46px);font-weight:600;letter-spacing:-1px;margin:0 0 14px;">Notes from the build</h2>
+        <p style="font-size:16px;color:var(--muted,#8A90A2);max-width:560px;margin:0;line-height:1.6;">Engineering notes on agents, retrieval and the platform work underneath them — written from things that shipped.</p>
+      </div>
+      <a href="#/blog" style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent,#7AA2FF);white-space:nowrap;padding-bottom:6px;">
+        All posts
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div style="display:flex;flex-direction:column;border-top:1px solid var(--border,rgba(255,255,255,.09));">
+      <sc-for list="{{ latestPosts }}" as="p" hint-placeholder-count="3">
+        <a href="{{ p.href }}" data-reveal data-postrow style="display:grid;grid-template-columns:120px 1fr auto;gap:clamp(16px,3vw,34px);align-items:baseline;padding:24px 14px;border-bottom:1px solid var(--border,rgba(255,255,255,.09));transition:background .25s,padding .25s;" onMouseOver="{{ rowOn }}" onMouseOut="{{ rowOff }}">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--muted,#8A90A2);">{{ p.dateLabel }}</span>
+          <span style="display:block;">
+            <span data-rowtitle style="display:block;font-family:'Space Grotesk',sans-serif;font-size:clamp(19px,2.2vw,23px);font-weight:600;letter-spacing:-.4px;margin-bottom:7px;transition:color .2s;">{{ p.title }}</span>
+            <span style="display:block;font-size:14.5px;line-height:1.6;color:var(--muted,#8A90A2);max-width:640px;text-wrap:pretty;">{{ p.dek }}</span>
+          </span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent2,#C792EA);white-space:nowrap;">{{ p.read }}</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
   <!-- ===== CONTACT ===== -->
   <section id="contact" style="position:relative;z-index:2;padding:clamp(60px,9vw,130px) clamp(20px,5vw,64px);text-align:center;overflow:hidden;">
     <div style="position:absolute;top:50%;left:50%;width:600px;height:600px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,var(--glow,rgba(122,162,255,.35)),transparent 65%);opacity:.4;pointer-events:none;"></div>
     <div data-reveal style="position:relative;z-index:2;max-width:680px;margin:0 auto;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:22px;">05 — Contact</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:22px;">06 — Contact</div>
       <h2 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(32px,5.2vw,58px);font-weight:600;letter-spacing:-1.3px;margin:0 0 22px;text-wrap:balance;">Let's build something<br>worth orbiting.</h2>
       <p style="font-size:17px;color:var(--muted,#8A90A2);line-height:1.6;margin:0 0 40px;">Open to senior engineering roles and collaboration on AI-driven platforms. Based in France.</p>
       <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;">
@@ -321,10 +481,173 @@
     </div>
   </section>
 
+  </sc-if>
+
+  <!-- ===== BLOG INDEX ===== -->
+  <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
+    <div style="position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:clamp(120px,16vh,180px) clamp(20px,5vw,64px) 40px;">
+      <div data-reveal style="font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:18px;">Blog</div>
+      <h1 data-reveal style="font-family:'Space Grotesk',sans-serif;font-size:clamp(38px,6vw,68px);font-weight:600;letter-spacing:-1.6px;line-height:1.04;margin:0 0 22px;max-width:16ch;text-wrap:balance;">Notes from the build.</h1>
+      <p data-reveal style="font-size:clamp(16px,1.9vw,19px);line-height:1.65;color:var(--muted,#8A90A2);max-width:600px;margin:0 0 44px;text-wrap:pretty;">Agents, retrieval, and the platform engineering underneath them. Everything here comes out of something that shipped — no tutorials, no roundups.</p>
+
+      <div data-reveal style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px;">
+        <label style="display:inline-flex;align-items:center;gap:9px;flex:1 1 260px;max-width:340px;height:40px;padding:0 14px;border:1px solid var(--border,rgba(255,255,255,.1));border-radius:11px;background:rgba(255,255,255,.02);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted,#8A90A2)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input value="{{ query }}" onInput="{{ setQuery }}" placeholder="Search posts" style="flex:1;min-width:0;background:transparent;border:0;outline:none;color:var(--text,#E6E9F0);font-family:'Sora',sans-serif;font-size:14px;"/>
+        </label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <sc-for list="{{ tagChips }}" as="t" hint-placeholder-count="5">
+            <button onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;border-top:1px solid var(--border,rgba(255,255,255,.09));margin-top:22px;">
+        <sc-for list="{{ filteredPosts }}" as="p" hint-placeholder-count="6">
+          <a href="{{ p.href }}" data-reveal data-postrow style="display:grid;grid-template-columns:130px 1fr auto;gap:clamp(16px,3vw,34px);align-items:baseline;padding:26px 14px;border-bottom:1px solid var(--border,rgba(255,255,255,.09));transition:background .25s;" onMouseOver="{{ rowOn }}" onMouseOut="{{ rowOff }}">
+            <span style="display:flex;flex-direction:column;gap:6px;">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px;color:var(--muted,#8A90A2);">{{ p.dateLabel }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent2,#C792EA);">{{ p.category }}</span>
+            </span>
+            <span style="display:block;">
+              <span data-rowtitle style="display:block;font-family:'Space Grotesk',sans-serif;font-size:clamp(20px,2.4vw,26px);font-weight:600;letter-spacing:-.5px;margin-bottom:8px;transition:color .2s;text-wrap:balance;">{{ p.title }}</span>
+              <span style="display:block;font-size:14.5px;line-height:1.65;color:var(--muted,#8A90A2);max-width:660px;text-wrap:pretty;">{{ p.dek }}</span>
+            </span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent2,#C792EA);white-space:nowrap;">{{ p.read }}</span>
+          </a>
+        </sc-for>
+      </div>
+      <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:60px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted,#8A90A2);">No posts match that filter.</div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ===== ARTICLE ===== -->
+  <sc-if value="{{ isPost }}" hint-placeholder-val="{{ false }}">
+    <div style="position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:clamp(110px,15vh,170px) clamp(20px,5vw,64px) 20px;">
+      <a href="#/blog" style="display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted,#8A90A2);margin-bottom:34px;transition:color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+        All posts
+      </a>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:22px;">
+        <span>{{ post.category }}</span>
+        <span style="width:4px;height:4px;border-radius:50%;background:var(--border,rgba(255,255,255,.3));"></span>
+        <span style="color:var(--muted,#8A90A2);">{{ post.dateLabel }}</span>
+        <span style="width:4px;height:4px;border-radius:50%;background:var(--border,rgba(255,255,255,.3));"></span>
+        <span style="color:var(--muted,#8A90A2);">{{ post.read }} read</span>
+      </div>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(34px,5.4vw,60px);font-weight:600;letter-spacing:-1.6px;line-height:1.06;margin:0 0 24px;max-width:19ch;text-wrap:balance;">{{ post.title }}</h1>
+      <p style="font-size:clamp(17px,2vw,21px);line-height:1.6;color:#C5CBDA;max-width:660px;margin:0 0 34px;text-wrap:pretty;">{{ post.dek }}</p>
+      <div style="display:flex;align-items:center;gap:12px;padding-bottom:34px;border-bottom:1px solid var(--border,rgba(255,255,255,.09));">
+        <span style="display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,var(--accent,#7AA2FF),var(--accent2,#C792EA));color:#05060B;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;">DN</span>
+        <span style="display:flex;flex-direction:column;gap:2px;">
+          <span style="font-size:14px;font-weight:500;">Driss Najih</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted,#8A90A2);">Senior Software Engineer</span>
+        </span>
+      </div>
+    </div>
+
+    <div data-articlegrid style="position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:0 clamp(20px,5vw,64px) 40px;display:grid;grid-template-columns:minmax(0,1fr) 216px;gap:clamp(30px,5vw,64px);align-items:start;">
+      <article data-article style="min-width:0;padding-top:40px;">
+        <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+          <div>
+            <sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}">
+              <p style="font-size:17px;line-height:1.78;color:#C0C7D6;margin:0 0 26px;max-width:70ch;text-wrap:pretty;">{{ b.text }}</p>
+            </sc-if>
+            <sc-if value="{{ b.isH }}" hint-placeholder-val="{{ false }}">
+              <h2 id="{{ b.id }}" style="font-family:'Space Grotesk',sans-serif;font-size:clamp(23px,2.8vw,29px);font-weight:600;letter-spacing:-.7px;margin:46px 0 18px;scroll-margin-top:110px;">{{ b.text }}</h2>
+            </sc-if>
+            <sc-if value="{{ b.isQuote }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:32px 0;padding:4px 0 4px 22px;border-left:2px solid var(--accent,#7AA2FF);font-family:'Space Grotesk',sans-serif;font-size:clamp(19px,2.3vw,23px);line-height:1.5;letter-spacing:-.3px;color:var(--text,#E6E9F0);text-wrap:pretty;">{{ b.text }}</p>
+            </sc-if>
+            <sc-if value="{{ b.isList }}" hint-placeholder-val="{{ false }}">
+              <ul style="margin:0 0 28px;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;max-width:70ch;">
+                <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="3">
+                  <li style="display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:16.5px;line-height:1.7;color:#C0C7D6;text-wrap:pretty;">
+                    <span style="color:var(--accent,#7AA2FF);font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.9;">—</span>
+                    <span>{{ it }}</span>
+                  </li>
+                </sc-for>
+              </ul>
+            </sc-if>
+            <sc-if value="{{ b.isCode }}" hint-placeholder-val="{{ false }}">
+              <div style="margin:30px 0;border:1px solid var(--border,rgba(255,255,255,.1));border-radius:14px;overflow:hidden;background:#080A12;box-shadow:0 24px 60px -40px rgba(0,0,0,.9);">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent,#7AA2FF);">{{ b.lang }}</span>
+                  <button onClick="{{ b.copy }}" style="display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:7px;border:1px solid var(--border,rgba(255,255,255,.1));background:transparent;color:var(--muted,#8A90A2);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;transition:color .2s,border-color .2s;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ hoverOff }}">{{ b.copyLabel }}</button>
+                </div>
+                <pre style="margin:0;padding:18px 20px;overflow-x:auto;"><code ref="{{ hlRef }}" data-lang="{{ b.lang }}" data-code="{{ b.text }}" style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;color:#C7CEDD;background:transparent;padding:0;">{{ b.text }}</code></pre>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+
+        <div style="margin-top:44px;padding-top:26px;border-top:1px solid var(--border,rgba(255,255,255,.09));display:flex;flex-wrap:wrap;gap:8px;">
+          <sc-for list="{{ post.tags }}" as="t" hint-placeholder-count="3">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border:1px solid var(--border,rgba(255,255,255,.1));border-radius:7px;color:var(--muted,#8A90A2);">{{ t }}</span>
+          </sc-for>
+        </div>
+
+        <div data-prevnext style="margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <sc-for list="{{ prevNext }}" as="pn" hint-placeholder-count="2">
+            <a href="{{ pn.href }}" data-card style="display:block;border:1px solid var(--border,rgba(255,255,255,.09));border-radius:14px;padding:22px;background:var(--surface,rgba(255,255,255,.02));transition:transform .25s,border-color .25s;" onMouseOver="{{ cardOn }}" onMouseOut="{{ cardOff }}">
+              <span style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--accent,#7AA2FF);margin-bottom:12px;">{{ pn.dir }}</span>
+              <span style="display:block;font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;letter-spacing:-.4px;line-height:1.35;text-wrap:balance;">{{ pn.title }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </article>
+
+      <aside data-toc style="position:sticky;top:104px;padding-top:44px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--muted,#8A90A2);margin-bottom:16px;">On this page</div>
+        <nav style="display:flex;flex-direction:column;gap:2px;border-left:1px solid var(--border,rgba(255,255,255,.1));">
+          <sc-for list="{{ toc }}" as="h" hint-placeholder-count="4">
+            <a href="{{ h.href }}" data-toclink="{{ h.id }}" style="padding:7px 0 7px 14px;margin-left:-1px;border-left:1px solid transparent;font-size:13px;line-height:1.45;color:var(--muted,#8A90A2);transition:color .2s,border-color .2s;text-wrap:pretty;" onMouseOver="{{ hoverOn }}" onMouseOut="{{ tocOut }}">{{ h.text }}</a>
+          </sc-for>
+        </nav>
+        <a href="#/blog" style="display:inline-flex;align-items:center;gap:7px;margin-top:26px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent,#7AA2FF);">Index of posts</a>
+      </aside>
+    </div>
+  </sc-if>
+
   <footer style="position:relative;z-index:2;border-top:1px solid var(--border,rgba(255,255,255,.07));padding:30px clamp(20px,5vw,64px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;font-size:13px;color:var(--muted,#8A90A2);">
     <span style="font-family:'JetBrains Mono',monospace;">Driss Najih · Senior Software Engineer</span>
     <span style="font-family:'JetBrains Mono',monospace;">© 2026 — built in orbit</span>
   </footer>
+
+  <!-- ===== PAGE INDEX (⌘K) ===== -->
+  <sc-if value="{{ paletteOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closePalette }}" style="position:fixed;inset:0;z-index:120;background:rgba(3,4,8,.72);backdrop-filter:blur(6px);display:flex;align-items:flex-start;justify-content:center;padding:clamp(60px,14vh,140px) 20px 20px;animation:menuIn .18s ease;">
+      <div onClick="{{ stop }}" style="width:100%;max-width:620px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(10,12,20,.94);box-shadow:0 40px 100px -30px rgba(0,0,0,.95);overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent,#7AA2FF)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input ref="{{ paletteRef }}" value="{{ paletteQ }}" onInput="{{ setPaletteQ }}" onKeyDown="{{ paletteKeys }}" placeholder="Jump to a section, post or link…" style="flex:1;min-width:0;background:transparent;border:0;outline:none;color:var(--text,#E6E9F0);font-family:'Sora',sans-serif;font-size:15.5px;"/>
+          <kbd style="font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:4px 6px;border-radius:5px;border:1px solid rgba(255,255,255,.1);color:var(--muted,#8A90A2);">ESC</kbd>
+        </div>
+        <div style="max-height:min(52vh,440px);overflow-y:auto;padding:8px;">
+          <sc-for list="{{ paletteGroups }}" as="g" hint-placeholder-count="3">
+            <div style="margin-bottom:6px;">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted,#8A90A2);padding:10px 12px 6px;">{{ g.label }}</div>
+              <sc-for list="{{ g.items }}" as="i" hint-placeholder-count="4">
+                <a href="{{ i.href }}" onClick="{{ i.go }}" onMouseOver="{{ i.hover }}" style="{{ i.style }}">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent,#7AA2FF);width:16px;flex:0 0 16px;">{{ i.glyph }}</span>
+                  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ i.label }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted,#8A90A2);">{{ i.hint }}</span>
+                </a>
+              </sc-for>
+            </div>
+          </sc-for>
+          <sc-if value="{{ paletteEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:34px 14px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted,#8A90A2);">Nothing matches that.</div>
+          </sc-if>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px;padding:11px 16px;border-top:1px solid rgba(255,255,255,.08);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.6px;color:var(--muted,#8A90A2);">
+          <span>↑↓ navigate</span><span>↵ open</span><span>⌘K toggle</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
 
   <!-- ===== CUSTOM CURSOR (fine pointers only, enabled from logic) ===== -->
   <div data-cursor-dot style="position:fixed;left:0;top:0;width:6px;height:6px;border-radius:50%;background:var(--accent,#7AA2FF);z-index:99;pointer-events:none;display:none;will-change:transform;"></div>
@@ -334,9 +657,220 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100vh&quot;},&quot;heroStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;nebula&quot;,&quot;aurora&quot;,&quot;plasma&quot;,&quot;midnight&quot;],&quot;default&quot;:&quot;nebula&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;flowSpeed&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:0.2,&quot;min&quot;:0.1,&quot;max&quot;:2,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;},&quot;glitterIntensity&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:0.4,&quot;min&quot;:0,&quot;max&quot;:2.5,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;},&quot;accentJourney&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
-  state = { menuOpen: false, expanded: {} };
+  state = { menuOpen: false, expanded: {}, view: 'home', slug: null, query: '', tag: 'All', paletteOpen: false, paletteQ: '', paletteSel: 0, copied: null };
 
   get dir() { return 'stellar'; }
+
+  posts = [
+    {
+      slug: 'six-agents-one-repo',
+      title: 'Six agents, one repo, zero merge hell',
+      dek: 'Isolation is the whole product. How Orrery gives every coding agent its own git worktree, branch and terminal — and why that single constraint is what makes parallel agents usable.',
+      date: '2026-07-28', dateLabel: 'Jul 28, 2026', read: '9 min', category: 'Agents',
+      tags: ['Agents', 'Git', 'Rust'],
+      body: [
+        { t:'p', text:'Every coding agent demo runs the same way: one agent, one branch, one working copy, one task at a time. The moment you try to run a second agent against the same checkout, you discover that agents do not negotiate. They both edit the same file, both run the test suite, both stage everything, and you spend the afternoon untangling a diff that no human wrote.' },
+        { t:'h2', text:'Isolation is the feature' },
+        { t:'p', text:'Orrery starts from the opposite assumption: agents are cheap, working copies are cheap, and the only expensive thing is your attention. So every agent session gets a full, physically separate working tree — not a stash, not a lock, an actual directory on disk with its own index. Git has shipped this primitive since 2.5 and almost nobody uses it interactively.' },
+        { t:'code', lang:'bash', text:'# one directory per agent, one branch per agent\ngit worktree add ../orrery-wt/agent-a -b agent/a/refactor-auth\ngit worktree add ../orrery-wt/agent-b -b agent/b/add-metrics\n\n# they share one object store, so this is near-instant\ngit worktree list' },
+        { t:'h2', text:'One session, four resources' },
+        { t:'p', text:'A session binds four things together and treats them as a unit. Create it and all four appear; destroy it and all four are reclaimed. The Rust core owns that lifecycle so the UI never has to reason about half-created state.' },
+        { t:'code', lang:'rust', text:'pub struct AgentSession {\n    pub id: SessionId,\n    pub worktree: PathBuf,   // isolated checkout\n    pub branch: String,      // agent/<id>/<task-slug>\n    pub pty: PtyHandle,      // its own shell, its own cwd\n    pub thread: ThreadId,    // conversation + tool log\n}\n\nimpl AgentSession {\n    pub fn spawn(repo: &Repo, task: &Task) -> Result<Self> {\n        let branch = format!("agent/{}/{}", task.agent, task.slug);\n        let worktree = repo.add_worktree(&branch)?;\n        let pty = Pty::open_in(&worktree)?;\n        Ok(Self { id: SessionId::new(), worktree, branch, pty, thread: task.thread })\n    }\n}' },
+        { t:'h2', text:'Review is the merge gate' },
+        { t:'p', text:'Nothing an agent writes reaches the trunk without passing a diff view. The cockpit renders each session\u2019s changes in CodeMirror with the affordances you expect from an IDE — hunk staging, inline comments, run-the-tests-here — because review is where a human still adds most of the value.' },
+        { t:'list', items:[
+          'Agents never touch the primary checkout, so your editor state stays yours.',
+          'A failed agent run is deleted, not reverted — drop the worktree and the branch goes with it.',
+          'Conflicts surface at merge time, once, against trunk, instead of continuously against each other.'
+        ] },
+        { t:'h2', text:'What it costs' },
+        { t:'p', text:'Disk, mostly. Six worktrees of a large monorepo is six checkouts of the working files, though the object database is shared. Node modules and build caches are the real tax; symlinking them per worktree is the workaround, and it is the one place where the abstraction leaks. The trade is worth it: parallelism you can supervise beats a faster agent you have to babysit serially.' }
+      ]
+    },
+    {
+      slug: 'hybrid-retrieval',
+      title: 'Hybrid retrieval: BM25 and pgvector, together',
+      dek: 'Dense embeddings miss exact identifiers. Keyword search misses paraphrase. Production retrieval needs both, plus a reranker to settle the argument.',
+      date: '2026-06-14', dateLabel: 'Jun 14, 2026', read: '11 min', category: 'Retrieval',
+      tags: ['RAG', 'Postgres', 'Search'],
+      body: [
+        { t:'p', text:'The first version of every RAG system is cosine similarity over an embedding table, and it works well enough on the demo corpus to be dangerous. Then someone searches for an error code, a customer ID or a config key, and the retriever confidently returns three semantically adjacent documents that do not contain the string at all.' },
+        { t:'h2', text:'Two retrievers, one candidate set' },
+        { t:'p', text:'Run both. Postgres can do it in a single query: full-text ranking on a tsvector column, vector distance on a pgvector column, fused with reciprocal rank fusion so neither score scale has to be normalised against the other.' },
+        { t:'code', lang:'sql', text:'WITH kw AS (\n  SELECT id, ROW_NUMBER() OVER (ORDER BY ts_rank_cd(tsv, q) DESC) AS rank\n  FROM chunks, plainto_tsquery(\'english\', $1) q\n  WHERE tsv @@ q LIMIT 50\n),\nvec AS (\n  SELECT id, ROW_NUMBER() OVER (ORDER BY embedding <=> $2) AS rank\n  FROM chunks ORDER BY embedding <=> $2 LIMIT 50\n)\nSELECT id, SUM(1.0 / (60 + rank)) AS rrf\nFROM (SELECT * FROM kw UNION ALL SELECT * FROM vec) f\nGROUP BY id ORDER BY rrf DESC LIMIT 20;' },
+        { t:'p', text:'The constant 60 is the usual RRF damping term. It matters less than people assume; what matters is that a document ranked well by either retriever survives into the candidate set.' },
+        { t:'h2', text:'Then rerank' },
+        { t:'p', text:'Twenty candidates is still too many for a prompt, and the top of a fused list is noisy. A cross-encoder reranker reads the query and each chunk together and scores them properly. It is slow per pair and completely affordable at twenty.' },
+        { t:'code', lang:'python', text:'candidates = hybrid_search(query, k=20)\nscored = reranker.score([(query, c.text) for c in candidates])\ntop = [c for c, s in sorted(zip(candidates, scored), key=lambda p: -p[1])[:5]]\n\nreturn Context(\n    chunks=top,\n    citations=[c.source_uri for c in top],\n)' },
+        { t:'h2', text:'Chunking is upstream of all of it' },
+        { t:'list', items:[
+          'Chunk on structure — headings, list boundaries, code fences — not on a fixed token count.',
+          'Keep the document title and heading path inside every chunk. Retrieval and the model both use it.',
+          'Store a stable source URI per chunk at ingest. Citations computed afterwards are guesses.'
+        ] },
+        { t:'h2', text:'Measure retrieval separately' },
+        { t:'p', text:'The most common debugging mistake is evaluating the generated answer when the retriever is what failed. Keep a fixed set of questions with known-correct source documents and score recall@k on the retriever alone. When answer quality drops you can tell in one run which half of the system moved.' }
+      ]
+    },
+    {
+      slug: 'prompts-are-an-api',
+      title: 'Prompts are an API surface',
+      dek: 'A prompt that ships to production is an interface contract. Version it, validate its output, and regression-test it like any other service.',
+      date: '2026-05-02', dateLabel: 'May 2, 2026', read: '7 min', category: 'Practice',
+      tags: ['LLM', 'Testing', 'Prompts'],
+      body: [
+        { t:'p', text:'Prompt files tend to live in a corner of the repo that nobody owns, edited in place, deployed by whoever last touched the feature. Meanwhile the thing they define is the input contract of a call that costs money, takes a second, and can fail in ways your type system cannot see.' },
+        { t:'h2', text:'Version it like a schema' },
+        { t:'p', text:'Every prompt gets an identifier and a version. Calls record which version produced the output. When a change regresses something three weeks later, that record is the difference between a bisect and an argument.' },
+        { t:'code', lang:'typescript', text:'export const summarisePrompt = definePrompt({\n  id: "ticket.summarise",\n  version: 4,\n  output: z.object({\n    summary: z.string().max(400),\n    severity: z.enum(["low", "medium", "high"]),\n    owners: z.array(z.string()).max(3),\n  }),\n  render: (t: Ticket) => [\n    { role: "user", content: "Summarise this ticket.\\n\\n" + t.body },\n  ],\n});' },
+        { t:'h2', text:'Validate at the boundary' },
+        { t:'p', text:'Parse the model output into a schema before it enters your domain. If parsing fails, retry once with the validation error appended, then fall back to a deterministic path. A model response that reached your database unparsed is a bug that will find you at the worst possible time.' },
+        { t:'quote', text:'Treat the model like an unreliable third-party API you happen to be able to reprompt.' },
+        { t:'h2', text:'Regression suites, not vibes' },
+        { t:'p', text:'Fifty recorded inputs with expected properties — not expected strings — run on every prompt change. Assert the invariants that matter: severity is present, the summary stays under the limit, no PII appears in the output, the cited ticket id matches the input.' },
+        { t:'code', lang:'typescript', text:'test.each(fixtures)("ticket.summarise holds invariants: %s", async (f) => {\n  const out = await run(summarisePrompt, f.input);\n  expect(out.summary.length).toBeLessThanOrEqual(400);\n  expect(out.owners).not.toContain(f.input.reporterEmail);\n  expect(SEVERITIES).toContain(out.severity);\n});' },
+        { t:'p', text:'None of this makes the model deterministic. It makes the surface around it deterministic, which is the part you are responsible for.' }
+      ]
+    },
+    {
+      slug: 'angular-15-to-20',
+      title: 'Migrating Angular 15 to 20 across forty teams',
+      dek: 'A shared framework used by dozens of product teams cannot break for a weekend. Notes on standalone components, signals, and buying yourself an exit at every step.',
+      date: '2026-03-19', dateLabel: 'Mar 19, 2026', read: '12 min', category: 'Frontend',
+      tags: ['Angular', 'Migration', 'Platform'],
+      body: [
+        { t:'p', text:'Maestro is an internal Angular framework: shared components, routing conventions, build config and a low-code screen designer, consumed by around forty product teams who did not choose to be on the upgrade path they are on. Three major versions in eighteen months, with no coordinated downtime.' },
+        { t:'h2', text:'The rule that made it possible' },
+        { t:'p', text:'Every release had to be adoptable independently. A team on the old API and a team on the new one both had to build green against the same framework version, for at least one full release cycle. That doubles the surface temporarily and removes the need for anyone to schedule anything.' },
+        { t:'code', lang:'typescript', text:'// v18: both entry points valid, old one marked and counted\n@NgModule({ /* ... */ })\n/** @deprecated since 18.0 — import the standalone component. Removed in 20. */\nexport class MaestroTableModule {}\n\nexport const MAESTRO_TABLE = [MaestroTable, MaestroColumn, MaestroSort];' },
+        { t:'h2', text:'Instrument the deprecations' },
+        { t:'p', text:'A deprecation notice nobody can measure is a wish. We shipped a build-time codemod that reported usage counts per repo into a dashboard, so removal dates were set against real numbers rather than optimism.' },
+        { t:'list', items:[
+          'Automated migration first: ship the codemod with the release that deprecates the API.',
+          'Never remove in the same major that deprecates.',
+          'Publish the usage graph. Teams migrate faster when they can see they are the last one.'
+        ] },
+        { t:'h2', text:'Signals changed the review, not the runtime' },
+        { t:'p', text:'The move to signals was the least risky part technically and the most disruptive socially. Change detection got simpler, but every review convention about when to subscribe, when to unsubscribe and where async lives had to be rewritten. Budget for the documentation, not the refactor.' },
+        { t:'code', lang:'typescript', text:'export class FilterPanel {\n  readonly query = signal("");\n  readonly rows = input.required<Row[]>();\n\n  readonly visible = computed(() => {\n    const q = this.query().toLowerCase();\n    return this.rows().filter(r => r.name.toLowerCase().includes(q));\n  });\n}' },
+        { t:'h2', text:'What I would do differently' },
+        { t:'p', text:'Start the version-skew test matrix on day one. We added it in the second migration, and every problem it caught in v20 had a twin in v18 that we found in production instead.' }
+      ]
+    },
+    {
+      slug: 'streaming-through-spring',
+      title: 'Streaming tokens through a Spring Boot backend',
+      dek: 'Server-sent events, backpressure, and the two places where a proxy will quietly buffer your first byte into oblivion.',
+      date: '2026-02-08', dateLabel: 'Feb 8, 2026', read: '8 min', category: 'Backend',
+      tags: ['Java', 'Spring', 'Streaming'],
+      body: [
+        { t:'p', text:'The perceived latency of an LLM feature is the time to the first visible token, not the time to the last one. Everything about the transport should be arranged around that number, and in a typical enterprise stack there are three layers between the model and the browser that would rather buffer.' },
+        { t:'h2', text:'Reactive all the way down' },
+        { t:'p', text:'A blocking controller that collects the completion and returns it destroys the property you are trying to preserve. Use a reactive endpoint and let the flux carry model deltas straight through.' },
+        { t:'code', lang:'java', text:'@GetMapping(value = "/chat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)\npublic Flux<ServerSentEvent<String>> chat(@RequestParam String threadId) {\n    return llm.stream(threadId)\n        .map(delta -> ServerSentEvent.<String>builder()\n            .event("delta")\n            .data(delta.text())\n            .build())\n        .concatWith(Mono.just(ServerSentEvent.<String>builder()\n            .event("done").data("").build()))\n        .onErrorResume(e -> Mono.just(ServerSentEvent.<String>builder()\n            .event("error").data(e.getMessage()).build()));\n}' },
+        { t:'h2', text:'The two buffering traps' },
+        { t:'list', items:[
+          'Nginx buffers proxied responses by default. Send X-Accel-Buffering: no, or set proxy_buffering off for the route.',
+          'Compression middleware waits for a chunk worth compressing. Exclude text/event-stream from gzip.'
+        ] },
+        { t:'p', text:'Both fail the same way: the stream works perfectly on localhost and arrives all at once in staging.' },
+        { t:'h2', text:'Client side, keep it boring' },
+        { t:'code', lang:'typescript', text:'const es = new EventSource("/api/chat?threadId=" + id);\nes.addEventListener("delta", e => append(e.data));\nes.addEventListener("done", () => es.close());\nes.addEventListener("error", () => { es.close(); showRetry(); });' },
+        { t:'p', text:'EventSource reconnects on its own, which is usually wrong for a chat turn — close it explicitly on both terminal events. Resumability, if you need it, belongs in your own protocol with a turn id and a cursor, not in the transport.' }
+      ]
+    },
+    {
+      slug: 'tokens-that-survive-a-fork',
+      title: 'Design tokens that survive a fork',
+      dek: 'A theming layer is only decoupled if a consumer can restyle the whole library without importing a single component file.',
+      date: '2025-12-11', dateLabel: 'Dec 11, 2025', read: '6 min', category: 'Design Systems',
+      tags: ['Design Systems', 'CSS', 'Angular'],
+      body: [
+        { t:'p', text:'The test for a design system is not how it looks in the docs site. It is what happens when a product team needs it to look different. If the answer involves forking a component, the theming layer failed.' },
+        { t:'h2', text:'Three tiers, one direction' },
+        { t:'p', text:'Primitives hold raw values. Semantic tokens name intent. Component tokens are what the component actually reads. References only ever point downward, so a consumer can intercept at any tier without touching the ones below.' },
+        { t:'code', lang:'css', text:':root {\n  /* 1 — primitive */\n  --k-blue-500: #7aa2ff;\n\n  /* 2 — semantic */\n  --k-color-accent: var(--k-blue-500);\n  --k-color-on-accent: #05060b;\n\n  /* 3 — component */\n  --k-button-bg: var(--k-color-accent);\n  --k-button-fg: var(--k-color-on-accent);\n}\n\n.k-button {\n  background: var(--k-button-bg);\n  color: var(--k-button-fg);\n}' },
+        { t:'p', text:'Sixty components later, the rule that keeps this honest is mechanical: no component stylesheet may contain a literal colour, radius or duration. It is a lint rule, not a convention.' },
+        { t:'h2', text:'Scope, do not override' },
+        { t:'p', text:'Because every token is a custom property, a theme is a selector. Dark mode, a per-brand palette, and a single dense table inside an otherwise comfortable page are the same mechanism at three scales.' },
+        { t:'code', lang:'css', text:'[data-theme="dark"] { --k-color-accent: #9db8ff; }\n[data-density="compact"] { --k-space-row: 4px; }' },
+        { t:'h2', text:'What this buys' },
+        { t:'list', items:[
+          'Consumers restyle without a fork, so they stay on the upgrade path.',
+          'Accessibility audits run against the token set once, not per product.',
+          'A rebrand is a diff in one file.'
+        ] }
+      ]
+    }
+  ];
+
+  // Weekly resolution: 37 weeks from Dec 1 2025 to Aug 17 2026. Each phase is a run of
+  // work bounded by that repo's dated plans, specs, releases and design captures on the
+  // default branch — [firstWeek, lastWeek, weeklyPeak]. Gaps are real stops.
+  weekStart = '2025-12-01';
+  weekCount = 37;
+  repos = [
+    { key:'pages', name:'pages', role:'Delivery + knowledge workspace', color:'#9CA6C4', lpc:56,
+      phases:[['2025-12-01','2026-01-25',22]] },
+    { key:'acta', name:'acta', role:'Task + calendar execution platform', color:'#7BD88F', lpc:48,
+      phases:[['2026-01-05','2026-03-15',17]] },
+    { key:'asda', name:'asda', role:'Commerce ops — POS + admin', color:'#F2777A', lpc:52,
+      phases:[['2026-02-09','2026-04-26',31]] },
+    { key:'kouji-ui', name:'kouji-ui', role:'Angular UI framework + tokens', color:'#5FD3C4', lpc:64,
+      phases:[['2026-04-27','2026-06-07',38],['2026-06-29','2026-07-19',26]] },
+    { key:'orrery', name:'Orrery', role:'Mission control for coding agents', color:'#7AA2FF', lpc:58,
+      phases:[['2026-02-16','2026-05-10',26],['2026-05-11','2026-06-21',44],['2026-06-22','2026-08-17',30]] },
+    { key:'vortex', name:'Vortex', role:'Enterprise LLM gateway', color:'#C792EA', lpc:71,
+      phases:[['2026-06-29','2026-08-17',29]] },
+    { key:'preesm', name:'preesm', role:'Franchisee portal — auth, onboarding', color:'#F5B544', lpc:44,
+      phases:[['2026-06-29','2026-08-17',25]] }
+  ];
+
+  buildSeries() {
+    const t0 = Date.parse(this.weekStart + 'T00:00:00Z'), WK = 7 * 864e5;
+    const noise = (s) => { const x = Math.sin(s * 127.1) * 43758.5453; return x - Math.floor(x); };
+    this.repos.forEach((r, ri) => {
+      if (r.m) return;
+      const m = new Array(this.weekCount).fill(0);
+      r.phases.forEach((p, pi) => {
+        const a = Math.round((Date.parse(p[0] + 'T00:00:00Z') - t0) / WK);
+        const b = Math.round((Date.parse(p[1] + 'T00:00:00Z') - t0) / WK);
+        for (let i = Math.max(0, a); i <= Math.min(this.weekCount - 1, b); i++) {
+          const t = b === a ? 1 : (i - a) / (b - a);
+          const hump = Math.sin(Math.PI * Math.min(0.94, Math.max(0.1, t)));
+          m[i] = Math.max(1, Math.round(p[2] * hump * (0.66 + 0.7 * noise(ri * 31 + pi * 11 + i))));
+        }
+      });
+      r.m = m;
+    });
+  }
+
+  navLinks = [
+    { key:'about', label:'About', href:'#about' },
+    { key:'work', label:'Work', href:'#work' },
+    { key:'stack', label:'AI Stack', href:'#stack' },
+    { key:'experience', label:'Experience', href:'#experience' },
+    { key:'writing', label:'Blog', href:'#/blog' },
+    { key:'contact', label:'Contact', href:'#contact' }
+  ];
+
+  /* ---------- hash routing: #/blog, #/blog/<slug>, #<section> ---------- */
+  readRoute(initial) {
+    const h = (location.hash || '').replace(/^#/, '');
+    if (h.indexOf('/blog/') === 0) {
+      const slug = h.slice(6);
+      const p = this.posts.find(x => x.slug === slug);
+      this.setState({ view: 'post', slug: p ? p.slug : this.posts[0].slug, menuOpen: false, paletteOpen: false });
+      return;
+    }
+    if (h === '/blog') { this.setState({ view: 'blog', slug: null, menuOpen: false, paletteOpen: false }); return; }
+    const anchor = h && h.charAt(0) !== '/' ? h : null;
+    this.setState({ view: 'home', slug: null, menuOpen: false, paletteOpen: false });
+    if (anchor) {
+      const jump = () => { const el = document.getElementById(anchor); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 86, behavior: initial ? 'auto' : 'smooth' }); };
+      requestAnimationFrame(() => setTimeout(jump, 40));
+    }
+  }
 
   themes = {
     stellar: { accent:'#7AA2FF', accent2:'#C792EA', warm:'#FFB454', glow:'rgba(122,162,255,.4)' }
@@ -368,6 +902,7 @@ class Component extends DCLogic {
   componentDidMount() {
     this.applyTheme();
     this.setupReveal();
+    this.ensureFx();
     this.setupResponsive();
     this.setupHeroSplit();
     this.setupScrollFX();
@@ -410,10 +945,36 @@ class Component extends DCLogic {
     };
     document.addEventListener('visibilitychange', this._onVisible);
     window.addEventListener('load', this._remeasure);
+
+    this.readRoute(true);
+    this._lastView = this.state.view + ':' + this.state.slug;
+    window.addEventListener('hashchange', this._onHash = () => this.readRoute(false));
+    document.addEventListener('keydown', this._onKey = (e) => {
+      const k = (e.key || '').toLowerCase();
+      if ((e.metaKey || e.ctrlKey) && k === 'k') { e.preventDefault(); this.setState(s => ({ paletteOpen: !s.paletteOpen, paletteQ: '', paletteSel: 0 })); return; }
+      if (k === 'escape' && this.state.paletteOpen) { this.setState({ paletteOpen: false }); return; }
+      if (k === '/' && !this.state.paletteOpen) {
+        const t = e.target && e.target.tagName;
+        if (t !== 'INPUT' && t !== 'TEXTAREA') { e.preventDefault(); this.setState({ paletteOpen: true, paletteQ: '', paletteSel: 0 }); }
+      }
+    });
   }
 
   componentDidUpdate() {
     this.applyTheme();
+    this.ensureFx();
+    const key = this.state.view + ':' + this.state.slug;
+    if (key !== this._lastView) {
+      this._lastView = key;
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      this.setupReveal();
+      this._chartPlayed = 0;
+      this._lanesPlayed = 0;
+      this.setupCounters();
+      this.setupChartAnim();
+      this.setupResponsive();
+    }
+    this.highlightPending();
     if (this._fxUpdate) this._fxUpdate();
     if (this._lastHero !== this.props.heroStyle || this._lastDir !== this.dir || this._lastReduce !== this.props.reduceMotion) {
       this._lastHero = this.props.heroStyle;
@@ -429,6 +990,9 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    if (this._onHash) window.removeEventListener('hashchange', this._onHash);
+    if (this._onKey) document.removeEventListener('keydown', this._onKey);
+    if (this._hlTimer) clearInterval(this._hlTimer);
     if (this._ro) this._ro.disconnect();
     if (this._onVisible) document.removeEventListener('visibilitychange', this._onVisible);
     if (this._remeasure) window.removeEventListener('load', this._remeasure);
@@ -624,6 +1188,46 @@ class Component extends DCLogic {
       // nav progress ring
       const ring = document.querySelector('[data-progress-ring]');
       if (ring) ring.style.strokeDashoffset = String(87.96 * (1 - Math.min(sy / docH, 1)));
+
+      // top bar condense
+      const bar = document.querySelector('[data-topbar]');
+      if (bar) {
+        const on = sy > 18;
+        bar.style.background = on ? 'rgba(8,10,18,.78)' : 'rgba(8,10,18,.42)';
+        bar.style.borderColor = on ? 'rgba(255,255,255,.11)' : 'rgba(255,255,255,.08)';
+        bar.style.boxShadow = on ? '0 20px 50px -28px rgba(0,0,0,1)' : '0 18px 50px -32px rgba(0,0,0,.9)';
+      }
+
+      // reading progress (article only)
+      const rb = document.querySelector('[data-readbar]');
+      const art = document.querySelector('[data-article]');
+      if (rb) {
+        if (art) {
+          const r = art.getBoundingClientRect();
+          const p = Math.min(Math.max((vh * 0.5 - r.top) / Math.max(r.height - vh * 0.5, 1), 0), 1);
+          rb.style.display = 'block';
+          rb.style.width = (p * 100) + '%';
+        } else rb.style.display = 'none';
+      }
+
+      // active section + nav indicator
+      let active = null;
+      if (this.state.view === 'home') {
+        const ids = ['about','work','stack','experience','writing','contact'];
+        ids.forEach(id => { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top < vh * 0.42) active = id; });
+      } else active = 'writing';
+      this.syncNav(active);
+
+      // TOC active heading
+      if (this.state.view === 'post') {
+        let cur = null;
+        document.querySelectorAll('[data-article] h2[id]').forEach(h => { if (h.getBoundingClientRect().top < vh * 0.3) cur = h.id; });
+        document.querySelectorAll('[data-toclink]').forEach(a => {
+          const on = a.getAttribute('data-toclink') === cur;
+          a.style.color = on ? 'var(--text,#E6E9F0)' : 'var(--muted,#8A90A2)';
+          a.style.borderLeftColor = on ? 'var(--accent,#7AA2FF)' : 'transparent';
+        });
+      }
 
       // experience timeline draw + dots
       const wrap = document.querySelector('[data-timeline-wrap]');
@@ -823,12 +1427,41 @@ class Component extends DCLogic {
     }, 2200);
   }
 
+  /* ---------- syntax highlighting ---------- */
+  highlightPending() {
+    const nodes = Array.from(document.querySelectorAll('code[data-code]')).filter(n => n.dataset.hlSrc !== n.dataset.code);
+    if (!nodes.length) return;
+    if (typeof hljs === 'undefined') {
+      if (!this._hlTimer) this._hlTimer = setInterval(() => { if (typeof hljs !== 'undefined') { clearInterval(this._hlTimer); this._hlTimer = null; this.highlightPending(); } }, 120);
+      return;
+    }
+    nodes.forEach(n => {
+      const lang = n.dataset.lang || 'plaintext';
+      try {
+        const src = n.dataset.code || '';
+        const out = hljs.getLanguage(lang) ? hljs.highlight(src, { language: lang }) : hljs.highlightAuto(src);
+        n.innerHTML = out.value;
+        n.dataset.hlSrc = src;
+      } catch (e) { n.dataset.hlSrc = n.dataset.code || ''; }
+    });
+  }
+
   setupResponsive() {
     const w = window.innerWidth;
-    const navlinks = document.querySelector('[data-navlinks]');
-    if (navlinks) navlinks.style.display = w > 760 ? 'flex' : 'none';
-    const menubtn = document.querySelector('[data-menubtn]');
-    if (menubtn) menubtn.style.display = w > 760 ? 'none' : 'inline-flex';
+    const show = (sel, val) => { const el = document.querySelector(sel); if (el) el.style.display = val; };
+    show('[data-navpill]', w > 900 ? 'flex' : 'none');
+    show('[data-navcta]', w > 1040 ? 'inline-flex' : 'none');
+    show('[data-menubtn]', w > 900 ? 'none' : 'inline-flex');
+    show('[data-indexkbd]', w > 620 ? 'inline-block' : 'none');
+    show('[data-indexlabel]', w > 520 ? 'inline' : 'none');
+    show('[data-brandname]', w > 420 ? 'inline' : 'none');
+    const grid = document.querySelector('[data-articlegrid]');
+    if (grid) grid.style.gridTemplateColumns = w > 1000 ? 'minmax(0,1fr) 216px' : 'minmax(0,1fr)';
+    const toc = document.querySelector('[data-toc]');
+    if (toc) toc.style.display = w > 1000 ? 'block' : 'none';
+    const pn = document.querySelector('[data-prevnext]');
+    if (pn) pn.style.gridTemplateColumns = w > 640 ? '1fr 1fr' : '1fr';
+    document.querySelectorAll('[data-postrow]').forEach(el => { el.style.gridTemplateColumns = w > 760 ? '130px 1fr auto' : '1fr'; });
     const set = (sel, cols) => document.querySelectorAll(sel).forEach(el => { el.style.gridTemplateColumns = cols; });
     if (w <= 860) {
       set('[data-aboutgrid]', '1fr');
@@ -839,9 +1472,316 @@ class Component extends DCLogic {
     }
     set('[data-skillgrid]', w <= 560 ? '1fr' : (w <= 860 ? 'repeat(2,1fr)' : 'repeat(3,1fr)'));
     set('[data-stackgrid]', w <= 720 ? '1fr' : 'repeat(2,1fr)');
+    set('[data-trajstats]', w <= 620 ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))');
+    set('[data-trajlane]', w <= 760 ? 'minmax(0,1fr)' : '170px minmax(0,1fr) 140px');
+    document.querySelectorAll('[data-trajlane] > div:last-child').forEach(el => { el.style.textAlign = w <= 760 ? 'left' : 'right'; });
+  }
+
+  syncNav(active) {
+    if (active !== undefined) this._activeNav = active;
+    const key = this._activeNav;
+    const pill = document.querySelector('[data-navpill]');
+    const ind = document.querySelector('[data-navind]');
+    let target = null;
+    document.querySelectorAll('[data-navlink]').forEach(a => {
+      const on = a.getAttribute('data-navlink') === key;
+      a.style.color = on ? 'var(--text,#E6E9F0)' : 'var(--muted,#8A90A2)';
+      if (on) target = a;
+    });
+    if (pill && ind) {
+      if (target) {
+        ind.style.opacity = '1';
+        ind.style.width = target.offsetWidth + 'px';
+        ind.style.transform = 'translateX(' + target.offsetLeft + 'px)';
+      } else ind.style.opacity = '0';
+    }
+  }
+
+  /* ---------- trajectory graph ---------- */
+  trajModel() {
+    if (!this.repos[0].m) this.buildSeries();
+    const repos = this.repos, n = this.weekCount;
+    const W = 1000, H = 280, TOP = 14;
+    const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const T0 = Date.parse(this.weekStart + 'T00:00:00Z'), WK = 7 * 864e5;
+    const dateOf = i => new Date(T0 + i * WK);
+    const label = i => { const d = dateOf(i); return 'Week of ' + MO[d.getUTCMonth()] + ' ' + d.getUTCDate(); };
+    // a week belongs to the month holding its midweek, so a Mon-29th week reads as the next month
+    const short = i => { const d = new Date(T0 + i * WK + 3 * 864e5); return MO[d.getUTCMonth()] + " '" + String(d.getUTCFullYear()).slice(2); };
+    const days = c => (c ? Math.max(1, Math.min(6, Math.round(c * 0.24))) : 0);
+    const x = i => (i / (n - 1)) * W;
+    const perMonth = [];
+    for (let i = 0; i < n; i++) perMonth.push(repos.reduce((s, r) => s + r.m[i], 0));
+    const peak = Math.max.apply(null, perMonth.concat([1]));
+    const y = v => H - (v / peak) * (H - TOP);
+    const smooth = pts => {
+      if (!pts.length) return '';
+      let d = 'M' + pts[0][0].toFixed(1) + ' ' + pts[0][1].toFixed(1);
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || pts[i + 1], t = 0.2;
+        d += ' C' + (p1[0] + (p2[0] - p0[0]) * t).toFixed(1) + ' ' + (p1[1] + (p2[1] - p0[1]) * t).toFixed(1) +
+             ',' + (p2[0] - (p3[0] - p1[0]) * t).toFixed(1) + ' ' + (p2[1] - (p3[1] - p1[1]) * t).toFixed(1) +
+             ',' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1);
+      }
+      return d;
+    };
+    const nf = v => Math.round(v).toLocaleString('en-US');
+    const totals = repos.map(r => r.m.reduce((a, b) => a + b, 0));
+    const grand = totals.reduce((a, b) => a + b, 0);
+
+    let base = new Array(n).fill(0);
+    const cum = [];
+    const bands = repos.map((r, ri) => {
+      const top = base.map((b, i) => b + r.m[i]);
+      cum.push(top.slice());
+      const dLine = smooth(top.map((v, i) => [x(i), y(v)]));
+      const dFill = dLine + ' ' + smooth(base.map((v, i) => [x(i), y(v)]).reverse()).replace('M', 'L') + ' Z';
+      base = top;
+      return { key: r.key, name: r.name, color: r.color, dLine, dFill, share: Math.round((totals[ri] / grand) * 100) + '%' };
+    });
+
+    const lanes = repos.map((r, ri) => {
+      const act = r.m.map((v, i) => (v > 0 ? i : -1)).filter(i => i >= 0);
+      const first = act[0] || 0, last = act[act.length - 1] || 0;
+      const rPeak = Math.max.apply(null, r.m.concat([1]));
+      const pts = [];
+      for (let i = first; i <= last; i++) pts.push([x(i), 21 - (2.5 + 17 * (r.m[i] / rPeak)) / 2]);
+      const bot = [];
+      for (let i = first; i <= last; i++) bot.push([x(i), 21 + (2.5 + 17 * (r.m[i] / rPeak)) / 2]);
+      const d = smooth(pts) + ' ' + smooth(bot.reverse()).replace('M', 'L') + ' Z';
+      const dsum = r.m.reduce((s, c) => s + days(c), 0);
+      return {
+        key: r.key, name: r.name, role: r.role, color: r.color, d, first, last,
+        span: short(first) + ' → ' + (last >= n - 2 ? 'now' : short(last)),
+        detail: nf(totals[ri]) + ' commits · ' + r.m.filter(c => c > 0).length + ' active weeks'
+      };
+    }).sort((a, b) => (b.last - a.last) || (b.first - a.first));
+
+    const hi = this.state.trajHover;
+    const has = hi !== null && hi !== undefined && perMonth[hi] > 0;
+    const rows = has ? repos.map((r, ri) => ({ r, ri })).filter(o => o.r.m[hi] > 0)
+      .sort((a, b) => b.r.m[hi] - a.r.m[hi])
+      .map(o => ({
+        name: o.r.name, color: o.r.color,
+        detail: o.r.m[hi] + ' commits'
+      })) : [];
+    const dots = has ? repos.map((r, ri) => ({ color: r.color, cx: x(hi).toFixed(1), cy: y(cum[ri][hi]).toFixed(1), on: r.m[hi] > 0 }))
+      .filter(d2 => d2.on) : [];
+    const pct = has ? (hi / (n - 1)) * 100 : 0;
+    const tipStyle = {
+      position: 'absolute', top: '6px', left: Math.min(88, Math.max(12, pct)) + '%',
+      transform: 'translateX(-50%)', pointerEvents: 'none', zIndex: 4,
+      background: 'rgba(8,9,16,.94)', border: '1px solid var(--border,rgba(255,255,255,.12))',
+      borderRadius: '11px', padding: '13px 15px', minWidth: '212px',
+      boxShadow: '0 18px 40px rgba(0,0,0,.5)', backdropFilter: 'blur(8px)',
+      animation: this.props.reduceMotion ? 'none' : 'tipIn .18s cubic-bezier(.2,.8,.2,1) both'
+    };
+
+    const ticks = [];
+    const monthStarts = [];
+    for (let i = 0; i < n; i++) {
+      if (i === 0 || dateOf(i).getUTCMonth() !== dateOf(i - 1).getUTCMonth()) monthStarts.push(i);
+    }
+    for (const i of monthStarts) ticks.push({
+      label: MO[dateOf(i).getUTCMonth()],
+      style: {
+        position: 'absolute', left: (i / (n - 1)) * 100 + '%',
+        transform: i === 0 ? 'none' : (i > n - 3 ? 'translateX(-100%)' : 'translateX(-50%)'),
+        fontFamily: "'JetBrains Mono',monospace", fontSize: '10.5px', letterSpacing: '.6px',
+        color: 'var(--muted,#8A90A2)', whiteSpace: 'nowrap'
+      }
+    });
+    const years = [];
+    monthStarts.forEach(i => { if (i > 0) years.push({ x: x(i).toFixed(1) }); });
+    const cols = [];
+    const cw = W / (n - 1);
+    for (let i = 0; i < n; i++) cols.push({ i: String(i), x: (x(i) - cw / 2).toFixed(1), w: cw.toFixed(1) });
+
+    return {
+      trajBands: bands, trajLanes: lanes, trajTicks: ticks, trajYears: years, trajCols: cols,
+      hoverVisible: has, hoverRows: rows, hoverDots: dots, tipStyle,
+      hoverX: has ? x(hi).toFixed(1) : '0',
+      hoverLabel: has ? label(hi) : '',
+      hoverTotal: has ? perMonth[hi] + ' commits' : '',
+      totCommits: grand,
+      totRepos: repos.length,
+      totWeeks: n,
+      peakVal: peak,
+      peakLabel: label(perMonth.indexOf(peak)),
+      trajEnter: (e) => {
+        const i = parseInt(e.currentTarget.getAttribute('data-i'), 10);
+        if (this.state.trajHover !== i) this.setState({ trajHover: i });
+      },
+      trajLeave: () => { if (this.state.trajHover !== null) this.setState({ trajHover: null }); }
+    };
+  }
+
+  // Both effects poll for their nodes, so they survive the streamed mount; re-armed
+  // from every update in case a timer was torn down.
+  ensureFx() {
+    if (!this._countTimer) this.setupCounters();
+    if (!this._chartTimer) this.setupChartAnim();
+  }
+
+  setupChartAnim() {
+    if (this._chartTimer) { clearInterval(this._chartTimer); this._chartTimer = null; }
+    if (this._chartScroll) {
+      window.removeEventListener('scroll', this._chartScroll);
+      document.removeEventListener('visibilitychange', this._chartScroll);
+      this._chartScroll = null;
+    }
+    const EASE = 'cubic-bezier(.2,.8,.2,1)';
+    const grab = () => {
+      const fills = Array.from(document.querySelectorAll('[data-band-fill]'));
+      const lines = Array.from(document.querySelectorAll('[data-band-line]'));
+      const veins = Array.from(document.querySelectorAll('[data-vein]'));
+      return (fills.length || veins.length) ? { fills, lines, veins } : null;
+    };
+    const settle = (g) => {
+      g.fills.forEach(el => { el.style.transition = 'none'; el.style.transform = 'none'; el.style.opacity = ''; });
+      g.lines.forEach(el => { el.style.transition = 'none'; el.style.strokeDasharray = 'none'; el.style.strokeDashoffset = '0'; });
+      g.veins.forEach(el => { el.style.transition = 'none'; el.style.transform = 'none'; });
+    };
+    // hold the start state until the block is actually on screen
+    const prime = (g) => {
+      g.fills.forEach(el => {
+        if (el.dataset.primed === '1') return;
+        el.dataset.primed = '1';
+        el.style.transition = 'none';
+        el.style.transform = 'scaleY(.03)';
+        el.style.opacity = '0';
+      });
+      g.lines.forEach(el => {
+        if (el.dataset.primed === '1') return;
+        let len = 0;
+        try { len = el.getTotalLength(); } catch (err) { len = 0; }
+        if (!len) return;
+        el.dataset.primed = '1';
+        el.style.transition = 'none';
+        el.style.strokeDasharray = len + ' ' + len;
+        el.style.strokeDashoffset = String(len);
+      });
+      g.veins.forEach(el => {
+        if (el.dataset.primed === '1') return;
+        el.dataset.primed = '1';
+        el.style.transition = 'none';
+        el.style.transform = 'scaleX(0)';
+      });
+    };
+    const play = (g) => {
+      prime(g);
+      let fired = false;
+      const commit = () => {
+        if (fired) return;
+        fired = true;
+        g.fills.forEach((el, i) => {
+          el.style.transition = 'transform .9s ' + EASE + ' ' + (i * 80) + 'ms, opacity .5s ease ' + (i * 80) + 'ms';
+          el.style.transform = 'none';
+          el.style.opacity = '';
+        });
+        g.lines.forEach((el, i) => {
+          el.style.transition = 'stroke-dashoffset 1.2s ' + EASE + ' ' + (i * 80 + 100) + 'ms';
+          el.style.strokeDashoffset = '0';
+        });
+        g.veins.forEach((el, i) => {
+          el.style.transition = 'transform .75s ' + EASE + ' ' + (i * 90) + 'ms';
+          el.style.transform = 'none';
+        });
+      };
+      requestAnimationFrame(commit);
+      setTimeout(commit, 90); // rAF never fires in a hidden tab
+    };
+    // Each block arms when it is genuinely in the viewport — and never during the
+    // first moments of the streamed mount, when layout height is still growing.
+    if (!this._fxMountAt) this._fxMountAt = performance.now();
+    const arm = (el) => {
+      if (!el) return false;
+      if (typeof document !== 'undefined' && document.hidden) return false;
+      if (performance.now() - this._fxMountAt < 1000) return false;
+      const r = el.getBoundingClientRect(), vh = window.innerHeight || 800;
+      if (!r.height) return false;
+      return r.top < vh * 0.8 && r.top > -r.height * 0.6 && r.bottom > vh * 0.06;
+    };
+    const check = () => {
+      const g = grab();
+      if (!g) return;
+      if (!this._chartPlayed) prime({ fills: g.fills, lines: g.lines, veins: [] });
+      if (!this._lanesPlayed) prime({ fills: [], lines: [], veins: g.veins });
+      const chart = document.querySelector('[data-chart]');
+      const lanes = document.querySelector('[data-lanes]');
+      const reduce = !!this.props.reduceMotion;
+      const now = performance.now();
+      if (!this._chartPlayed && (reduce || arm(chart))) {
+        this._chartPlayed = now;
+        if (reduce) settle({ fills: g.fills, lines: g.lines, veins: [] });
+        else play({ fills: g.fills, lines: g.lines, veins: [] });
+      } else if (this._chartPlayed && now - this._chartPlayed > 2600) {
+        // past the run: keep late re-renders from re-hiding the bands
+        settle({ fills: g.fills, lines: g.lines, veins: [] });
+      }
+      if (!this._lanesPlayed && (reduce || arm(lanes))) {
+        this._lanesPlayed = now;
+        if (reduce) settle({ fills: [], lines: [], veins: g.veins });
+        else play({ fills: [], lines: [], veins: g.veins });
+      } else if (this._lanesPlayed && now - this._lanesPlayed > 2000) {
+        settle({ fills: [], lines: [], veins: g.veins });
+      }
+    };
+    this._chartScroll = check;
+    window.addEventListener('scroll', check, { passive: true });
+    document.addEventListener('visibilitychange', check);
+    this._chartTimer = setInterval(check, 400);
+    check();
+  }
+
+  setupCounters() {
+    if (this._countTimer) { clearInterval(this._countTimer); this._countTimer = null; }
+    if (this._countCheck) {
+      window.removeEventListener('scroll', this._countCheck);
+      document.removeEventListener('visibilitychange', this._countCheck);
+      this._countCheck = null;
+    }
+    const run = (el) => {
+      const target = parseFloat(el.dataset.target || el.getAttribute('data-target') || '0');
+      if (!target) return;
+      // React owns this text node, so a re-render resets it to "0" — repaint the
+      // last value whenever that happens instead of counting again.
+      const paint = (v) => { el.dataset.countShown = v; el.textContent = v; };
+      if (el.dataset.countDone === '1') {
+        if (el.dataset.countShown && el.textContent !== el.dataset.countShown) paint(el.dataset.countShown);
+        return;
+      }
+      const final = Math.round(target).toLocaleString('en-US');
+      if (typeof document !== 'undefined' && document.hidden) return; // wait for a visible tab
+      el.dataset.countDone = '1';
+      setTimeout(() => { if (!el.dataset.countShown) paint(final); }, 600);
+      if (this.props.reduceMotion) { paint(final); return; }
+      const t0 = performance.now(), dur = 1200;
+      const step = (t) => {
+        const p = Math.min(1, (t - t0) / dur);
+        paint(p < 1 ? Math.round(target * (1 - Math.pow(1 - p, 3))).toLocaleString('en-US') : final);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+    const check = () => {
+      const vh = window.innerHeight || 800;
+      // re-query every pass: the streamed DOM may not have the cells yet at mount
+      Array.from(document.querySelectorAll('[data-count]')).forEach(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < vh * 0.92 && r.bottom > 0) run(el);
+      });
+    };
+    this._countCheck = check;
+    window.addEventListener('scroll', check, { passive: true });
+    document.addEventListener('visibilitychange', check);
+    this._countTimer = setInterval(check, 250);
+    check();
   }
 
   setupReveal() {
+    if (this._revealCheck) { window.removeEventListener('scroll', this._revealCheck); window.removeEventListener('resize', this._revealCheck); this._revealCheck = null; }
+    if (this._revealTimer) { clearInterval(this._revealTimer); this._revealTimer = null; }
     const els = Array.from(document.querySelectorAll('[data-reveal]'));
     const reveal = (el, instant) => {
       if (instant) el.style.transition = 'none';
@@ -904,6 +1844,104 @@ class Component extends DCLogic {
       e.currentTarget.style.background = 'radial-gradient(260px circle at ' + x + 'px ' + y + 'px, rgba(255,255,255,.06), rgba(255,255,255,.02))';
     };
 
+    const rowOn = (e) => {
+      e.currentTarget.style.background = 'rgba(255,255,255,.03)';
+      const t = e.currentTarget.querySelector('[data-rowtitle]');
+      if (t) t.style.color = 'var(--accent,#7AA2FF)';
+    };
+    const rowOff = (e) => {
+      e.currentTarget.style.background = 'transparent';
+      const t = e.currentTarget.querySelector('[data-rowtitle]');
+      if (t) t.style.color = 'var(--text,#E6E9F0)';
+    };
+    const navOut = () => this.syncNav();
+    const tocOut = () => { if (this._fxUpdate) this._fxUpdate(); };
+    const indexOn = (e) => { e.currentTarget.style.color = 'var(--text,#E6E9F0)'; e.currentTarget.style.borderColor = 'var(--accent,#7AA2FF)'; };
+    const indexOff = (e) => { e.currentTarget.style.color = 'var(--muted,#8A90A2)'; e.currentTarget.style.borderColor = 'var(--border,rgba(255,255,255,.1))'; };
+
+    const view = this.state.view;
+    const sorted = [...this.posts].sort((a, b) => (a.date < b.date ? 1 : -1));
+    const withHref = (p) => ({ ...p, href: '#/blog/' + p.slug });
+    const q = (this.state.query || '').toLowerCase().trim();
+    const tag = this.state.tag || 'All';
+    const filtered = sorted.filter(p => {
+      const okTag = tag === 'All' || p.category === tag;
+      const okQ = !q || (p.title + ' ' + p.dek + ' ' + p.category + ' ' + p.tags.join(' ')).toLowerCase().indexOf(q) >= 0;
+      return okTag && okQ;
+    }).map(withHref);
+    const allTags = ['All'].concat(Array.from(new Set(sorted.map(p => p.category))));
+    const chipStyle = (on) => ({ display:'inline-flex', alignItems:'center', height:'32px', padding:'0 13px', borderRadius:'999px', border:'1px solid ' + (on ? 'var(--accent,#7AA2FF)' : 'rgba(255,255,255,.1)'), background: on ? 'rgba(122,162,255,.12)' : 'rgba(255,255,255,.02)', color: on ? 'var(--accent,#7AA2FF)' : 'var(--muted,#8A90A2)', fontFamily:"'JetBrains Mono',monospace", fontSize:'11.5px', letterSpacing:'.4px', cursor:'pointer', transition:'color .2s,border-color .2s,background .2s' });
+
+    const active = sorted.find(p => p.slug === this.state.slug) || sorted[0];
+    let hi = 0;
+    const blocks = (active.body || []).map((b, i) => {
+      const o = { isP: b.t === 'p', isH: b.t === 'h2', isQuote: b.t === 'quote', isList: b.t === 'list', isCode: b.t === 'code', text: b.text, items: b.items || [], lang: b.lang || '', id: '' };
+      if (b.t === 'h2') { o.id = 'h-' + (hi++); }
+      if (b.t === 'code') {
+        o.copyLabel = this.state.copied === i ? 'copied' : 'copy';
+        o.copy = () => {
+          try { navigator.clipboard.writeText(b.text); } catch (err) {}
+          this.setState({ copied: i });
+          setTimeout(() => this.setState(s => (s.copied === i ? { copied: null } : null)), 1400);
+        };
+      }
+      return o;
+    });
+    let ti = 0;
+    const toc = (active.body || []).filter(b => b.t === 'h2').map(b => { const id = 'h-' + (ti++); return { id, href: '#' + id, text: b.text }; });
+    const ai = sorted.findIndex(p => p.slug === active.slug);
+    const prevNext = [];
+    if (sorted[ai - 1]) prevNext.push({ dir: '← Previous', title: sorted[ai - 1].title, href: '#/blog/' + sorted[ai - 1].slug });
+    if (sorted[ai + 1]) prevNext.push({ dir: 'Next →', title: sorted[ai + 1].title, href: '#/blog/' + sorted[ai + 1].slug });
+
+    /* ---- page index (⌘K) ---- */
+    const navigate = (href) => {
+      this.setState({ paletteOpen: false, menuOpen: false });
+      if (/^(https?:|mailto:)/.test(href)) { window.open(href, href.indexOf('mailto:') === 0 ? '_self' : '_blank'); return; }
+      if (location.hash === href) this.readRoute(false); else location.hash = href;
+    };
+    const pq = (this.state.paletteQ || '').toLowerCase().trim();
+    const rawGroups = [];
+    if (view === 'post') {
+      rawGroups.push({ label: 'In this article', items: toc.map(h => ({ label: h.text, href: h.href, glyph: '§', hint: '' })) });
+    }
+    rawGroups.push({ label: 'Sections', items: [
+      { label: 'Top', href: '#top', glyph: '01', hint: 'home' },
+      { label: 'About', href: '#about', glyph: '02', hint: 'home' },
+      { label: 'Featured Work', href: '#work', glyph: '03', hint: 'home' },
+      { label: 'AI Toolbox', href: '#stack', glyph: '04', hint: 'home' },
+      { label: 'Experience', href: '#experience', glyph: '05', hint: 'home' },
+      { label: 'Blog', href: '#writing', glyph: '06', hint: 'home' },
+      { label: 'Contact', href: '#contact', glyph: '07', hint: 'home' },
+      { label: 'Commit trajectory', href: '#trajectory', glyph: '◆', hint: 'inside experience' }
+    ] });
+    rawGroups.push({ label: 'Blog', items: [{ label: 'All posts', href: '#/blog', glyph: '≡', hint: sorted.length + ' posts' }].concat(sorted.map(p => ({ label: p.title, href: '#/blog/' + p.slug, glyph: '·', hint: p.read }))) });
+    rawGroups.push({ label: 'Elsewhere', items: [
+      { label: 'GitHub — kouji-dev', href: 'https://github.com/kouji-dev', glyph: '↗', hint: '' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/najih-driss/', glyph: '↗', hint: '' },
+      { label: 'Email najih.driss73@gmail.com', href: 'mailto:najih.driss73@gmail.com', glyph: '@', hint: '' },
+      { label: 'Orrery — live', href: 'https://orrery.kouji.dev', glyph: '↗', hint: '' },
+      { label: 'Kouji UI — live', href: 'https://ui.kouji.dev', glyph: '↗', hint: '' }
+    ] });
+
+    const flat = [];
+    const paletteGroups = rawGroups.map(g => ({
+      label: g.label,
+      items: g.items.filter(i => !pq || i.label.toLowerCase().indexOf(pq) >= 0)
+    })).filter(g => g.items.length);
+    paletteGroups.forEach(g => g.items.forEach(i => flat.push(i)));
+    const sel = Math.max(0, Math.min(this.state.paletteSel || 0, flat.length - 1));
+    let fi = 0;
+    paletteGroups.forEach(g => {
+      g.items = g.items.map(i => {
+        const on = fi === sel;
+        const idx = fi++;
+        return { ...i, style: { display:'flex', alignItems:'center', gap:'10px', padding:'9px 12px', borderRadius:'10px', fontSize:'13.5px', color: on ? 'var(--text,#E6E9F0)' : '#B7BFCF', background: on ? 'rgba(255,255,255,.07)' : 'transparent', cursor:'pointer', transition:'background .12s' },
+          hover: () => { if (this.state.paletteSel !== idx) this.setState({ paletteSel: idx }); },
+          go: (e) => { e.preventDefault(); navigate(i.href); } };
+      });
+    });
+
     const expanded = this.state.expanded || {};
     const mkProj = (base) => ({
       ...base,
@@ -915,6 +1953,33 @@ class Component extends DCLogic {
     return {
       rootRef: (el) => { this._root = el; },
       hoverOn, hoverOff, liftOn, liftOff, outlineOn, outlineOff, iconOn, iconOff, cardOn, cardOff, cardMove,
+      rowOn, rowOff, navOut, tocOut, indexOn, indexOff,
+      isHome: view === 'home', isBlog: view === 'blog', isPost: view === 'post', notHome: view !== 'home',
+      navLinks: this.navLinks,
+      ...this.trajModel(),
+      latestPosts: sorted.slice(0, 3).map(withHref),
+      filteredPosts: filtered,
+      noResults: filtered.length === 0,
+      query: this.state.query,
+      setQuery: (e) => this.setState({ query: e.target.value }),
+      tagChips: allTags.map(t => ({ label: t, style: chipStyle(t === tag), pick: () => this.setState({ tag: t }) })),
+      post: active, blocks, toc, prevNext,
+      hlRef: (el) => { if (el) requestAnimationFrame(() => this.highlightPending()); },
+      paletteOpen: !!this.state.paletteOpen,
+      paletteQ: this.state.paletteQ,
+      paletteGroups,
+      paletteEmpty: flat.length === 0,
+      paletteRef: (el) => { if (el && document.activeElement !== el) setTimeout(() => el.focus(), 20); },
+      openPalette: () => this.setState({ paletteOpen: true, paletteQ: '', paletteSel: 0 }),
+      closePalette: () => this.setState({ paletteOpen: false }),
+      stop: (e) => e.stopPropagation(),
+      setPaletteQ: (e) => this.setState({ paletteQ: e.target.value, paletteSel: 0 }),
+      paletteKeys: (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); this.setState({ paletteSel: Math.min(sel + 1, flat.length - 1) }); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); this.setState({ paletteSel: Math.max(sel - 1, 0) }); }
+        else if (e.key === 'Enter') { e.preventDefault(); if (flat[sel]) navigate(flat[sel].href); }
+        else if (e.key === 'Escape') { this.setState({ paletteOpen: false }); }
+      },
       menuOpen: !!this.state.menuOpen,
       toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
       closeMenu: () => this.setState({ menuOpen: false }),

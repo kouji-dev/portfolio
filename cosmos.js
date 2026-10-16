@@ -310,6 +310,29 @@
     var wrap = document.querySelector('[data-timeline-wrap]');
     var fill = document.querySelector('[data-timeline-fill]');
     var dots = Array.prototype.slice.call(document.querySelectorAll('.tl-dot'));
+    var topbar = document.querySelector('[data-topbar]');
+    var navInd = document.querySelector('[data-navind]');
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-navlink]'));
+    // pages other than home pin their active nav entry (e.g. blogs → "writing")
+    var navStatic = document.body.getAttribute('data-nav-active');
+    var navIds = ['about', 'work', 'stack', 'experience', 'writing', 'contact'];
+
+    function syncNav(key) {
+      var target = null;
+      navLinks.forEach(function (a) {
+        var on = a.getAttribute('data-navlink') === key;
+        a.classList.toggle('is-active', on);
+        if (on) target = a;
+      });
+      if (!navInd) return;
+      if (target && target.offsetWidth) {
+        navInd.style.opacity = '1';
+        navInd.style.width = target.offsetWidth + 'px';
+        navInd.style.transform = 'translateX(' + target.offsetLeft + 'px)';
+      } else {
+        navInd.style.opacity = '0';
+      }
+    }
 
     function update() {
       var sy = window.scrollY || 0;
@@ -321,6 +344,20 @@
 
       // nav progress ring
       if (ring) ring.style.strokeDashoffset = String(87.96 * (1 - Math.min(sy / docH, 1)));
+
+      // top bar condenses once the page starts scrolling
+      if (topbar) topbar.classList.toggle('on', sy > 18);
+
+      // active section → nav pill sliding indicator
+      var active = navStatic;
+      if (!active) {
+        navIds.forEach(function (id) {
+          var el = document.getElementById(id);
+          // skip hidden sections (e.g. #writing while there are no posts)
+          if (el && el.offsetHeight > 0 && el.getBoundingClientRect().top < vh * 0.42) active = id;
+        });
+      }
+      syncNav(active);
 
       // experience timeline draw + dot ignition
       if (wrap && fill) {
@@ -374,6 +411,8 @@
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
+    // re-measure the nav indicator once webfonts have settled link widths
+    window.addEventListener('load', onScroll);
     update();
   }
 

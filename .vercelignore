@@ -9,3 +9,12 @@ cv-source/
 # Claude Code skills + the kouji job-hunt plugin.
 .claude/
 kouji/
+
+# E2E tooling — never served.
+e2e/
+node_modules/
+playwright.config.js
+package.json
+package-lock.json
+test-results/
+playwright-report/

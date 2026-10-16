@@ -37,7 +37,7 @@ twinkling glitter overlay, fading into deep space as you scroll.
 - **Hero** — animated cosmos, shimmering gradient headline, quick links.
 - **About** — positioning, key stats, and a six-cell skills grid.
 - **Featured Work** — Orrery and Kouji UI as *live, interactive* iframe embeds in browser frames.
-- **Also building** — AI Portal, Pages, GamerGG, Chartify → GitHub.
+- **Also building** — Vortex, Pages, GamerGG, Chartify → GitHub.
 - **Experience** — seven-year timeline (Amundi → Scor).
 - **Contact** — email, LinkedIn, GitHub.
 
