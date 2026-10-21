@@ -8,7 +8,9 @@ test.describe('home', () => {
   test('renders the header and every section', async ({ page }) => {
     await page.goto('/');
     await expect(page.locator('h1.name')).toHaveText('@NAJIH Driss');
+    expect(await page.locator('.socials a').evaluateAll((as) => as.map((a) => a.title))).toEqual(['GitHub', 'LinkedIn', 'X']);
     await expect(page.locator('.socials a[aria-label="Follow on X"]')).toHaveAttribute('href', 'https://x.com/NajihDriss1');
+    await expect(page.locator('#contact a', { hasText: /GitHub|LinkedIn/ })).toHaveCount(0);
     for (const id of ['about', 'now', 'work', 'activity', 'projects', 'contact']) {
       await expect(page.locator('#' + id)).toBeVisible();
     }
