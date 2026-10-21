@@ -89,7 +89,8 @@ a:hover{color:var(--accent);text-decoration-color:var(--accent)}
   .wrap > .col{display:contents}
   .wrap > .col > *{order:2;width:100%;max-width:600px;margin-inline:auto}
   .wrap > .col > header{order:0}
-  .sky{order:1;position:relative;top:0;width:100%;max-width:600px;margin-inline:auto;height:56vh;min-height:340px;max-height:520px;flex:none}
+  /* same 520×720 frame as desktop so the slice never crops the sun or the fountain */
+  .sky{order:1;position:relative;top:0;width:100%;max-width:440px;margin-inline:auto;height:auto;min-height:0;aspect-ratio:520/720;flex:none}
 }
 
 /*PAINT*/
