@@ -8,7 +8,7 @@ module.exports = defineConfig({
     baseURL: 'http://localhost:4173',
   },
   webServer: {
-    command: 'npx serve -l 4173 .',
+    command: 'pnpm exec serve -l 4173 .',
     url: 'http://localhost:4173',
     reuseExistingServer: true,
     timeout: 30000,

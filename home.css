@@ -1,0 +1,174 @@
+/* =========================================================================
+   Home (index.html) — the minimal one-column design with the painted sky.
+   Ported from design/Minimal.dc.html: inline styles became classes, the
+   painting CSS at the end (PAINT markers) is copied verbatim.
+   ========================================================================= */
+
+/* ---------- theme tokens (data-theme lives on <html>) ---------- */
+[data-theme="dark"]{--fg:#EDEDEC;--muted:#A1A09A;--ul:rgba(237,237,236,0.28);--accent:#9DB9FF;--orr:#C39AFC;--kj:#B8F500;--line:#7AA2FF;--area:rgba(122,162,255,0.12);
+  --bg:#0c0e16;--bgimg:radial-gradient(520px 320px at 50% -60px, rgba(122,162,255,0.10), rgba(122,162,255,0) 70%), linear-gradient(180deg, #11131d 0, #0c0e16 900px, #08090f 1900px);
+  --panel:#0d1336;--panel-bd:rgba(157,185,255,0.10);--panel-sh:0 40px 120px -40px rgba(10,14,40,0.9);--btn:rgba(255,255,255,0.04);--btn-bd:rgba(255,255,255,0.10);color-scheme:dark}
+[data-theme="light"]{--fg:#1B1D24;--muted:#64635E;--ul:rgba(27,29,36,0.25);--accent:#3F5FD1;--orr:#7C4DDB;--kj:#6E9A00;--line:#3F63D6;--area:rgba(63,99,214,0.10);
+  --bg:#f3f1ec;--bgimg:radial-gradient(560px 340px at 50% -60px, rgba(255,190,160,0.22), rgba(255,190,160,0) 70%), linear-gradient(180deg, #fbf9f5 0, #f6f4ef 900px, #f1efe9 1900px);
+  --panel:#86bbdc;--panel-bd:rgba(40,50,110,0.10);--panel-sh:0 40px 100px -50px rgba(70,70,130,0.40);--btn:rgba(27,29,36,0.03);--btn-bd:rgba(27,29,36,0.12);color-scheme:light}
+
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg)}
+.root{min-height:100vh;box-sizing:border-box;background:var(--bgimg);color:var(--fg);font-family:'Sora',sans-serif;font-size:15px;line-height:1.7;padding:clamp(48px,9vw,112px) 20px 64px;transition:background-color .5s,color .5s}
+a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--ul);text-underline-offset:3px}
+a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ---------- layout: text column + sticky painting ---------- */
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:56px 80px}
+.col{flex:1 1 520px;max-width:600px;min-width:0;display:flex;flex-direction:column;gap:52px}
+.sky{position:sticky;top:10vh;height:80vh;min-height:560px;cursor:pointer;flex:1 1 380px;max-width:520px;min-width:0;overflow:hidden;border-radius:22px;border:1px solid var(--panel-bd);background:var(--panel);box-shadow:var(--panel-sh);transition:background-color .9s,box-shadow .9s}
+.sky-inner{position:relative;width:100%;height:100%}
+.sky:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---------- header ---------- */
+.head{display:flex;flex-direction:column;gap:14px}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.head-id{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;min-width:0}
+.name{margin:0;font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.6px;line-height:1.05}
+.name-at{color:var(--accent);font-weight:500;margin-right:2px}
+.socials{display:flex;align-items:center;gap:2px}
+.socials a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;color:var(--muted);text-decoration:none;transition:color .2s,background-color .2s}
+.socials a:hover{color:var(--fg);background:var(--btn)}
+.socials a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;border:1px solid var(--btn-bd);background:var(--btn);color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s}
+.theme-btn:hover{color:var(--fg);border-color:var(--ul)}
+.theme-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+[data-theme="dark"] .icon-moon,[data-theme="light"] .icon-sun{display:none}
+.tagline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted)}
+.tl-short{display:none}
+
+/* ---------- sections ---------- */
+.sec{display:flex;flex-direction:column;gap:12px}
+.sec-h{margin:0;font-size:15px;font-weight:500;color:var(--muted)}
+.sec-p{margin:0}
+.now{margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:6px}
+.rows{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.rows li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 16px;padding:7px 0}
+.rows-proj li{align-items:baseline;flex-wrap:nowrap}
+.rows-proj li > span:last-child{white-space:nowrap;flex-shrink:0}
+.dim{color:var(--muted)}
+.meta{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.more{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+.links{display:flex;flex-wrap:wrap;gap:4px 20px}
+.links a{display:inline-flex;align-items:center;min-height:44px}
+
+/* product wordmarks */
+.orr{display:inline-flex;align-items:center;gap:6px;vertical-align:-3px;text-decoration:none;color:var(--fg);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15.5px;letter-spacing:-0.01em}
+.orr-o{color:var(--orr)}
+.kj{display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:var(--fg);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px}
+.kj-dot{width:8px;height:8px;border-radius:50%;background:var(--kj)}
+
+/* ---------- activity sparkline ---------- */
+.act-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.act-readout{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);transition:color .2s}
+.act-readout.is-hi{color:var(--fg)}
+.act-chart{position:relative;height:64px;border-radius:4px;outline-offset:6px;cursor:crosshair}
+.act-chart svg{width:100%;height:64px;display:block}
+.act-area{fill:var(--area)}
+.act-line{fill:none;stroke:var(--line)}
+.act-mark{position:absolute;top:0;bottom:0;width:1px;background:var(--ul);pointer-events:none}
+.act-dot{position:absolute;width:7px;height:7px;border-radius:50%;background:var(--line);transform:translate(-50%,-50%);box-shadow:0 0 0 3px var(--area);pointer-events:none}
+.act-hits{position:absolute;inset:0;display:flex}
+.act-hits span{flex:1 1 0;height:100%}
+.act-hits span:first-child,.act-hits span:last-child{flex-grow:.5}
+.act-ticks{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* ---------- small screens: painting moves under the header ---------- */
+@media (max-width: 960px){
+  .rows-proj li,.rows-work li{flex-direction:column;align-items:flex-start;gap:2px}
+  .tagline{flex-wrap:nowrap;gap:10px;white-space:nowrap}
+  .tagline .tl-full{display:none}
+  .tagline .tl-short{display:inline}
+  .wrap{flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:44px}
+  .wrap > .col{display:contents}
+  .wrap > .col > *{order:2;width:100%;max-width:600px;margin-inline:auto}
+  .wrap > .col > header{order:0}
+  .sky{order:1;position:relative;top:0;width:100%;max-width:600px;margin-inline:auto;height:56vh;min-height:340px;max-height:520px;flex:none}
+}
+
+/*PAINT*/
+/* ---------- painting: the Eiffel Tower from the Trocadéro (flat shapes + scratch strokes) ---------- */
+@property --pt-wind{syntax:"<number>";inherits:true;initial-value:0}
+@property --pt-gust{syntax:"<number>";inherits:false;initial-value:0}
+/* sky state → palette + how much of each kind of light: --pn lights, --ps night sky, --pk dusk sky, --pd daylight */
+.pt[data-sky="night"]{--c-skb1:#141a48;--c-skb2:#1d2260;--c-sks1:#2c3478;--c-sks2:#4a4f9a;--c-cl:#2a3160;--c-clS:#1e2552;--c-clR:#4f5a94;--c-hill:#23295a;--c-hillL:#2e3568;--c-hillD:#1b2050;--c-hs1:#3a3f72;--c-hs2:#33386a;--c-hsr:#262c5c;--c-scw:#d9d1bc;--c-scS:#a69c86;--c-scL:#8a8170;--c-far1:#262a5c;--c-far2:#2d3266;--c-farw:#ffc777;--c-nd:#9c8a68;--c-ndS:#73654c;--c-inv:#8c7e66;--c-invD:#2c3044;--c-gold:#f0c96a;--c-tw:#d48a2c;--c-twL:#ffd994;--c-twD:#8e5516;--c-twP:#ffe6b0;--c-h1:#2e356c;--c-h2:#343b75;--c-h3:#2a3166;--c-h4:#38417c;--c-hS:#1f2554;--c-hL:#4b5394;--c-roof:#1a2148;--c-roofL:#38457f;--c-dorm:#28306a;--c-chim:#2c3570;--c-pot:#b0603f;--c-iron:#0e1336;--c-wl:#ffc777;--c-wl2:#ffe0a0;--c-wd:#171d4a;--c-shop:#1b2152;--c-cafe:#ffcf7a;--c-awR:#c0394a;--c-awG:#2f7a55;--c-awW:#efe0c8;--c-sea:#101a40;--c-seaL:#1c2a62;--c-seaD:#0b1334;--c-seaH:#dfe6ff;--c-br:#3a3f7a;--c-brS:#2b3068;--c-brL:#4f56a0;--c-bh:#0b1030;--c-bc:#232c66;--c-bw:#ffc777;--c-qw:#262b5e;--c-qwL:#434a8e;--c-qwS:#1a1f4c;--c-bq:#1f4a3a;--c-bqL:#2a5e4a;--c-pave:#141b3c;--c-paveL:#1c2448;--c-lamp:#0a0f26;--c-lampG:#ffd38a;--c-lawn:#132241;--c-lawnL:#1a2c50;--c-lawnD:#0e1a34;--c-path:#3a4278;--c-bg1:#13324a;--c-bg2:#1a4058;--c-bg3:#24506a;--c-bgH:#4f8ca4;--c-bp1:#3e3466;--c-bp2:#4a3e74;--c-bpH:#8f7ab0;--c-br1:#4c2a50;--c-brH:#8a5a7e;--c-by1:#3c3a2c;--c-byH:#7c7454;--c-fr:#a8405a;--c-fp:#b48aa8;--c-fc:#e8c870;--c-dot:#9fd0dc;--c-stem:#163650;--c-lf1:#1d4660;--c-lf2:#25566e;--c-lf3:#12304a;--c-lfH:#3f7a92;--c-gr1:#1c3a54;--c-gr2:#2a4c6a;--c-gr3:#0f2238;--c-trk:#0a0f22;--c-tc1:#0e263a;--c-tc2:#173a52;--c-tc3:#25566e;--c-tcH:#4f8ca4;--c-ppl:#080b1c;--c-mor:#1f4a3a;--c-morL:#2a5e4a;--c-mtp:#151a33;--c-mtpL:#283055;--c-em:#9a8c70;--c-champ:#14284a;--c-road:#0f1430;--c-roadL:#2b3150;--c-water:#123866;--c-waterL:#2c66a0;--c-jet:#e6f0ff;--c-basin:#3a4078;--c-statue:#262b46;--c-car1:#5a2230;--c-car2:#1d2a55;--c-car3:#4a4426;--c-car4:#3a3f58;--pn:1;--ps:1;--pk:0;--pd:0}
+.pt[data-sky="dusk"]{--c-skb1:#5a4a92;--c-skb2:#6c5aa0;--c-sks1:#8a6aa8;--c-sks2:#f4b8a8;--c-cl:#f6c6b8;--c-clS:#d999a2;--c-clR:#ffe6d6;--c-hill:#616f5d;--c-hillL:#727e6a;--c-hillD:#50604e;--c-hs1:#a595a0;--c-hs2:#9f8b94;--c-hsr:#5b5874;--c-scw:#eddac8;--c-scS:#cdb7a1;--c-scL:#b7a18c;--c-far1:#7f7d96;--c-far2:#8b869e;--c-farw:#ffc777;--c-nd:#caad8b;--c-ndS:#ab8f6f;--c-inv:#c7ae95;--c-invD:#504957;--c-gold:#f2bd58;--c-tw:#bc7e42;--c-twL:#e2b380;--c-twD:#8a582e;--c-twP:#e9c194;--c-h1:#9e8d96;--c-h2:#a18a95;--c-h3:#99878e;--c-h4:#a496a2;--c-hS:#8f7a7b;--c-hL:#afa1b5;--c-roof:#56536b;--c-roofL:#747697;--c-dorm:#555273;--c-chim:#98848b;--c-pot:#cb6a4b;--c-iron:#3b3140;--c-wl:#ffc777;--c-wl2:#ffe0a0;--c-wd:#656e89;--c-shop:#434952;--c-cafe:#ffcf7a;--c-awR:#d7434a;--c-awG:#4c875d;--c-awW:#f8e2d2;--c-sea:#455d77;--c-seaL:#5d7292;--c-seaD:#3c5168;--c-seaH:#ebe3ea;--c-br:#9f8d97;--c-brS:#8e7a7f;--c-brL:#b0a1b6;--c-bh:#353448;--c-bc:#9d92a6;--c-bw:#ffc777;--c-qw:#948184;--c-qwL:#a798a7;--c-qwS:#826e6c;--c-bq:#436849;--c-bqL:#507f59;--c-pave:#877671;--c-paveL:#938381;--c-lamp:#373032;--c-lampG:#ffd38a;--c-lawn:#51684a;--c-lawnL:#637859;--c-lawnD:#435a3f;--c-path:#a19095;--c-bg1:#406651;--c-bg2:#4e7763;--c-bg3:#6e8861;--c-bgH:#9ab398;--c-bp1:#a46c8d;--c-bp2:#ab819d;--c-bpH:#ccabc1;--c-br1:#a53645;--c-brH:#cb97a1;--c-by1:#a47c35;--c-byH:#c3aa81;--c-fr:#cf3f4e;--c-fp:#da98ac;--c-fc:#f5c558;--c-dot:#d4dbdb;--c-stem:#3a5945;--c-lf1:#4b7468;--c-lf2:#538072;--c-lf3:#3a5850;--c-lfH:#6c998d;--c-gr1:#44684d;--c-gr2:#5e7f5b;--c-gr3:#31422f;--c-trk:#543e39;--c-tc1:#3d5843;--c-tc2:#4a6e55;--c-tc3:#678a66;--c-tcH:#98b292;--c-ppl:#392f38;--c-mor:#456248;--c-morL:#507858;--c-mtp:#514a59;--c-mtpL:#6d687d;--c-em:#cbb297;--c-champ:#5e7357;--c-road:#574e5a;--c-roadL:#9b8f95;--c-water:#4c7897;--c-waterL:#7b9dba;--c-jet:#f4eaeb;--c-basin:#a08f96;--c-statue:#5a494c;--c-car1:#a93a3e;--c-car2:#44568e;--c-car3:#a98334;--c-car4:#a2969a;--pn:.75;--ps:0;--pk:1;--pd:.4}
+.pt[data-sky="day"]{--c-skb1:#8fc2e0;--c-skb2:#6aa9d4;--c-sks1:#a9d3ea;--c-sks2:#e6f2f8;--c-cl:#fcf8ef;--c-clS:#efe7d8;--c-clR:#fffefa;--c-hill:#6fae5a;--c-hillL:#8cc56c;--c-hillD:#4f9442;--c-hs1:#fbf3e2;--c-hs2:#f3e2cf;--c-hsr:#5d7290;--c-scw:#fdfbf4;--c-scS:#e7e0cf;--c-scL:#cfc7b4;--c-far1:#b4cfe2;--c-far2:#c9dceb;--c-farw:#e9f3fa;--c-nd:#eadbbb;--c-ndS:#cbb995;--c-inv:#f3ead6;--c-invD:#3c4a63;--c-gold:#efbd3c;--c-tw:#8b6a4b;--c-twL:#b89470;--c-twD:#5f4733;--c-twP:#c9a782;--c-h1:#f6ead2;--c-h2:#f7dcc4;--c-h3:#efe0c4;--c-h4:#fbf1de;--c-hS:#e2ccaa;--c-hL:#fffaf0;--c-roof:#5d7391;--c-roofL:#87a0bf;--c-dorm:#4c5f7f;--c-chim:#e9d3b2;--c-pot:#d6674b;--c-iron:#2a2f3b;--c-wl:#a9d0e6;--c-wl2:#c3e0ef;--c-wd:#86b7d6;--c-shop:#2f5a48;--c-cafe:#f6e8c8;--c-awR:#e2323d;--c-awG:#2f8f5f;--c-awW:#ffffff;--c-sea:#3f93b6;--c-seaL:#6cb4d2;--c-seaD:#2f7c9e;--c-seaH:#f1fafd;--c-br:#ecdfc4;--c-brS:#d2c09e;--c-brL:#fff7e6;--c-bh:#1f3a55;--c-bc:#ffffff;--c-bw:#9fcbe2;--c-qw:#e6d6b5;--c-qwL:#f6ecd6;--c-qwS:#c9b58e;--c-bq:#2b7a4c;--c-bqL:#3f9c63;--c-pave:#dccdab;--c-paveL:#efe3c6;--c-lamp:#24312b;--c-lampG:#fbf6e0;--c-lawn:#5aa548;--c-lawnL:#7dc15b;--c-lawnD:#3d8a3a;--c-path:#f1e2c2;--c-bg1:#2f8f4e;--c-bg2:#4aa86a;--c-bg3:#8cc152;--c-bgH:#c8e69a;--c-bp1:#f49ac1;--c-bp2:#f7c2d9;--c-bpH:#fde6ef;--c-br1:#e8222a;--c-brH:#ffd9d9;--c-by1:#f6ba2c;--c-byH:#fcebb8;--c-fr:#e82036;--c-fp:#f7a8c6;--c-fc:#ffd236;--c-dot:#ffffff;--c-stem:#1f6a2c;--c-lf1:#3f9b6e;--c-lf2:#4aa678;--c-lf3:#236e4c;--c-lfH:#6cbb92;--c-gr1:#2f8a3a;--c-gr2:#5fae45;--c-gr3:#11480f;--c-trk:#6b5440;--c-tc1:#2f7a3f;--c-tc2:#45994f;--c-tc3:#7cbf5a;--c-tcH:#c4e48a;--c-ppl:#2b3445;--c-mor:#2e6b4a;--c-morL:#3f8a60;--c-mtp:#56647c;--c-mtpL:#8796ad;--c-em:#efe5cf;--c-champ:#78b85e;--c-road:#6d7480;--c-roadL:#f2f2ee;--c-water:#4fb2da;--c-waterL:#a3dcf0;--c-jet:#ffffff;--c-basin:#eee1c4;--c-statue:#5a5046;--c-car1:#e2343c;--c-car2:#2f6fd6;--c-car3:#f2c230;--c-car4:#f4f4f0;--pn:0;--ps:0;--pk:0;--pd:1}
+.pt .k-skb1{fill:var(--c-skb1)}.pt .s-skb1{stroke:var(--c-skb1)}.pt .k-skb2{fill:var(--c-skb2)}.pt .s-skb2{stroke:var(--c-skb2)}.pt .k-sks1{fill:var(--c-sks1)}.pt .s-sks1{stroke:var(--c-sks1)}.pt .k-sks2{fill:var(--c-sks2)}.pt .s-sks2{stroke:var(--c-sks2)}.pt .k-cl{fill:var(--c-cl)}.pt .s-cl{stroke:var(--c-cl)}.pt .k-clS{fill:var(--c-clS)}.pt .s-clS{stroke:var(--c-clS)}.pt .k-clR{fill:var(--c-clR)}.pt .s-clR{stroke:var(--c-clR)}.pt .k-hill{fill:var(--c-hill)}.pt .s-hill{stroke:var(--c-hill)}.pt .k-hillL{fill:var(--c-hillL)}.pt .s-hillL{stroke:var(--c-hillL)}.pt .k-hillD{fill:var(--c-hillD)}.pt .s-hillD{stroke:var(--c-hillD)}.pt .k-hs1{fill:var(--c-hs1)}.pt .s-hs1{stroke:var(--c-hs1)}.pt .k-hs2{fill:var(--c-hs2)}.pt .s-hs2{stroke:var(--c-hs2)}.pt .k-hsr{fill:var(--c-hsr)}.pt .s-hsr{stroke:var(--c-hsr)}.pt .k-scw{fill:var(--c-scw)}.pt .s-scw{stroke:var(--c-scw)}.pt .k-scS{fill:var(--c-scS)}.pt .s-scS{stroke:var(--c-scS)}.pt .k-scL{fill:var(--c-scL)}.pt .s-scL{stroke:var(--c-scL)}.pt .k-far1{fill:var(--c-far1)}.pt .s-far1{stroke:var(--c-far1)}.pt .k-far2{fill:var(--c-far2)}.pt .s-far2{stroke:var(--c-far2)}.pt .k-farw{fill:var(--c-farw)}.pt .s-farw{stroke:var(--c-farw)}.pt .k-nd{fill:var(--c-nd)}.pt .s-nd{stroke:var(--c-nd)}.pt .k-ndS{fill:var(--c-ndS)}.pt .s-ndS{stroke:var(--c-ndS)}.pt .k-inv{fill:var(--c-inv)}.pt .s-inv{stroke:var(--c-inv)}.pt .k-invD{fill:var(--c-invD)}.pt .s-invD{stroke:var(--c-invD)}.pt .k-gold{fill:var(--c-gold)}.pt .s-gold{stroke:var(--c-gold)}.pt .k-tw{fill:var(--c-tw)}.pt .s-tw{stroke:var(--c-tw)}.pt .k-twL{fill:var(--c-twL)}.pt .s-twL{stroke:var(--c-twL)}.pt .k-twD{fill:var(--c-twD)}.pt .s-twD{stroke:var(--c-twD)}.pt .k-twP{fill:var(--c-twP)}.pt .s-twP{stroke:var(--c-twP)}.pt .k-h1{fill:var(--c-h1)}.pt .s-h1{stroke:var(--c-h1)}.pt .k-h2{fill:var(--c-h2)}.pt .s-h2{stroke:var(--c-h2)}.pt .k-h3{fill:var(--c-h3)}.pt .s-h3{stroke:var(--c-h3)}.pt .k-h4{fill:var(--c-h4)}.pt .s-h4{stroke:var(--c-h4)}.pt .k-hS{fill:var(--c-hS)}.pt .s-hS{stroke:var(--c-hS)}.pt .k-hL{fill:var(--c-hL)}.pt .s-hL{stroke:var(--c-hL)}.pt .k-roof{fill:var(--c-roof)}.pt .s-roof{stroke:var(--c-roof)}.pt .k-roofL{fill:var(--c-roofL)}.pt .s-roofL{stroke:var(--c-roofL)}.pt .k-dorm{fill:var(--c-dorm)}.pt .s-dorm{stroke:var(--c-dorm)}.pt .k-chim{fill:var(--c-chim)}.pt .s-chim{stroke:var(--c-chim)}.pt .k-pot{fill:var(--c-pot)}.pt .s-pot{stroke:var(--c-pot)}.pt .k-iron{fill:var(--c-iron)}.pt .s-iron{stroke:var(--c-iron)}.pt .k-wl{fill:var(--c-wl)}.pt .s-wl{stroke:var(--c-wl)}.pt .k-wl2{fill:var(--c-wl2)}.pt .s-wl2{stroke:var(--c-wl2)}.pt .k-wd{fill:var(--c-wd)}.pt .s-wd{stroke:var(--c-wd)}.pt .k-shop{fill:var(--c-shop)}.pt .s-shop{stroke:var(--c-shop)}.pt .k-cafe{fill:var(--c-cafe)}.pt .s-cafe{stroke:var(--c-cafe)}.pt .k-awR{fill:var(--c-awR)}.pt .s-awR{stroke:var(--c-awR)}.pt .k-awG{fill:var(--c-awG)}.pt .s-awG{stroke:var(--c-awG)}.pt .k-awW{fill:var(--c-awW)}.pt .s-awW{stroke:var(--c-awW)}.pt .k-sea{fill:var(--c-sea)}.pt .s-sea{stroke:var(--c-sea)}.pt .k-seaL{fill:var(--c-seaL)}.pt .s-seaL{stroke:var(--c-seaL)}.pt .k-seaD{fill:var(--c-seaD)}.pt .s-seaD{stroke:var(--c-seaD)}.pt .k-seaH{fill:var(--c-seaH)}.pt .s-seaH{stroke:var(--c-seaH)}.pt .k-br{fill:var(--c-br)}.pt .s-br{stroke:var(--c-br)}.pt .k-brS{fill:var(--c-brS)}.pt .s-brS{stroke:var(--c-brS)}.pt .k-brL{fill:var(--c-brL)}.pt .s-brL{stroke:var(--c-brL)}.pt .k-bh{fill:var(--c-bh)}.pt .s-bh{stroke:var(--c-bh)}.pt .k-bc{fill:var(--c-bc)}.pt .s-bc{stroke:var(--c-bc)}.pt .k-bw{fill:var(--c-bw)}.pt .s-bw{stroke:var(--c-bw)}.pt .k-qw{fill:var(--c-qw)}.pt .s-qw{stroke:var(--c-qw)}.pt .k-qwL{fill:var(--c-qwL)}.pt .s-qwL{stroke:var(--c-qwL)}.pt .k-qwS{fill:var(--c-qwS)}.pt .s-qwS{stroke:var(--c-qwS)}.pt .k-bq{fill:var(--c-bq)}.pt .s-bq{stroke:var(--c-bq)}.pt .k-bqL{fill:var(--c-bqL)}.pt .s-bqL{stroke:var(--c-bqL)}.pt .k-pave{fill:var(--c-pave)}.pt .s-pave{stroke:var(--c-pave)}.pt .k-paveL{fill:var(--c-paveL)}.pt .s-paveL{stroke:var(--c-paveL)}.pt .k-lamp{fill:var(--c-lamp)}.pt .s-lamp{stroke:var(--c-lamp)}.pt .k-lampG{fill:var(--c-lampG)}.pt .s-lampG{stroke:var(--c-lampG)}.pt .k-lawn{fill:var(--c-lawn)}.pt .s-lawn{stroke:var(--c-lawn)}.pt .k-lawnL{fill:var(--c-lawnL)}.pt .s-lawnL{stroke:var(--c-lawnL)}.pt .k-lawnD{fill:var(--c-lawnD)}.pt .s-lawnD{stroke:var(--c-lawnD)}.pt .k-path{fill:var(--c-path)}.pt .s-path{stroke:var(--c-path)}.pt .k-bg1{fill:var(--c-bg1)}.pt .s-bg1{stroke:var(--c-bg1)}.pt .k-bg2{fill:var(--c-bg2)}.pt .s-bg2{stroke:var(--c-bg2)}.pt .k-bg3{fill:var(--c-bg3)}.pt .s-bg3{stroke:var(--c-bg3)}.pt .k-bgH{fill:var(--c-bgH)}.pt .s-bgH{stroke:var(--c-bgH)}.pt .k-bp1{fill:var(--c-bp1)}.pt .s-bp1{stroke:var(--c-bp1)}.pt .k-bp2{fill:var(--c-bp2)}.pt .s-bp2{stroke:var(--c-bp2)}.pt .k-bpH{fill:var(--c-bpH)}.pt .s-bpH{stroke:var(--c-bpH)}.pt .k-br1{fill:var(--c-br1)}.pt .s-br1{stroke:var(--c-br1)}.pt .k-brH{fill:var(--c-brH)}.pt .s-brH{stroke:var(--c-brH)}.pt .k-by1{fill:var(--c-by1)}.pt .s-by1{stroke:var(--c-by1)}.pt .k-byH{fill:var(--c-byH)}.pt .s-byH{stroke:var(--c-byH)}.pt .k-fr{fill:var(--c-fr)}.pt .s-fr{stroke:var(--c-fr)}.pt .k-fp{fill:var(--c-fp)}.pt .s-fp{stroke:var(--c-fp)}.pt .k-fc{fill:var(--c-fc)}.pt .s-fc{stroke:var(--c-fc)}.pt .k-dot{fill:var(--c-dot)}.pt .s-dot{stroke:var(--c-dot)}.pt .k-stem{fill:var(--c-stem)}.pt .s-stem{stroke:var(--c-stem)}.pt .k-lf1{fill:var(--c-lf1)}.pt .s-lf1{stroke:var(--c-lf1)}.pt .k-lf2{fill:var(--c-lf2)}.pt .s-lf2{stroke:var(--c-lf2)}.pt .k-lf3{fill:var(--c-lf3)}.pt .s-lf3{stroke:var(--c-lf3)}.pt .k-lfH{fill:var(--c-lfH)}.pt .s-lfH{stroke:var(--c-lfH)}.pt .k-gr1{fill:var(--c-gr1)}.pt .s-gr1{stroke:var(--c-gr1)}.pt .k-gr2{fill:var(--c-gr2)}.pt .s-gr2{stroke:var(--c-gr2)}.pt .k-gr3{fill:var(--c-gr3)}.pt .s-gr3{stroke:var(--c-gr3)}.pt .k-trk{fill:var(--c-trk)}.pt .s-trk{stroke:var(--c-trk)}.pt .k-tc1{fill:var(--c-tc1)}.pt .s-tc1{stroke:var(--c-tc1)}.pt .k-tc2{fill:var(--c-tc2)}.pt .s-tc2{stroke:var(--c-tc2)}.pt .k-tc3{fill:var(--c-tc3)}.pt .s-tc3{stroke:var(--c-tc3)}.pt .k-tcH{fill:var(--c-tcH)}.pt .s-tcH{stroke:var(--c-tcH)}.pt .k-ppl{fill:var(--c-ppl)}.pt .s-ppl{stroke:var(--c-ppl)}.pt .k-mor{fill:var(--c-mor)}.pt .s-mor{stroke:var(--c-mor)}.pt .k-morL{fill:var(--c-morL)}.pt .s-morL{stroke:var(--c-morL)}.pt .k-mtp{fill:var(--c-mtp)}.pt .s-mtp{stroke:var(--c-mtp)}.pt .k-mtpL{fill:var(--c-mtpL)}.pt .s-mtpL{stroke:var(--c-mtpL)}.pt .k-em{fill:var(--c-em)}.pt .s-em{stroke:var(--c-em)}.pt .k-champ{fill:var(--c-champ)}.pt .s-champ{stroke:var(--c-champ)}.pt .k-road{fill:var(--c-road)}.pt .s-road{stroke:var(--c-road)}.pt .k-roadL{fill:var(--c-roadL)}.pt .s-roadL{stroke:var(--c-roadL)}.pt .k-water{fill:var(--c-water)}.pt .s-water{stroke:var(--c-water)}.pt .k-waterL{fill:var(--c-waterL)}.pt .s-waterL{stroke:var(--c-waterL)}.pt .k-jet{fill:var(--c-jet)}.pt .s-jet{stroke:var(--c-jet)}.pt .k-basin{fill:var(--c-basin)}.pt .s-basin{stroke:var(--c-basin)}.pt .k-statue{fill:var(--c-statue)}.pt .s-statue{stroke:var(--c-statue)}.pt .k-car1{fill:var(--c-car1)}.pt .s-car1{stroke:var(--c-car1)}.pt .k-car2{fill:var(--c-car2)}.pt .s-car2{stroke:var(--c-car2)}.pt .k-car3{fill:var(--c-car3)}.pt .s-car3{stroke:var(--c-car3)}.pt .k-car4{fill:var(--c-car4)}.pt .s-car4{stroke:var(--c-car4)}
+.pt{position:absolute;inset:0;contain:paint;--pt-wind:.45;transition:--pt-wind 1.6s ease-out}
+.sky:hover .pt{--pt-wind:1.25;transition:--pt-wind .6s ease-out}
+.pt[data-gust="1"]{--pt-wind:2.4;transition:--pt-wind .35s ease-out}
+.pt-l{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.pt path,.pt rect,.pt circle,.pt ellipse{transition:fill 1.2s ease,stroke 1.2s ease}
+.pt .nt{opacity:calc(var(--pn) * var(--o,1));transition:opacity 1.2s ease}
+.pt .nsky{opacity:var(--ps);transition:opacity 1.2s ease}
+.pt .ksky{opacity:var(--pk);transition:opacity 1.2s ease}
+.pt-stars{opacity:calc(var(--ps) + var(--pk) * .25);transition:opacity 1.2s ease}
+.pt-cloud{will-change:transform;opacity:calc(1 - .2 * var(--ps));animation:pt-cloud 300s linear infinite;transition:opacity 1.2s ease}
+@keyframes pt-cloud{from{transform:translateX(var(--a))}to{transform:translateX(var(--b))}}
+.pt-grain{position:absolute;inset:0;pointer-events:none}
+.pt-grain:before,.pt-grain:after{content:"";position:absolute;inset:0;pointer-events:none}
+.pt-grain:before{mix-blend-mode:multiply;opacity:calc(.16 * var(--pd));background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.33 0 0 0 0 0.27 0 0 0 0 0.2 -2.6 0 0 0 1.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");transition:opacity 1.2s}
+.pt-grain:after{opacity:calc(.25 - .13 * var(--ps));background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.99 0 0 0 0 0.95 3.4 0 0 0 -2.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23s)'/%3E%3C/svg%3E");transition:opacity 1.2s}
+/* the garden sways in a light breeze; hover or a click brings a gust (same technique as leerob.com) */
+.pt .sw{transform-box:fill-box;transform-origin:50% 100%;animation:pt-gust 3.2s ease-in-out infinite}
+.pt .sw-bush,.pt .sw-grass{transform:skewX(calc(var(--pt-gust) * var(--pt-wind) * -2.5deg))}
+.pt .sw-leaf,.pt .sw-flower{transform:rotate(calc(var(--pt-gust) * var(--pt-wind) * 1.4deg))}
+@keyframes pt-gust{0%,100%{--pt-gust:.1}50%{--pt-gust:1}}
+/* stars */
+.pt .t1{animation:pt-tw 4.6s ease-in-out infinite}.pt .t2{animation:pt-tw 6.4s ease-in-out infinite}.pt .t3{animation:pt-tw 8.2s ease-in-out infinite}
+@keyframes pt-tw{0%,100%{opacity:1}50%{opacity:.3}}
+.pt .sp{transform-box:fill-box;transform-origin:center;animation:pt-sp 6s ease-in-out infinite}
+@keyframes pt-sp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.7);opacity:.6}}
+.pt .streak{opacity:0;animation:pt-ss 17s linear 5s infinite}
+@keyframes pt-ss{0%{transform:translateX(0);opacity:0}1.5%{opacity:1}7%{transform:translateX(-420px);opacity:0}100%{transform:translateX(-420px);opacity:0}}
+/* the tower: golden lights, rotating beacon, and the sparkle (5 minutes on the hour, or on click) */
+.pt .glitter{opacity:0;transition:opacity .8s ease}
+.pt[data-sparkle="1"] .glitter{opacity:var(--pn)}
+.pt .g1{animation:pt-gl .9s steps(2) infinite}.pt .g2{animation:pt-gl 1.3s steps(2) -.4s infinite}.pt .g3{animation:pt-gl .7s steps(2) -.2s infinite}
+@keyframes pt-gl{0%{opacity:1}50%{opacity:.1}}
+.pt .rot{transform-origin:430px 453px;animation:pt-rot 22s linear infinite}.pt .rB{animation-delay:-5.5s}
+@keyframes pt-rot{0%{transform:scaleX(1)}12.5%{transform:scaleX(.71)}25%{transform:scaleX(0)}37.5%{transform:scaleX(-.71)}50%{transform:scaleX(-1)}62.5%{transform:scaleX(-.71)}75%{transform:scaleX(0)}87.5%{transform:scaleX(.71)}100%{transform:scaleX(1)}}
+.pt .flare{transform-box:fill-box;transform-origin:center;animation:pt-flare 5.5s ease-in-out infinite}
+@keyframes pt-flare{0%,100%{opacity:1;transform:scale(1.25)}30%,70%{opacity:.25;transform:scale(.7)}}
+.pt .pulse{animation:pt-pulse 4s ease-in-out infinite}@keyframes pt-pulse{0%,100%{opacity:.85}50%{opacity:.6}}
+.pt .blink{animation:pt-blink 2s steps(1) infinite}.pt .b2{animation-delay:-1s}@keyframes pt-blink{0%{opacity:1}50%{opacity:.08}}
+.pt[data-sky="dusk"] .beacon{opacity:0}
+/* the river, boats, windows, traffic */
+.pt .shim{animation:pt-shim 7s ease-in-out infinite alternate}@keyframes pt-shim{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
+.pt .refl{animation:pt-refl 3.4s ease-in-out infinite}@keyframes pt-refl{0%,100%{opacity:var(--pn)}50%{opacity:calc(var(--pn) * .55)}}
+.pt .boat{animation:pt-boat 80s linear infinite}
+@keyframes pt-boat{0%{transform:translateX(-40px);opacity:0}6%{opacity:1}92%{opacity:1}100%{transform:translateX(180px);opacity:0}}
+.pt .bob{animation:pt-bob 4.5s ease-in-out infinite}@keyframes pt-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(1.2px)}}
+.pt .w{opacity:0;animation:pt-win 26s ease-in-out infinite}@keyframes pt-win{0%,38%{opacity:0}42%,86%{opacity:.95}90%,100%{opacity:0}}
+.pt .ca{animation:pt-ca 20s linear infinite}.pt .cb{animation:pt-cb 20s linear infinite}
+@keyframes pt-ca{from{transform:translateX(0)}to{transform:translateX(880px)}}@keyframes pt-cb{from{transform:translateX(0)}to{transform:translateX(-880px)}}
+/* the Warsaw fountain (runs 10:00–23:00) */
+.pt .fountain{transition:opacity 1.5s ease}.pt[data-fount="off"] .fountain{opacity:0}
+.pt .jt{animation:pt-jet .9s linear infinite}@keyframes pt-jet{to{stroke-dashoffset:-24}}
+.pt .boil{transform-box:fill-box;transform-origin:50% 80%;animation:pt-boil 2.4s ease-in-out infinite}@keyframes pt-boil{0%,100%{transform:scale(1)}50%{transform:scale(1.25,1.4)}}
+.pt .col{transform-box:fill-box;transform-origin:50% 100%;animation:pt-col 2.6s ease-in-out infinite}.pt .c2{animation-duration:1.9s}
+@keyframes pt-col{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.9)}}
+.pt .ff{animation:pt-ff 9s ease-in-out infinite alternate}.pt .f2{animation-duration:12s}.pt .f3{animation-duration:7s}
+@keyframes pt-ff{0%{transform:translate(0,0);opacity:.25}50%{opacity:1}100%{transform:translate(9px,-14px);opacity:.4}}
+/* sun and moon: the moon sets when day comes, the sun rises; at dusk the sun is behind us (west) */
+.pt-cel .mx,.pt-cel .sx{transition:transform 2s cubic-bezier(.45,0,.55,1)}
+.pt-cel .my,.pt-cel .sy{transition:transform 2s cubic-bezier(.5,0,.75,0),opacity 1.6s ease}
+.pt[data-sky="day"] .pt-cel .sy,.pt[data-sky="night"] .pt-cel .my{transition-timing-function:cubic-bezier(.25,1,.5,1),ease}
+.pt:not([data-sky="night"]) .pt-cel .mx{transform:translateX(150px)}.pt:not([data-sky="night"]) .pt-cel .my{transform:translateY(700px);opacity:0}
+.pt:not([data-sky="day"]) .pt-cel .sx{transform:translateX(-60px)}.pt:not([data-sky="day"]) .pt-cel .sy{transform:translateY(720px);opacity:0}
+/* save work: pause what can't be seen */
+.pt[data-sky="day"] .nt *,.pt[data-sky="day"] .pt-stars *,.pt:not([data-sparkle="1"]) .glitter *,.pt[data-fount="off"] .fountain *{animation-play-state:paused}
+.pt[data-paused="1"],.pt[data-paused="1"] *{animation-play-state:paused!important}
+@media (max-width: 960px){.pt .sw,.pt .boil,.pt .col,.pt .ff,.pt .w,.pt .t1,.pt .t2,.pt .t3,.pt .sp,.pt .shim,.pt .refl,.pt .bob{animation:none}}
+@media (prefers-reduced-motion: reduce){.pt *,.pt-cel *{animation:none!important;transition:none!important}.pt .w,.pt .streak{opacity:0}}
+.theme-btn svg{animation:iconin .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes iconin{from{transform:rotate(-120deg) scale(.5);opacity:0}}
+@media (prefers-reduced-motion: reduce){.root{transition:none}.theme-btn svg{animation:none}}
+/*/PAINT*/

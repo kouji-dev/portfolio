@@ -12,25 +12,13 @@ const getPosts = (page) => page.evaluate(() =>
   })));
 
 test.describe('navbar', () => {
-  test('home shows the top bar with a Blog link and index button', async ({ page }) => {
-    await page.goto('/');
+  test('blogs page shows the top bar with a Blog link and index button', async ({ page }) => {
+    await page.goto('/blogs');
     const navpill = page.locator('[data-navpill]');
     await expect(navpill).toBeVisible();
     await expect(navpill.locator('a[data-navlink="writing"]')).toHaveAttribute('href', '/blogs');
+    await expect(navpill.locator('a[data-navlink="projects"]')).toHaveAttribute('href', '/#projects');
     await expect(page.locator('[data-palette-open]')).toBeVisible();
-  });
-
-  test('home writing section shows latest posts, or hides when empty', async ({ page }) => {
-    await page.goto('/');
-    const posts = await getPosts(page);
-    if (posts.length) {
-      const rows = page.locator('[data-latest-posts] .post-row');
-      await expect(rows).toHaveCount(Math.min(3, posts.length));
-      await expect(rows.first()).toHaveAttribute('href', /\/blogs\?id=/);
-    } else {
-      await expect(page.locator('#writing')).toBeHidden();
-    }
-    await expect(page.locator('#contact .section-num')).toHaveText('06 — Contact');
   });
 });
 
@@ -109,10 +97,10 @@ test.describe('page index (⌘K palette)', () => {
   });
 
   test('opens with Ctrl+K, shows sections, closes with Escape', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/blogs');
     await page.keyboard.press('Control+k');
     await expect(page.locator('[data-palette]')).toBeVisible();
-    await expect(page.locator('.palette-item', { hasText: 'Featured Work' })).toBeVisible();
+    await expect(page.locator('.palette-item', { hasText: 'Projects' })).toHaveAttribute('href', '/#projects');
     await page.keyboard.press('Escape');
     await expect(page.locator('[data-palette]')).toBeHidden();
   });
@@ -149,12 +137,13 @@ test.describe('analytics (GA4 dataLayer)', () => {
   });
 
   test('palette open and CV download are tracked', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/blogs');
     await page.keyboard.press('Control+k');
     await page.keyboard.press('Escape');
+    expect(await eventNames(page)).toContain('palette_open');
+    await page.goto('/');
     await page.click('a[download][href*="cv-en-short"]');
     const names = await eventNames(page);
-    expect(names).toContain('palette_open');
     expect(names).toContain('file_download');
   });
 });

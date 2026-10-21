@@ -18,3 +18,8 @@ package.json
 package-lock.json
 test-results/
 playwright-report/
+
+# Design source + data/tooling scripts — never served.
+design/
+scripts/
+pnpm-lock.yaml

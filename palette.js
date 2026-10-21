@@ -44,14 +44,14 @@
     }
 
     groups.push({ label: 'Sections', items: [
-      { label: 'Top',           href: section('top'),        glyph: '01', hint: 'home' },
-      { label: 'About',         href: section('about'),      glyph: '02', hint: 'home' },
-      { label: 'Featured Work', href: section('work'),       glyph: '03', hint: 'home' },
-      { label: 'AI Toolbox',    href: section('stack'),      glyph: '04', hint: 'home' },
-      { label: 'Experience',    href: section('experience'), glyph: '05', hint: 'home' },
-      { label: 'Blog',          href: section('writing'),    glyph: '06', hint: 'home' },
-      { label: 'Contact',       href: section('contact'),    glyph: '07', hint: 'home' },
-      { label: 'Commit trajectory', href: section('trajectory'), glyph: '◆', hint: 'inside experience' }
+      { label: 'Top',      href: section('top'),      glyph: '01', hint: 'home' },
+      { label: 'Bio',      href: section('about'),    glyph: '02', hint: 'home' },
+      { label: 'Now',      href: section('now'),      glyph: '03', hint: 'home' },
+      { label: 'Work',     href: section('work'),     glyph: '04', hint: 'home' },
+      { label: 'Activity', href: section('activity'), glyph: '05', hint: 'home' },
+      { label: 'Projects', href: section('projects'), glyph: '06', hint: 'home' },
+      { label: 'Writing',  href: section('writing'),  glyph: '07', hint: 'home' },
+      { label: 'Contact',  href: section('contact'),  glyph: '08', hint: 'home' }
     ] });
 
     var posts = window.BLOG_POSTS_SORTED || [];
@@ -64,6 +64,7 @@
     groups.push({ label: 'Elsewhere', items: [
       { label: 'GitHub — kouji-dev', href: 'https://github.com/kouji-dev', glyph: '↗', hint: '' },
       { label: 'LinkedIn', href: 'https://www.linkedin.com/in/najih-driss/', glyph: '↗', hint: '' },
+      { label: 'X — @NajihDriss1', href: 'https://x.com/NajihDriss1', glyph: '↗', hint: '' },
       { label: 'Email najih.driss73@gmail.com', href: 'mailto:najih.driss73@gmail.com', glyph: '@', hint: '' },
       { label: 'Orrery — live', href: 'https://orrery.kouji.dev', glyph: '↗', hint: '' },
       { label: 'Kouji UI — live', href: 'https://ui.kouji.dev', glyph: '↗', hint: '' }
