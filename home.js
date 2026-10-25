@@ -101,7 +101,7 @@
     // the painting is ~550 KB of SVG: fetch it only once the page itself has loaded
     var loadSky = function () {
       var s = document.createElement('script');
-      s.src = 'sky.js';
+      s.src = 'sky.js?v=2'; // ?v= busts phones that cached it under the old 24 h header
       s.onload = mountSky;
       document.head.appendChild(s);
     };
