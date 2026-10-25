@@ -5,10 +5,10 @@
    ========================================================================= */
 
 /* ---------- theme tokens (data-theme lives on <html>) ---------- */
-[data-theme="dark"]{--fg:#EDEDEC;--muted:#A1A09A;--ul:rgba(237,237,236,0.28);--accent:#9DB9FF;--orr:#C39AFC;--kj:#B8F500;--line:#7AA2FF;--area:rgba(122,162,255,0.12);
+[data-theme="dark"]{--chip:#121422;--fg:#EDEDEC;--muted:#A1A09A;--ul:rgba(237,237,236,0.28);--accent:#9DB9FF;--orr:#C39AFC;--kj:#B8F500;--line:#7AA2FF;--area:rgba(122,162,255,0.12);
   --bg:#0c0e16;--bgimg:radial-gradient(520px 320px at 50% -60px, rgba(122,162,255,0.10), rgba(122,162,255,0) 70%), linear-gradient(180deg, #11131d 0, #0c0e16 900px, #08090f 1900px);
   --panel:#0d1336;--panel-bd:rgba(157,185,255,0.10);--panel-sh:0 40px 120px -40px rgba(10,14,40,0.9);--btn:rgba(255,255,255,0.04);--btn-bd:rgba(255,255,255,0.10);color-scheme:dark}
-[data-theme="light"]{--fg:#1B1D24;--muted:#64635E;--ul:rgba(27,29,36,0.25);--accent:#3F5FD1;--orr:#7C4DDB;--kj:#6E9A00;--line:#3F63D6;--area:rgba(63,99,214,0.10);
+[data-theme="light"]{--chip:#f8f6f1;--fg:#1B1D24;--muted:#64635E;--ul:rgba(27,29,36,0.25);--accent:#3F5FD1;--orr:#7C4DDB;--kj:#6E9A00;--line:#3F63D6;--area:rgba(63,99,214,0.10);
   --bg:#f3f1ec;--bgimg:radial-gradient(560px 340px at 50% -60px, rgba(255,190,160,0.22), rgba(255,190,160,0) 70%), linear-gradient(180deg, #fbf9f5 0, #f6f4ef 900px, #f1efe9 1900px);
   --panel:#86bbdc;--panel-bd:rgba(40,50,110,0.10);--panel-sh:0 40px 100px -50px rgba(70,70,130,0.40);--btn:rgba(27,29,36,0.03);--btn-bd:rgba(27,29,36,0.12);color-scheme:light}
 
@@ -16,14 +16,15 @@
 body{margin:0;background:var(--bg)}
 .root{min-height:100vh;box-sizing:border-box;background:var(--bgimg);color:var(--fg);font-family:'Sora',sans-serif;font-size:15px;line-height:1.7;padding:clamp(48px,9vw,112px) 20px 64px;transition:background-color .5s,color .5s}
 a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--ul);text-underline-offset:3px}
-a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+a:hover{color:var(--accent);text-decoration-color:#a855f7}
 .mono{font-family:'JetBrains Mono',monospace}
 
 /* ---------- layout: text column + sticky painting ---------- */
 .wrap{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:center;gap:56px 80px}
 .col{flex:1 1 520px;max-width:600px;min-width:0;display:flex;flex-direction:column;gap:52px}
 .sky{position:sticky;top:10vh;height:80vh;min-height:560px;cursor:pointer;flex:1 1 380px;max-width:520px;min-width:0;overflow:hidden;border-radius:22px;border:1px solid var(--panel-bd);background:var(--panel);box-shadow:var(--panel-sh);transition:background-color .9s,box-shadow .9s}
-.sky-inner{position:relative;width:100%;height:100%}
+.sky-inner{position:relative;width:100%;height:100%;opacity:0;transition:opacity .6s ease}
+.sky-inner.is-in{opacity:1}
 .sky:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 /* ---------- header ---------- */
@@ -31,7 +32,7 @@ a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 .head-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .head-id{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;min-width:0}
 .name{margin:0;font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.6px;line-height:1.05}
-.name-at{color:var(--accent);font-weight:500;margin-right:2px}
+.name-at{font-weight:500;margin-right:2px}
 .socials{display:flex;align-items:center;gap:2px}
 .socials a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;color:var(--muted);text-decoration:none;transition:color .2s,background-color .2s}
 .socials a:hover{color:var(--fg);background:var(--btn)}
@@ -77,7 +78,28 @@ a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 .act-hits{position:absolute;inset:0;display:flex}
 .act-hits span{flex:1 1 0;height:100%}
 .act-hits span:first-child,.act-hits span:last-child{flex-grow:.5}
+/* the sparkline draws itself when it scrolls into view (home.js sets data-drawn) */
+.act-chart .act-line{stroke-dasharray:1;stroke-dashoffset:1}
+.act-chart .act-area{opacity:0}
+.act-chart[data-drawn="1"] .act-line{animation:act-draw 1.8s cubic-bezier(.65,0,.35,1) forwards}
+.act-chart[data-drawn="1"] .act-area{animation:act-fill .9s ease 1.1s forwards}
+@keyframes act-draw{to{stroke-dashoffset:0}}@keyframes act-fill{to{opacity:1}}
+@media (prefers-reduced-motion: reduce){.act-chart .act-line{stroke-dashoffset:0;animation:none!important}.act-chart .act-area{opacity:1;animation:none!important}}
 .act-ticks{display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* ---------- AI touches ---------- */
+.ai-grad{background:linear-gradient(100deg,#ff5d9e,#a855f7 50%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ai-chip{position:relative;display:inline-flex;align-items:center;gap:4px;padding:1px 8px;border-radius:999px;color:var(--fg);background:linear-gradient(var(--chip),var(--chip)) padding-box,linear-gradient(100deg,#ff5d9e,#a855f7 50%,#22d3ee) border-box;border:1px solid transparent;cursor:help;outline:none}
+.ai-chip:focus-visible{box-shadow:0 0 0 2px var(--accent)}
+.ai-tip{position:absolute;left:0;top:calc(100% + 8px);z-index:20;width:max-content;max-width:280px;white-space:normal;padding:8px 10px;border-radius:10px;font-size:11.5px;line-height:1.5;color:#f4f4f6;background:#14162a;border:1px solid rgba(168,85,247,.45);box-shadow:0 12px 30px -12px rgba(20,10,60,.6);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .18s,transform .18s}
+.ai-chip:hover .ai-tip,.ai-chip:focus .ai-tip{opacity:1;transform:none}
+.tokens .tk{border-radius:3px;transition:background-color .25s}
+.tokens:hover .tk0{background:rgba(255,93,158,.10)}.tokens:hover .tk1{background:rgba(168,85,247,.10)}.tokens:hover .tk2{background:rgba(34,211,238,.10)}
+.rows-proj li[data-p]{cursor:default;transition:color .2s}
+.rows-proj li[data-p]:hover > span:last-child{color:var(--fg)}
+.ai-trail{position:fixed;left:0;top:0;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;pointer-events:none;z-index:50;background:linear-gradient(135deg,#ff5d9e,#a855f7,#22d3ee);opacity:0;transition:opacity .3s}
+@media (prefers-reduced-motion: reduce){.tokens .tk{transition:none}}
+.foot{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--muted)}
 
 /* ---------- small screens: painting moves under the header ---------- */
 @media (max-width: 960px){
@@ -165,11 +187,31 @@ a:hover{color:var(--accent);text-decoration-color:var(--accent)}
 .pt:not([data-sky="night"]) .pt-cel .mx{transform:translateX(150px)}.pt:not([data-sky="night"]) .pt-cel .my{transform:translateY(700px);opacity:0}
 .pt:not([data-sky="day"]) .pt-cel .sx{transform:translateX(-60px)}.pt:not([data-sky="day"]) .pt-cel .sy{transform:translateY(720px);opacity:0}
 /* save work: pause what can't be seen */
+/* AI layer: a neural net over the sky, a scan line and labels that follow the hovered project */
+.pt-net{opacity:calc(.32 + .45 * var(--ps) + .35 * var(--pk));transition:opacity 1.2s ease}
+.pt .sig{animation:pt-sig 5s linear infinite}@keyframes pt-sig{from{stroke-dashoffset:0}to{stroke-dashoffset:calc(var(--len) * -1)}}
+.pt .nd{transform-box:fill-box;transform-origin:center;animation:pt-nd 5s ease-in-out infinite}@keyframes pt-nd{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+.pt .scan{animation:pt-scan 26s cubic-bezier(.45,0,.55,1) infinite;opacity:.0}
+@keyframes pt-scan{0%{transform:translateX(0);opacity:0}2%{opacity:.85}26%{transform:translateX(900px);opacity:.85}28%,100%{transform:translateX(900px);opacity:0}}
+.pt .lab{opacity:0;transition:opacity .45s ease}
+.pt .lab-pages{animation:pt-lab 26s ease infinite;animation-delay:.8s}.pt .lab-orrery{animation:pt-lab 26s ease infinite;animation-delay:3.4s}
+.pt .lab-vortex{animation:pt-lab 26s ease infinite;animation-delay:3.6s}.pt .lab-kouji{animation:pt-lab 26s ease infinite;animation-delay:3.5s}
+@keyframes pt-lab{0%{opacity:0}3%,26%{opacity:1}31%,100%{opacity:0}}
+.pt .ring{transform-box:fill-box;transform-origin:center;animation:pt-ring 1.8s ease-out infinite}@keyframes pt-ring{from{transform:scale(.6);opacity:1}to{transform:scale(1.9);opacity:0}}
+.pt[data-focus]:not([data-focus=""]) .lab{animation:none;opacity:0}
+.pt[data-focus="pages"] .lab-pages,.pt[data-focus="orrery"] .lab-orrery,.pt[data-focus="vortex"] .lab-vortex,.pt[data-focus="kouji"] .lab-kouji{opacity:1!important}
+.pt[data-focus]:not([data-focus=""]) .scan{animation:none;opacity:0}
+@media (max-width: 960px){.pt .nd{animation:none}}
 .pt[data-sky="day"] .nt *,.pt[data-sky="day"] .pt-stars *,.pt:not([data-sparkle="1"]) .glitter *,.pt[data-fount="off"] .fountain *{animation-play-state:paused}
 .pt[data-paused="1"],.pt[data-paused="1"] *{animation-play-state:paused!important}
+/* quality (home.js picks it from device hints, then steps down while frames run slow):
+   every animated SVG shape costs main-thread style + paint each frame; clouds move on the compositor for free.
+   Plain class selectors on purpose: a `*:not(…)` rule here gets checked against all ~2,200 shapes on every recalc */
+.pt[data-q="lite"] .sw,.pt[data-q="lite"] .t1,.pt[data-q="lite"] .t2,.pt[data-q="lite"] .t3,.pt[data-q="lite"] .sp,.pt[data-q="lite"] .streak,.pt[data-q="lite"] .g1,.pt[data-q="lite"] .g2,.pt[data-q="lite"] .g3,.pt[data-q="lite"] .pulse,.pt[data-q="lite"] .blink,.pt[data-q="lite"] .shim,.pt[data-q="lite"] .refl,.pt[data-q="lite"] .bob,.pt[data-q="lite"] .w,.pt[data-q="lite"] .jt,.pt[data-q="lite"] .boil,.pt[data-q="lite"] .col,.pt[data-q="lite"] .ff,.pt[data-q="lite"] .sig,.pt[data-q="lite"] .nd,
+.pt[data-q="static"] .sw,.pt[data-q="static"] .t1,.pt[data-q="static"] .t2,.pt[data-q="static"] .t3,.pt[data-q="static"] .sp,.pt[data-q="static"] .streak,.pt[data-q="static"] .g1,.pt[data-q="static"] .g2,.pt[data-q="static"] .g3,.pt[data-q="static"] .pulse,.pt[data-q="static"] .blink,.pt[data-q="static"] .shim,.pt[data-q="static"] .refl,.pt[data-q="static"] .bob,.pt[data-q="static"] .w,.pt[data-q="static"] .jt,.pt[data-q="static"] .boil,.pt[data-q="static"] .col,.pt[data-q="static"] .ff,.pt[data-q="static"] .sig,.pt[data-q="static"] .nd,.pt[data-q="static"] .rot,.pt[data-q="static"] .flare,.pt[data-q="static"] .scan,.pt[data-q="static"] .lab,.pt[data-q="static"] .ring,.pt[data-q="static"] .boat,.pt[data-q="static"] .ca,.pt[data-q="static"] .cb{animation:none}
 @media (max-width: 960px){.pt .sw,.pt .boil,.pt .col,.pt .ff,.pt .w,.pt .t1,.pt .t2,.pt .t3,.pt .sp,.pt .shim,.pt .refl,.pt .bob{animation:none}}
 @media (prefers-reduced-motion: reduce){.pt *,.pt-cel *{animation:none!important;transition:none!important}.pt .w,.pt .streak{opacity:0}}
 .theme-btn svg{animation:iconin .55s cubic-bezier(.2,.8,.2,1)}
 @keyframes iconin{from{transform:rotate(-120deg) scale(.5);opacity:0}}
-@media (prefers-reduced-motion: reduce){.root{transition:none}.theme-btn svg{animation:none}}
+@media (prefers-reduced-motion: reduce){.root,.sky-inner{transition:none}.theme-btn svg{animation:none}}
 /*/PAINT*/

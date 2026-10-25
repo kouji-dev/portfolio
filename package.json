@@ -4,7 +4,8 @@
   "description": "Static portfolio site (kouji.dev) — Playwright e2e only, no build step",
   "scripts": {
     "serve": "serve -l 4173 .",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "sky": "node scripts/build-sky.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.46.0",

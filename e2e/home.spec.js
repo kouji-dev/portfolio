@@ -73,6 +73,56 @@ test.describe('home', () => {
     await expect(pt).toHaveAttribute('data-gust', '1');
   });
 
+  test('AI layer: project hover labels the painting, chart draws, chip tooltip', async ({ page }) => {
+    await page.goto('/');
+    const pt = page.locator('.sky .pt');
+    await expect(page.locator('.sky .pt-net')).toHaveCount(1);
+    await page.locator('#projects li[data-p="vortex"]').hover();
+    await expect(pt).toHaveAttribute('data-focus', 'vortex');
+    await page.locator('#contact').hover();
+    await expect(pt).toHaveAttribute('data-focus', '');
+
+    await page.locator('[data-act-chart]').scrollIntoViewIfNeeded();
+    await expect(page.locator('[data-act-chart]')).toHaveAttribute('data-drawn', '1');
+
+    await page.locator('.ai-chip').focus();
+    await expect(page.locator('#ai-tip')).toHaveCSS('opacity', '1');
+    await expect(page.locator('.ai-trail')).toHaveCount(7);
+  });
+
+  test('painting loads after the page, fonts are self-hosted, GA waits', async ({ page }) => {
+    const external = [];
+    page.on('request', (r) => { if (/fonts\.g|googletagmanager/.test(r.url())) external.push(r.url()); });
+    await page.goto('/');
+    await expect(page.locator('.sky .pt')).toHaveCount(1);
+    await expect(page.locator('.sky-inner')).toHaveClass(/is-in/);
+    // sky.js is requested only once the page has loaded
+    const t = await page.evaluate(() => [performance.getEntriesByType('navigation')[0].loadEventStart, performance.getEntriesByName(new URL('sky.js', location.href).href)[0].startTime]);
+    expect(t[1]).toBeGreaterThanOrEqual(t[0]);
+    // gtag.js is not in the markup; it is requested after load
+    expect(await page.locator('script[src*="googletagmanager"]').evaluateAll((ss) => ss.every((s) => !s.closest('head') || s.async))).toBe(true);
+    const ga = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => /googletagmanager/.test(r.name)).map((r) => r.startTime));
+    for (const start of ga) expect(start).toBeGreaterThanOrEqual(t[0]);
+    expect(external.filter((u) => /fonts\.g/.test(u))).toEqual([]);
+    expect(await page.evaluate(() => document.fonts.check('600 28px "Space Grotesk"'))).toBe(true);
+  });
+
+  test('painting quality steps down while frames run slow', async ({ page }) => {
+    // every frame takes ~40 ms (25 fps): full → lite → static
+    await page.addInitScript(() => {
+      const raf = window.requestAnimationFrame.bind(window);
+      window.requestAnimationFrame = (f) => raf((t) => { const end = performance.now() + 40; while (performance.now() < end); f(t); });
+    });
+    await page.goto('/');
+    const pt = page.locator('.sky .pt');
+    await expect(pt).toHaveAttribute('data-q', 'lite', { timeout: 10000 });
+    await expect(pt).toHaveAttribute('data-q', 'static', { timeout: 10000 });
+    expect(await page.evaluate(() => sessionStorage.getItem('dn-sky-q'))).toBe('static');
+    // the level holds for the session
+    await page.reload();
+    await expect(pt).toHaveAttribute('data-q', 'static');
+  });
+
   test('sky painting also loads from file://', async ({ page }) => {
     await page.goto(pathToFileURL(path.join(__dirname, '..', 'index.html')).href);
     await expect(page.locator('.sky .pt svg').first()).toBeVisible();

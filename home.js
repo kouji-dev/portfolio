@@ -3,9 +3,11 @@
 
    - Theme: follows the Paris sun (day → light, dusk/night → dark) until the
      visitor picks one with the toggle; the pick is saved as `dn-theme`.
-   - Sky: injects sky.js (window.SKY_SVG) and drives its data-* switches (sky state,
-     fountain hours, hourly sparkle, click gust/sparkle, off-screen pause).
+   - Sky: loads sky.js (window.SKY_SVG) after the page, injects it and drives its data-*
+     switches (sky state, fountain hours, hourly sparkle, click gust/sparkle, off-screen
+     pause, animation quality).
    - Activity: weekly commits summed over every repo in trajectory-data.js.
+   - AI layer: hovering a project lights its label in the painting; a cursor trail.
    - Writing: latest posts from blog-data.js (section stays hidden when empty).
    ========================================================================= */
 (function () {
@@ -96,16 +98,106 @@
         clearTimeout(pokeT); pokeT = setTimeout(function () { state.poke = false; render(); }, 12000);
       }
     });
-    if (window.SKY_SVG) {
-      skyEl.querySelector('[data-sky-inner]').innerHTML = window.SKY_SVG;
-      // pause the painting when it is off screen or the tab is hidden
-      var off = false, el = pt();
-      var update = function () { el.setAttribute('data-paused', off || document.hidden ? '1' : '0'); };
-      document.addEventListener('visibilitychange', update);
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (es) { off = !es[0].isIntersecting; update(); }).observe(el);
-      }
+    // the painting is ~550 KB of SVG: fetch it only once the page itself has loaded
+    var loadSky = function () {
+      var s = document.createElement('script');
+      s.src = 'sky.js';
+      s.onload = mountSky;
+      document.head.appendChild(s);
+    };
+    if (document.readyState === 'complete') loadSky();
+    else window.addEventListener('load', loadSky);
+  }
+
+  function mountSky() {
+    var inner = skyEl.querySelector('[data-sky-inner]');
+    inner.innerHTML = window.SKY_SVG;
+    var el = pt();
+    quality(el);
+    render();
+    requestAnimationFrame(function () { inner.classList.add('is-in'); });
+    // pause the painting when it is off screen or the tab is hidden
+    var off = false;
+    var update = function () {
+      el.setAttribute('data-paused', off || document.hidden ? '1' : '0');
+      if (!off && !document.hidden) el.dispatchEvent(new Event('sky:visible'));
+    };
+    document.addEventListener('visibilitychange', update);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { off = !es[0].isIntersecting; update(); }).observe(el);
+    } else update();
+  }
+
+  /* ---------- painting quality: full → lite → static ----------
+     Every animated SVG shape costs main-thread work each frame, so weak devices get fewer.
+     Start from device hints, then watch real frames once the painting is on screen and step
+     down while the median frame is slower than ~45 fps. Never steps back up within a session. */
+  function quality(el) {
+    var LEVELS = ['full', 'lite', 'static'];
+    var nav = navigator, saved = null;
+    try { saved = sessionStorage.getItem('dn-sky-q'); } catch (e) {}
+    var q = LEVELS.indexOf(saved) >= 0 ? saved
+      : nav.connection && nav.connection.saveData ? 'static'
+      : (nav.hardwareConcurrency || 8) < 4 || (nav.deviceMemory || 8) < 4 ? 'lite' : 'full';
+    var set = function (v) {
+      q = v; el.setAttribute('data-q', v);
+      try { sessionStorage.setItem('dn-sky-q', v); } catch (e) {}
+    };
+    set(q);
+    var probing = false;
+    var probe = function () {
+      if (probing || q === 'static' || el.getAttribute('data-paused') === '1') return;
+      probing = true;
+      var frames = [], prev = 0, t0 = 0;
+      requestAnimationFrame(function f(now) {
+        if (prev) frames.push(now - prev);
+        prev = now; t0 = t0 || now;
+        if (now - t0 < 2000) return requestAnimationFrame(f);
+        probing = false;
+        frames.sort(function (a, b) { return a - b; });
+        if (frames[frames.length >> 1] > 22) { set(LEVELS[LEVELS.indexOf(q) + 1]); setTimeout(probe, 500); }
+        else el.removeEventListener('sky:visible', later);
+      });
+    };
+    // let the injection, first raster, chart draw and gtag.js settle before measuring
+    var later = function () { setTimeout(probe, 2500); };
+    el.addEventListener('sky:visible', later);
+  }
+
+  // hovered / focused project → its label in the painting
+  var projects = document.querySelector('.rows-proj');
+  if (projects) {
+    var focus = function (e) { var li = e.target.closest && e.target.closest('li[data-p]'), el = pt(); if (el) el.setAttribute('data-focus', li ? li.getAttribute('data-p') : ''); };
+    projects.addEventListener('mouseover', focus);
+    projects.addEventListener('focusin', focus);
+    projects.addEventListener('mouseleave', function () { var el = pt(); if (el) el.setAttribute('data-focus', ''); });
+    projects.addEventListener('focusout', function (e) { if (!projects.contains(e.relatedTarget)) { var el = pt(); if (el) el.setAttribute('data-focus', ''); } });
+  }
+
+  /* ---------- cursor trail ---------- */
+  if (window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var dots = [], pos = { x: -100, y: -100 }, last = 0;
+    for (var t = 0; t < 7; t++) {
+      var d = document.createElement('span');
+      d.className = 'ai-trail'; d.style.transform = 'scale(' + (1 - t * .11) + ')';
+      document.body.appendChild(d); dots.push({ el: d, x: -100, y: -100 });
     }
+    var running = false;
+    var step = function () {
+      var px = pos.x, py = pos.y, idle = performance.now() - last > 900;
+      dots.forEach(function (d, i) {
+        d.x += (px - d.x) * (0.42 - i * 0.04); d.y += (py - d.y) * (0.42 - i * 0.04);
+        d.el.style.translate = d.x + 'px ' + d.y + 'px'; d.el.style.opacity = idle ? 0 : (0.55 - i * 0.07);
+        px = d.x; py = d.y;
+      });
+      // the loop sleeps once the trail has faded and wakes on the next move
+      if (idle) running = false;
+      else requestAnimationFrame(step);
+    };
+    window.addEventListener('pointermove', function (e) {
+      pos.x = e.clientX; pos.y = e.clientY; last = performance.now();
+      if (!running) { running = true; requestAnimationFrame(step); }
+    }, { passive: true });
   }
 
   tick();
@@ -157,6 +249,11 @@
       readout.textContent = 'Week of ' + fmt(weekDate(i), { day: 'numeric', month: 'short', year: 'numeric' }) + ' · ' + w[i] + (w[i] === 1 ? ' commit' : ' commits');
     }
     setHi(null);
+    // draw the line once the chart scrolls into view
+    if ('IntersectionObserver' in window) {
+      var cio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { chart.setAttribute('data-drawn', '1'); cio.disconnect(); } }, { threshold: 0.4 });
+      cio.observe(chart);
+    } else chart.setAttribute('data-drawn', '1');
     hits.addEventListener('mouseover', function (e) { var i = e.target.getAttribute('data-i'); if (i != null) setHi(+i); });
     chart.addEventListener('mouseleave', function () { setHi(null); });
     chart.addEventListener('blur', function () { setHi(null); });
