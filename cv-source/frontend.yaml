@@ -100,11 +100,11 @@ experiences:
       en: "**TotalEnergies Digital Factory** — the group's in-house unit building digital products used across the company."
       fr: "**TotalEnergies Digital Factory** — l'entité interne du groupe qui conçoit les produits numériques utilisés dans toute l'entreprise."
     responsibilities:
-      - in: [short, long]
+      - in: [long]
         text:
           en: "Full stack development of **AI-powered applications**, across **back end and front end**"
           fr: "Développement full stack d'**applications intégrant l'IA**, côté **back end et front end**"
-      - in: [short, long]
+      - in: [long]
         text:
           en: "Services and interfaces built mainly in **TypeScript** and **Python**"
           fr: "Services et interfaces développés principalement en **TypeScript** et **Python**"
