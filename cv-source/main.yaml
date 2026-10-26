@@ -133,8 +133,8 @@ experiences:
     role:
       en: "Full Stack Developer (Angular / Node.js)"
       fr: "Développeur Full Stack (Angular / Node.js)"
-    dates: { en: "May 2026", fr: "Mai 2026" }
-    period: { start: "2026-05", end: null }
+    dates: { en: "May 2026 – October 2026", fr: "Mai 2026 – Octobre 2026" }
+    period: { start: "2026-05", end: "2026-10" }
     client: null
     context:
       en: "**Preesm Portal** (preesm-group.com) — a **multi-tenant** B2B SaaS platform digitising the complete franchisee lifecycle of French franchise networks, each network isolated as its own tenant and used daily by headquarters staff, franchisors and franchisees. Sole engineer on the product, working directly with the client from requirements through to production operations."
