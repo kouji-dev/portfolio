@@ -1,8 +1,12 @@
-// E2E — minimal home (design/Minimal.dc.html): sections, theme toggle,
+// E2E — minimal home (design/Minimal.dc.html): sections, the sky clock and its skins,
 // activity sparkline from trajectory-data.js, injected sky painting.
 const path = require('path');
 const { pathToFileURL } = require('url');
 const { test, expect } = require('@playwright/test');
+
+// the sky follows the visitor's local time: pin the zone, and the date where it matters
+test.use({ timezoneId: 'Europe/Paris' });
+const at = (page, iso) => page.clock.setFixedTime(new Date(iso));
 
 test.describe('home', () => {
   test('renders the header and every section', async ({ page }) => {
@@ -29,16 +33,58 @@ test.describe('home', () => {
     }
   });
 
-  test('theme toggle flips data-theme, sky and persists', async ({ page }) => {
+  test('theme follows the local sky; the button fast-forwards to sunset', async ({ page }) => {
+    await at(page, '2026-07-01T13:00:00+02:00');
     await page.goto('/');
-    const html = page.locator('html');
-    const before = await html.getAttribute('data-theme');
-    const after = before === 'light' ? 'dark' : 'light';
+    const html = page.locator('html'), pt = page.locator('.sky .pt');
+    await expect(html).toHaveAttribute('data-theme', 'light');
+    await expect(pt).toHaveAttribute('data-sky', 'day');
+    await expect(page.locator('[data-theme-toggle]')).toHaveAttribute('aria-label', 'Fast-forward to sunset');
     await page.click('[data-theme-toggle]');
-    await expect(html).toHaveAttribute('data-theme', after);
-    await expect(page.locator('.pt')).toHaveAttribute('data-sky', after === 'light' ? 'day' : 'night');
+    await expect(html).toHaveAttribute('data-theme', 'dark', { timeout: 10000 });
+    await expect(pt).not.toHaveAttribute('data-sky', 'day');
+    await expect(page.locator('[data-theme-toggle]')).toHaveAttribute('aria-label', 'Fast-forward to sunrise');
+  });
+
+  test('skins follow the date; the test-only skin picker is not shipped', async ({ page }) => {
+    const pt = page.locator('.sky .pt');
+    await at(page, '2026-10-31T22:00:00+01:00');
+    await page.goto('/');
+    await expect(pt).toHaveAttribute('data-event', 'halloween');
+    await expect(pt).toHaveAttribute('data-season', 'autumn');
+    await expect(pt).toHaveAttribute('data-sky', 'night');
+    await expect(page.locator('.skin-sel, .skin-btn')).toHaveCount(0);
+    await expect(page.locator('.sky')).toHaveAttribute('aria-label', /Dressed for Halloween/);
+    // the skin's signature moment (the witch) plays first, a few seconds in
+    await expect(pt).toHaveAttribute('data-moment', 'witch', { timeout: 10000 });
+
+    await at(page, '2026-12-20T12:00:00+01:00');
     await page.reload();
-    await expect(html).toHaveAttribute('data-theme', after);
+    await expect(pt).toHaveAttribute('data-event', 'christmas');
+    await expect(pt).toHaveAttribute('data-season', 'winter');
+
+    // New Year's Eve: the countdown fills the painting's text hook
+    await at(page, '2026-12-31T23:59:55+01:00');
+    await page.reload();
+    await expect(pt).toHaveAttribute('data-ny', /count/);
+    await expect(page.locator('.sky [data-h="count"]')).toHaveText(/^\d+$/);
+    // the moon path gets its real phase
+    expect(await page.locator('.sky [data-h-d="moonD"]').first().getAttribute('d')).toMatch(/^M0 -25A25 25/);
+  });
+
+  test('winter weather is snow, rain or fog for the whole day', async ({ page }) => {
+    const pt = page.locator('.sky .pt');
+    for (const [iso, wx] of [['2027-01-10T15:00:00+01:00', 'rain'], ['2027-01-08T15:00:00+01:00', 'fog'], ['2027-01-07T15:00:00+01:00', 'snow']]) {
+      await at(page, iso);
+      await page.goto('/');
+      await expect(pt).toHaveAttribute('data-wx', wx);
+    }
+    await expect(page.locator('.sky')).toHaveAttribute('aria-label', /snow falling/);
+    // rain day: the rain layer shows and is not marked hidden
+    await at(page, '2027-01-10T15:00:00+01:00');
+    await page.reload();
+    await expect(page.locator('.sky .rainw')).toBeVisible();
+    await expect(page.locator('.sky .rainw')).not.toHaveClass(/\boff\b/);
   });
 
   test('activity readout sums every repo and reads weeks on hover and keys', async ({ page }) => {
@@ -62,15 +108,38 @@ test.describe('home', () => {
     await expect(readout).toContainText('commits ·');
   });
 
+  test('hidden skin / moment groups do not animate', async ({ page }) => {
+    await at(page, '2026-07-01T13:00:00+02:00');
+    await page.goto('/');
+    await expect(page.locator('.sky .mo-sleigh')).toHaveClass(/\boff\b/);
+    const hiddenRunning = await page.evaluate(() => document.getAnimations()
+      .filter((a) => a.playState === 'running' && a.effect.target.closest('.off')).length);
+    expect(hiddenRunning).toBe(0);
+  });
+
+  test('static level hides falling leaves instead of freezing them at the top edge', async ({ page }) => {
+    await at(page, '2026-10-26T15:00:00+01:00');
+    await page.goto('/');
+    await page.evaluate(() => sessionStorage.setItem('dn-sky-q', 'static'));
+    await page.reload();
+    await expect(page.locator('.sky .pt')).toHaveAttribute('data-q', 'static');
+    await expect(page.locator('.sky .lnear')).toBeHidden();
+    await page.evaluate(() => { sessionStorage.setItem('dn-sky-q', 'full'); });
+    await page.reload();
+    await expect(page.locator('.sky .lnear')).toBeVisible();
+  });
+
   test('sky painting is injected and responds to a click', async ({ page }) => {
     await page.goto('/');
     const pt = page.locator('.sky .pt');
     await expect(pt).toHaveCount(1);
-    // force day so a click is a gust
-    await page.evaluate(() => localStorage.setItem('dn-theme', 'light'));
+    // by day a click is a gust, plus the skin's shaped firework
+    await at(page, '2026-07-01T13:00:00+02:00');
     await page.reload();
     await page.locator('.sky').click();
     await expect(pt).toHaveAttribute('data-gust', '1');
+    await expect(pt).toHaveAttribute('data-fw', '1');
+    await expect(pt).toHaveAttribute('data-shape', /\w/);
   });
 
   test('AI layer: project hover labels the painting, chart draws, chip tooltip', async ({ page }) => {

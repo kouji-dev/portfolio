@@ -54,6 +54,11 @@ Then copy both files into `design/`.
 `assets/fonts/`, header socials (GitHub, LinkedIn, X), real `/blogs` URLs instead of hash
 routes, empty blog list until real posts exist. Mock blog titles stay out.
 
+**Never ship the seasonal-skin / event picker** (the `skin-btn` / `skin-sel` select in the design header
+and its `pickSkin` / `skin` state): the user uses it to test skins in the canvas only. Production always
+follows the date. Tests pin the date with Playwright's clock (`page.clock.setFixedTime`, timezone
+`Europe/Paris`) instead.
+
 ## 4. Performance rules (measured; don't relearn them)
 
 - Every **animated SVG element** costs main-thread style recalc and a paint re-record each frame;
@@ -64,6 +69,18 @@ routes, empty blog list until real posts exist. Mock blog titles stay out.
   - `.pt[data-q="static"] .<class>` for everything except the clouds
   - the `@media (max-width: 960px)` list when the design's own rule includes it
 - Use plain class selectors in those lists, never `*:not(…)`: it matches every shape on each recalc.
+- Chrome keeps ticking CSS animations inside `display:none` SVG groups. `pnpm run sky` lists every
+  class the CSS toggles with `display` (`SKY_TOGGLES`); `home.js` marks the hidden ones `.off`, which
+  stops their animations. That took a summer day from 823 to ~230 running animations. Check that
+  `document.getAnimations()` has nothing running under `.off` after a sync.
+- Never set the sky-clock variables (`--pd --ps --pk --pn --mono --sunx --suny --monx --mony --flyy`)
+  on the `.pt` root: custom properties inherit, so each change restyles all ~12,000 shapes (~70 ms).
+  `pnpm run sky` lists the classes that read them (`SKY_LIT`), and `home.js` sets them there only.
+- While the theme button fast-forwards, `<html data-ff>` turns painting transitions off
+  (the script drives the light every frame). Remaining known hitch: the palette switch at
+  day → dusk → night restyles every shape once (~100–200 ms).
+- Per-skin check: `page.clock.setFixedTime` on a few dates (summer day/night, Halloween night,
+  Christmas, New Year's Eve), count running animations and main-thread ms per frame at each `data-q`.
 - `sky.js` loads after `load` (`home.js` → `loadSky`); never put it back in the markup.
 - Don't re-add things that measured no gain: layer splitting, `will-change` on painting layers,
   path minifying.
@@ -73,9 +90,17 @@ routes, empty blog list until real posts exist. Mock blog titles stay out.
 ## 5. Verify
 
 1. `pnpm exec playwright test e2e/home.spec.js` (add a test for any new behaviour; never the full suite).
-2. Screenshots with Playwright at 1440×900 in dark and light (set `localStorage.dn-theme`),
-   plus 390×844, and look at what changed.
-3. For changes to animations, check the cost with the GPU on
+2. **Design vs production at the same instant.** The local server renders the design itself:
+   `http://localhost:4173/design/Minimal.dc` (its own `support.js` runtime). With Playwright, pin the clock
+   (`page.clock.setFixedTime`, timezone `Europe/Paris`, `sessionStorage.dn-sky-q = "full"`) on a few
+   dates (an ordinary day, a night, the current event). On both pages compare the `.pt` `data-*`
+   attributes, the sky variables on a `.nt` element, the theme and the number of visible painting elements
+   (ignore `data-dc-tpl`, `data-q`, `data-paused`, `data-moment`, `data-focus`), and screenshot
+   `.sky` side by side. Only animation phases may differ.
+3. Screenshots at 1440×900 (day and night via the pinned clock) and 390×844, and look at what changed.
+   Also check `data-q="static"`: nothing may sit frozen mid-animation (falling particles and moments
+   are hidden there, as in the design's reduced-motion rule).
+4. For changes to animations, check the cost with the GPU on
    (`--enable-gpu --ignore-gpu-blocklist --use-angle=d3d11`), comparing the trace's
    main-thread ms per frame before and after, not fps (fps is noisy on this machine).
 
