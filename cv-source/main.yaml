@@ -107,6 +107,28 @@ skills:
 
 experiences:
   - in: [short, long]
+    company: "TotalEnergies"
+    role:
+      en: "Senior Full Stack AI Developer (TypeScript / Python)"
+      fr: "Développeur Full Stack IA Senior (TypeScript / Python)"
+    dates: { en: "November 2026", fr: "Novembre 2026" }
+    period: { start: "2026-11", end: null }
+    client: null
+    context:
+      en: "**TotalEnergies Digital Factory** — the group's in-house unit building digital products used across the company."
+      fr: "**TotalEnergies Digital Factory** — l'entité interne du groupe qui conçoit les produits numériques utilisés dans toute l'entreprise."
+    responsibilities:
+      - in: [short, long]
+        text:
+          en: "Full stack development of **AI-powered applications**, across **back end and front end**"
+          fr: "Développement full stack d'**applications intégrant l'IA**, côté **back end et front end**"
+      - in: [short, long]
+        text:
+          en: "Services and interfaces built mainly in **TypeScript** and **Python**"
+          fr: "Services et interfaces développés principalement en **TypeScript** et **Python**"
+    tech: "TypeScript, Python, Angular, Node.js, Git, GitHub, GitHub Actions"
+
+  - in: [short, long]
     company: "Preesm Group"
     role:
       en: "Full Stack Developer (Angular / Node.js)"
@@ -190,8 +212,8 @@ experiences:
     role:
       en: "Senior Full Stack Developer (Angular / Java)"
       fr: "Développeur Full Stack Senior (Angular / Java)"
-    dates: { en: "September 2023", fr: "Septembre 2023" }
-    period: { start: "2023-09", end: null }
+    dates: { en: "September 2023 – October 2026", fr: "Septembre 2023 – Octobre 2026" }
+    period: { start: "2023-09", end: "2026-10" }
     client: null
     context:
       en: "Amundi ITS develops shared platforms and frameworks used by multiple internal and client-facing applications. A major product is the **Maestro framework**, an Angular-based solution enabling backend teams to rapidly integrate consistent, enterprise-grade user interfaces."
