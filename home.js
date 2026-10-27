@@ -20,8 +20,11 @@
   var btn = document.querySelector('[data-theme-toggle]');
   var skyEl = document.querySelector('[data-sky]');
   var vo = 0; // fast-forward offset (ms) added to the clock
-  var st = { moment: '', fw: 0, shape: '', slot: '', corner: 'tl', cx: '50%', cy: '50%', poke: false, gust: 0 };
-  var sig = '', ffRaf = null, hooks = null;
+  var skinMode = 'auto'; // the skin picker's choice ('auto' follows the date; the picker shows only off https)
+  var skinBtn = document.querySelector('[data-skin-picker]');
+  var SKIN_NAMES = { auto: 'Automatic', autumn: 'Autumn', halloween: 'Halloween', winter: 'Winter', christmas: 'Christmas', valentine: 'Valentine’s Day', newyear: 'New Year’s Eve', spring: 'Spring', summer: 'Summer', perseids: 'The Perseids', none: 'None' };
+  var st = { moment: '', fw: 0, shape: '', slot: '', corner: 'tl', cx: '50%', cy: '50%', poke: false, gust: 0, gl: 0 };
+  var sig = '', ffRaf = null, hooks = null, gl = null;
 
   function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
   function pt() { return skyEl && skyEl.querySelector('.pt'); }
@@ -50,9 +53,10 @@
     var vars = {
       pd: r2(cl((t + 15) / 60)), ps: r2(cl((-t - 20) / 50)), pk: r2(cl(1 - Math.abs(t + 5) / 45)), pn: r2(cl((25 - t) / 40)),
       sunx: r1(sun[0]) + 'px', suny: r1(sun[1]) + 'px', monx: r1(moon[0]) + 'px', mony: r1(moon[1]) + 'px', mono: r2(cl(-t / 30)),
-      flyy: r1(name === 'night' ? moon[1] : 330) + 'px'
+      flyy: r1(name === 'night' ? moon[1] : 330) + 'px',
+      dawn: m < 720 ? 1 : 0, sune: r2(fd == null ? 0 : Math.sin(Math.PI * fd)), ghost: r2(fd == null ? 0 : Math.max(0, 1 - Math.abs(sun[0] - 430) / 130))
     };
-    return { name: name, t: t, m: m, rise: rise, set: set, vars: vars };
+    return { name: name, t: t, m: m, rise: rise, set: set, vars: vars, sun: sun, moon: moon };
   }
   // the moon's lit part from its real phase (age since a known new moon)
   function moonD(d) {
@@ -95,12 +99,20 @@
   function snap() {
     var d = clock(), sk = sky(d), mo = d.getMonth() + 1, day = d.getDate(), h = d.getHours(), y = d.getFullYear();
     var sp = season(mo, day), sea = sp[0], phase = sp[1], event = eventOf(mo, day), wx = '';
+    // the skin picker (testing only) overrides the date's skin, as in the design
+    var mode = skinMode.split(':')[0], forceWx = skinMode.split(':')[1] || '';
+    if (mode === 'none') { sea = ''; event = ''; phase = 1; }
+    else if (mode !== 'auto') {
+      var S = { autumn: 2, winter: 1, spring: 2, summer: 2 }, E = { halloween: 'autumn', christmas: 'winter', newyear: 'winter', valentine: 'winter', perseids: 'summer' };
+      if (S[mode]) { sea = mode; phase = S[mode]; event = ''; if (mode === 'winter' && !forceWx) forceWx = 'snow'; } else { event = mode; sea = E[mode]; phase = event === 'halloween' || event === 'perseids' ? 2 : 1; }
+    }
     if (sea === 'winter' && event !== 'christmas') {
       var r = (Math.sin(y * 374.1 + mo * 31.7 + day * 7.13) * 43758.5453) % 1, v = r < 0 ? r + 1 : r;   // the same weather all day
       wx = v < .45 ? 'snow' : v < .75 ? 'rain' : 'fog';
     }
     if (sea === 'autumn' && h < 10) wx = 'mist';
     if (event === 'newyear') wx = 'snow';   // a white New Year's Eve: no fog or rain on the fireworks
+    if (forceWx) wx = forceWx;
     var dayTag = '';
     if (event === 'christmas' && ((day === 24 && h >= 23) || (day === 25 && h < 1))) dayTag = 'eve';
     else if (event === 'christmas' && day === 25 && sk.name === 'day') dayTag = 'xmorning';
@@ -140,6 +152,13 @@
       for (var i = 0; i < hooks.lit.length; i++) hooks.lit[i].style.setProperty('--' + n, v[n]);
     }
   }
+  // the skin picker's label and icon: the chosen skin, or the date's
+  function skinLabel(k) {
+    var mode = skinMode.split(':')[0], today = k.event ? SKIN_NAMES[k.event] : k.season ? SKIN_NAMES[k.season] : 'none';
+    var label = 'Seasonal skin: ' + (mode === 'auto' ? 'automatic (' + today + ' today)' : SKIN_NAMES[mode] + (k.wx === 'snow' ? ', snow' : k.wx === 'rain' ? ', rain' : k.wx === 'fog' ? ', fog' : ''));
+    skinBtn.title = label; skinBtn.querySelector('select').setAttribute('aria-label', label);
+    [].forEach.call(skinBtn.querySelectorAll('svg[data-sk]'), function (g) { g.style.display = g.getAttribute('data-sk') === mode ? '' : 'none'; });
+  }
   function render() {
     var k = snap(), name = k.sk.name, dark = name !== 'day';
     html.setAttribute('data-theme', dark ? 'dark' : 'light');
@@ -147,6 +166,7 @@
     btn.setAttribute('aria-label', label);
     btn.title = label;
     if (skyEl) skyEl.setAttribute('aria-label', skyLabel(k, name));
+    if (skinBtn && !skinBtn.hidden) skinLabel(k);
     var el = pt();
     if (!el) return;
     light(k.sk.vars);
@@ -156,7 +176,7 @@
       sky: name, fount: k.h >= 10 && k.h < 23 ? 'on' : 'off', gust: st.gust,
       sparkle: name === 'night' && (k.mi < 5 || st.poke) ? 1 : 0,
       season: k.season, phase: k.phase, wx: k.wx, event: k.event, moment: st.moment, day: k.dayTag, ny: k.ny, year: k.year,
-      fw: st.fw, shape: st.shape, slot: st.slot, corner: st.corner
+      fw: st.fw, shape: st.shape, slot: st.slot, corner: st.corner, gl: st.gl
     };
     for (var n in a) if (el.getAttribute('data-' + n) !== String(a[n])) el.setAttribute('data-' + n, a[n]);
     var md = moonD(k.d);
@@ -206,6 +226,31 @@
     var okR = !req || req === k.wx || (req[0] === 'p' && req.slice(1).indexOf(String(k.phase)) >= 0);
     return okT && okR;
   }
+  // the skin picker: only where the page isn't served over https (localhost, file://); production follows the date
+  if (skinBtn && location.protocol !== 'https:') {
+    skinBtn.hidden = false; skinLabel(snap());
+    var skinSel = skinBtn.querySelector('select');
+    skinSel.addEventListener('change', function () {
+      var v = skinSel.value; skinSel.selectedIndex = 0;
+      if (!v) return;
+      // the light stays as it is (day stays day, night stays night); New Year's Eve moves to 31 December, and at night
+      // jumps to 23:59:47 so the countdown and the finale play straight away
+      var now = new Date(), night = sky(clock()).name === 'night';
+      var t = v !== 'newyear' ? sameLight(now) : night ? new Date(now.getFullYear(), 11, 31, 23, 59, 47) : sameLight(new Date(now.getFullYear(), 11, 31));
+      vo = t.getTime() - now.getTime();
+      skinMode = v; clearTimeout(momentT); lastMoment = ''; first = true;
+      set({ moment: '' }); scheduleMoment(900);
+    });
+  }
+  // on `day`, the time closest to the clock's time of day that has the same light (day / dusk / night) as now
+  function sameLight(day) {
+    var cur = clock(), want = sky(cur).name, base = cur.getHours() * 60 + cur.getMinutes(), t;
+    for (var k = 0; k <= 720; k += 5) for (var sg = 1; sg >= -1; sg -= 2) {
+      t = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, ((base + sg * k) % 1440 + 1440) % 1440, cur.getSeconds());
+      if (sky(t).name === want) return t;
+    }
+    return new Date(day.getFullYear(), day.getMonth(), day.getDate(), cur.getHours(), cur.getMinutes(), cur.getSeconds());
+  }
   function playMoment() {
     var el = pt();
     // nothing to see while paused, and the static level would freeze a scene mid-flight
@@ -254,6 +299,7 @@
       next.corner = (y < r.height / 2 ? 't' : 'b') + (x < r.width / 2 ? 'l' : 'r'); next.cx = Math.round(x) + 'px'; next.cy = Math.round(y) + 'px';
       if (name === 'day') next.gust = 1; else next.poke = true;
       set(next);
+      if (gl) gl.poke({ day: name === 'day', event: k.event, season: k.season });
       if (k.event === 'christmas') callSanta();
       clearTimeout(fwT); fwT = setTimeout(function () { set({ fw: 0 }); }, 8500);
       if (name === 'day') { clearTimeout(gustT); gustT = setTimeout(function () { set({ gust: 0 }); }, 3500); }
@@ -262,7 +308,7 @@
     // the painting is ~1.2 MB of SVG: fetch it only once the page itself has loaded
     var loadSky = function () {
       var s = document.createElement('script');
-      s.src = 'sky.js?v=4'; // ?v= busts browser caches; bump with home.css / home.js
+      s.src = 'sky.js?v=5'; // ?v= busts browser caches; bump with home.css / home.js
       s.onload = mountSky;
       document.head.appendChild(s);
     };
@@ -282,7 +328,9 @@
       lit: el.querySelectorAll((window.SKY_LIT || []).map(function (c) { return '.' + CSS.escape(c); }).join(',') || 'x-none'),
       toggles: [].slice.call(el.querySelectorAll((window.SKY_TOGGLES || []).map(function (c) { return '.' + CSS.escape(c); }).join(',') || 'x-none'))
     };
-    quality(el);
+    // the SVG painting's quality is measured once the 3D scene is up (or not coming): its build would skew the probe
+    var measured = false;
+    load3d(el, function () { if (!measured) { measured = true; quality(el); } });
     render();
     scheduleMoment(4000 + Math.random() * 1500);
     requestAnimationFrame(function () { inner.classList.add('is-in'); });
@@ -303,10 +351,13 @@
      Start from device hints, then watch real frames once the painting is on screen and step
      down while the median frame is slower than ~45 fps. Never steps back up within a session. */
   function quality(el) {
-    var LEVELS = ['full', 'lite', 'static'];
+    // with the 3D scene up, the probe measures its frames too: never down to "static" then, which hides the weather
+    // (falling rain, snow, leaves) and the moments; "lite" only stops the small decorative animations
+    var LEVELS = gl ? ['full', 'lite'] : ['full', 'lite', 'static'];
     var nav = navigator, saved = null;
     try { saved = sessionStorage.getItem('dn-sky-q'); } catch (e) {}
     var q = LEVELS.indexOf(saved) >= 0 ? saved
+      : gl ? ((nav.hardwareConcurrency || 8) < 4 || (nav.deviceMemory || 8) < 4 || saved === 'static' ? 'lite' : 'full')
       : nav.connection && nav.connection.saveData ? 'static'
       : (nav.hardwareConcurrency || 8) < 4 || (nav.deviceMemory || 8) < 4 ? 'lite' : 'full';
     var set = function (v) {
@@ -316,7 +367,7 @@
     set(q);
     var probing = false;
     var probe = function () {
-      if (probing || q === 'static' || el.getAttribute('data-paused') === '1') return;
+      if (probing || q === LEVELS[LEVELS.length - 1] || el.getAttribute('data-paused') === '1') return;
       probing = true;
       var frames = [], prev = 0, t0 = 0;
       requestAnimationFrame(function f(now) {
@@ -332,6 +383,63 @@
     // let the injection, first raster, chart draw and gtag.js settle before measuring
     var later = function () { setTimeout(probe, 2500); };
     el.addEventListener('sky:visible', later);
+    if (el.getAttribute('data-paused') === '0') later();
+  }
+
+  /* ---------- the painting in 3D (design/Main.dc.html + design/paris3d.js) ----------
+     The painting is the 3D scene wherever WebGL 2 runs: while it loads, only the sky and the chip show; the old SVG
+     painting (its base layers) appears only if WebGL 2 is missing, the scripts or the scene fail, or the GPU context is lost. After the page's load, three.js (pinned in index.html's import map, from jsDelivr, ~160 KB) and paris3d.js (~110 KB) load; the scene builds in
+     small steps between frames and compiles only the shaders today's frame draws, without blocking (the rest compile the
+     first time they show), while a chip shows the progress; then the canvas fades in over the SVG. */
+  var GL_V = '2'; // ?v= for paris3d.js: bump when it changes (three.js is pinned by version in the import map)
+  // import('three') through Function: a browser without dynamic import rejects here instead of failing to parse home.js
+  function importThree() { try { return new Function('return import("three")')(); } catch (e) { return Promise.reject(e); } }
+  function can3d() {
+    try { if (sessionStorage.getItem('dn-sky-3d') === 'no') return false; } catch (e) {}
+    // no throwaway context to test (~0.7 s on an Intel UHD): mounting fails cleanly without WebGL 2
+    return !!window.WebGL2RenderingContext;
+  }
+  function script(src) {
+    return new Promise(function (ok, ko) { var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
+  }
+  // what the scene reads every frame: the sky clock (sun and moon where the painting puts them) and today's skin
+  function state3d() {
+    var k = snap(), d = k.d, sk = k.sk, age = ((d.getTime() - Date.UTC(2000, 0, 6, 18, 14)) / 864e5) % 29.530588853;
+    if (age < 0) age += 29.530588853;
+    return { t: sk.t, m: sk.m, sunx: sk.sun[0], suny: sk.sun[1], monx: sk.moon[0], mony: sk.moon[1], season: k.season, phase: k.phase, wx: k.wx, event: k.event, ny: k.ny,
+      fount: k.h >= 10 && k.h < 23, moment: st.moment || '', moon: (1 - Math.cos(2 * Math.PI * age / 29.530588853)) / 2, sparkle: sk.name === 'night' && (k.mi < 5 || st.poke), fw: st.fw };
+  }
+  function load3d(el, done) {
+    if (gl || !can3d()) return done();
+    var cv = el.querySelector('.pt3d'), bar = document.createElement('div');
+    if (!cv) return done();
+    bar.className = 'gl-load'; bar.setAttribute('role', 'status');
+    bar.innerHTML = '<span class="gl-load-t">Painting in 3D</span><span class="gl-load-b"><i></i></span>';
+    skyEl.appendChild(bar);
+    var progress = function (f) { bar.style.setProperty('--p', Math.round(f * 100) + '%'); };
+    // 3D mode from the start: the SVG base layers stay hidden; the canvas lays out invisible (so the scene can size itself)
+    el.setAttribute('data-gl-warm', ''); set({ gl: 1 });
+    var no = function () {
+      try { sessionStorage.setItem('dn-sky-3d', 'no'); } catch (e) {}
+      if (gl) { gl.dispose(); gl = null; }
+      el.removeAttribute('data-gl-warm'); set({ gl: 0 }); bar.remove(); done();
+    };
+    progress(0.04);
+    importThree()
+      .then(function (T) { window.THREE = T; progress(0.25); return script('paris3d.js?v=' + GL_V); })
+      .then(function () {
+        progress(0.3);
+        return window.Paris3D.mountAsync(cv, { layout: window.PARIS3D_LAYOUT, tokens: el, state: state3d, onProgress: function (f) { progress(0.3 + f * 0.65); } });
+      })
+      .then(function (h) {
+        if (!h) return no();
+        gl = h;
+        cv.addEventListener('webglcontextlost', no);
+        progress(1);
+        el.removeAttribute('data-gl-warm');
+        bar.classList.add('is-done'); setTimeout(function () { bar.remove(); }, 700); done();
+      })
+      .catch(no);
   }
 
   // hovered / focused project → its label in the painting

@@ -37,7 +37,18 @@
   <link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/fonts/fonts.css">
 
-  <link rel="stylesheet" href="home.css?v=4">
+  <link rel="stylesheet" href="home.css?v=5">
+
+  <!-- three.js for the 3D painting, imported by home.js once the page has loaded; pinned to the version paris3d.js is written for -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.min.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+    }
+  }
+  </script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 </head>
 <body data-page="home">
 <!-- Orrery mark, drawn once and reused -->
@@ -57,10 +68,27 @@
             <a href="https://x.com/NajihDriss1" aria-label="Follow on X" title="X"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
           </div>
         </div>
+        <div class="head-btns">
+        <!-- the seasonal-skin picker (from the design, for testing skins): home.js shows it only off https (localhost, file://) -->
+        <div class="theme-btn skin-btn" data-skin-picker hidden>
+          <svg data-sk="auto" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path><path d="M12 12.2l1 2.1 2.2.3-1.6 1.5.4 2.2-2-1.1-2 1.1.4-2.2-1.6-1.5 2.2-.3z" fill="currentColor" stroke="none"></path></svg>
+          <svg data-sk="autumn" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8.5 5.2-14 15-15-1 9.8-6.5 15-15 15z"></path><path d="M5 19l8.5-8.5"></path></svg>
+          <svg data-sk="halloween" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5c-1.2-.9-2.7-1.3-4.3-1.1C4.7 6.8 3 9.6 3 13.2S5 20 8.2 20.3c1.4.1 2.7-.3 3.8-1 1.1.7 2.4 1.1 3.8 1 3.2-.3 5.2-3.5 5.2-7.1s-1.7-6.4-4.7-6.8c-1.6-.2-3.1.2-4.3 1.1z"></path><path d="M12 7.5V4.2c.6-.9 1.6-1.3 2.6-1.2"></path><path d="M8.6 12.4l1.4-1.7 1 1.7M13 12.4l1-1.7 1.4 1.7M8.4 15.6c2.1 1.3 5.1 1.3 7.2 0"></path></svg>
+          <svg data-sk="winter" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.5 4.6L12 6.2l2.5-1.6M9.5 19.4L12 17.8l2.5 1.6"></path></svg>
+          <svg data-sk="christmas" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8l3.6 5.2h-2.2l3.8 5.4h-2.4l4 5.6H5.2l4-5.6H6.8l3.8-5.4H8.4z"></path><path d="M12 19v2.4"></path></svg>
+          <svg data-sk="valentine" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"></path></svg>
+          <svg data-sk="newyear" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3.2M12 17.8V21M3 12h3.2M17.8 12H21M5.6 5.6l2.3 2.3M16.1 16.1l2.3 2.3M5.6 18.4l2.3-2.3M16.1 7.9l2.3-2.3"></path><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"></circle></svg>
+          <svg data-sk="spring" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="6.8" r="2.9"></circle><circle cx="16.9" cy="10.4" r="2.9"></circle><circle cx="15" cy="16.1" r="2.9"></circle><circle cx="9" cy="16.1" r="2.9"></circle><circle cx="7.1" cy="10.4" r="2.9"></circle><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"></circle></svg>
+          <svg data-sk="summer" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 11.5a8.5 8.5 0 0 1 17 0z"></path><path d="M12 11.5v7a2 2 0 0 1-4 0"></path></svg>
+          <svg data-sk="perseids" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 3.5l1.3 2.7 3 .4-2.2 2.1.5 3-2.6-1.4-2.6 1.4.5-3-2.2-2.1 3-.4z"></path><path d="M4 20l6.5-6.5M3.5 15l4-4M9 20.5l3-3"></path></svg>
+          <svg data-sk="none" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><path d="M6.4 6.4l11.2 11.2"></path></svg>
+          <select class="skin-sel" aria-label="Seasonal skin"><option value="" disabled selected>Seasonal skin…</option><option value="auto">Automatic (by date)</option><optgroup label="Seasons"><option value="autumn">Autumn</option><option value="winter">Winter, snow</option><option value="winter:rain">Winter, rain</option><option value="winter:fog">Winter, fog</option><option value="spring">Spring</option><option value="summer">Summer</option></optgroup><optgroup label="Events"><option value="halloween">Halloween</option><option value="christmas">Christmas</option><option value="newyear">New Year’s Eve (plays the countdown)</option><option value="valentine">Valentine’s Day</option><option value="perseids">The Perseids</option></optgroup><option value="none">None (base painting)</option></select>
+        </div>
         <button class="theme-btn" type="button" data-theme-toggle aria-label="Fast-forward to sunrise" title="Fast-forward to sunrise">
           <svg class="icon-sun" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
           <svg class="icon-moon" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg>
         </button>
+        </div>
       </div>
       <div class="tagline">
         <span class="tl-full">freelance</span>
@@ -155,6 +183,6 @@
   <script src="analytics.js" defer></script>
   <script src="blog-data.js" defer></script>
   <script src="trajectory-data.js" defer></script>
-  <script src="home.js?v=4" defer></script>
+  <script src="home.js?v=5" defer></script>
 </body>
 </html>

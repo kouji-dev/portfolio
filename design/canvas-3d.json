@@ -1,0 +1,33 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-26T19:26:43Z"
+  },
+  "title": "Driss Najih — Portfolio 3D",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Portfolio 3D"
+    }
+  ],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1900,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Portfolio — 3D painting"
+    }
+  },
+  "order": [
+    "Main.dc.html"
+  ],
+  "notes": {},
+  "designSystems": []
+}
