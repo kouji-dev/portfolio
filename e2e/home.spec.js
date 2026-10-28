@@ -244,8 +244,8 @@ test.describe('home', () => {
     await page.goto('/');
     await expect(page.locator('.sky .pt')).toHaveCount(1);
     await expect(page.locator('.sky-inner')).toHaveClass(/is-in/);
-    // sky.js is requested only once the page has loaded
-    const t = await page.evaluate(() => [performance.getEntriesByType('navigation')[0].loadEventStart, performance.getEntriesByType('resource').find((r) => /\/sky\.js/.test(r.name)).startTime]);
+    // the painting (sky.js, or sky-svg.js where the 3D can't run) is requested only once the page has loaded
+    const t = await page.evaluate(() => [performance.getEntriesByType('navigation')[0].loadEventStart, performance.getEntriesByType('resource').find((r) => /\/sky(-svg)?\.js/.test(r.name)).startTime]);
     expect(t[1]).toBeGreaterThanOrEqual(t[0]);
     // gtag.js is not in the markup; it is requested after load
     expect(await page.locator('script[src*="googletagmanager"]').evaluateAll((ss) => ss.every((s) => !s.closest('head') || s.async))).toBe(true);

@@ -183,6 +183,8 @@
     hooks.moon.forEach(function (p) { if (p.getAttribute('d') !== md) p.setAttribute('d', md); });
     hooks.count.forEach(function (t) { t.textContent = k.count; });
     hooks.year.forEach(function (t) { t.textContent = k.year; });
+    var hv = { 'data-h-moond': md, 'data-h-count': k.count, 'data-h-year': k.year };
+    hooks.holes.forEach(function (e) { for (var a in hv) if (e.hasAttribute('data-h-' + a) && e.getAttribute(a) !== String(hv[a])) e.setAttribute(a, hv[a]); });
     // stop the animations of every hidden skin / moment / firework group (Chrome keeps ticking them under display:none)
     hooks.toggles.forEach(function (g) {
       var off = getComputedStyle(g).display === 'none';
@@ -306,44 +308,60 @@
       else { clearTimeout(pokeT); pokeT = setTimeout(function () { set({ poke: false }); }, 12000); }
     });
     // the painting is ~1.2 MB of SVG: fetch it only once the page itself has loaded
+    // the 3D painting's markup (sky.js), or straight away the SVG painting where the 3D can't run
     var loadSky = function () {
-      var s = document.createElement('script');
-      s.src = 'sky.js?v=5'; // ?v= busts browser caches; bump with home.css / home.js
-      s.onload = mountSky;
-      document.head.appendChild(s);
+      var three = can3d();
+      (three ? script('sky.js?v=' + SKY_V) : loadSvgPainting()).then(function () { mountSky(three); });
     };
     if (document.readyState === 'complete') loadSky();
     else window.addEventListener('load', loadSky);
   }
 
 
-  function mountSky() {
+  var SKY_V = '6'; // ?v= for sky.js, sky-svg.js and home-svg.css: bump with home.css / home.js
+  // the SVG painting (the design before it moved into the 3D scene): its markup and CSS load only when the 3D can't run
+  function loadSvgPainting() {
+    var css = new Promise(function (ok) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'home-svg.css?v=' + SKY_V; l.onload = l.onerror = ok; document.head.appendChild(l); });
+    return Promise.all([css, script('sky-svg.js?v=' + SKY_V)]);
+  }
+  // put the painting's markup (window.SKY_SVG) in the panel and find the elements the clock drives
+  function paintSky() {
+    skyEl.querySelector('[data-sky-inner]').innerHTML = window.SKY_SVG;
+    bindHooks(pt());
+  }
+  function mountSky(three) {
     var inner = skyEl.querySelector('[data-sky-inner]');
-    inner.innerHTML = window.SKY_SVG;
+    paintSky();
     var el = pt();
+    // the painting's quality is measured once the 3D scene is up (or not coming): its build would skew the probe
+    var measured = false;
+    var done = function () { if (!measured) { measured = true; quality(pt()); } };
+    if (three) load3d(el, done); else done();
+    render();
+    scheduleMoment(4000 + Math.random() * 1500);
+    requestAnimationFrame(function () { inner.classList.add('is-in'); });
+    // pause the painting when it is off screen or the tab is hidden (the panel is observed: the painting inside may be swapped)
+    var off = false;
+    var update = function () {
+      var p = pt(); if (!p) return;
+      p.setAttribute('data-paused', off || document.hidden ? '1' : '0');
+      if (!off && !document.hidden) p.dispatchEvent(new Event('sky:visible'));
+    };
+    document.addEventListener('visibilitychange', update);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { off = !es[0].isIntersecting; update(); }).observe(inner);
+    } else update();
+  }
+  function bindHooks(el) {
     hooks = {
       moon: [].slice.call(el.querySelectorAll('[data-h-d="moonD"]')),
       count: [].slice.call(el.querySelectorAll('[data-h="count"]')),
       year: [].slice.call(el.querySelectorAll('[data-h="year"]')),
+      // the 3D painting's mirror layers carry the moon path, the countdown and the year as attributes the scene reads
+      holes: [].slice.call(el.querySelectorAll('[data-h-data-h-moond],[data-h-data-h-count],[data-h-data-h-year]')),
       lit: el.querySelectorAll((window.SKY_LIT || []).map(function (c) { return '.' + CSS.escape(c); }).join(',') || 'x-none'),
       toggles: [].slice.call(el.querySelectorAll((window.SKY_TOGGLES || []).map(function (c) { return '.' + CSS.escape(c); }).join(',') || 'x-none'))
     };
-    // the SVG painting's quality is measured once the 3D scene is up (or not coming): its build would skew the probe
-    var measured = false;
-    load3d(el, function () { if (!measured) { measured = true; quality(el); } });
-    render();
-    scheduleMoment(4000 + Math.random() * 1500);
-    requestAnimationFrame(function () { inner.classList.add('is-in'); });
-    // pause the painting when it is off screen or the tab is hidden
-    var off = false;
-    var update = function () {
-      el.setAttribute('data-paused', off || document.hidden ? '1' : '0');
-      if (!off && !document.hidden) el.dispatchEvent(new Event('sky:visible'));
-    };
-    document.addEventListener('visibilitychange', update);
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) { off = !es[0].isIntersecting; update(); }).observe(el);
-    } else update();
   }
 
   /* ---------- painting quality: full → lite → static ----------
@@ -391,7 +409,7 @@
      painting (its base layers) appears only if WebGL 2 is missing, the scripts or the scene fail, or the GPU context is lost. After the page's load, three.js (pinned in index.html's import map, from jsDelivr, ~160 KB) and paris3d.js (~110 KB) load; the scene builds in
      small steps between frames and compiles only the shaders today's frame draws, without blocking (the rest compile the
      first time they show), while a chip shows the progress; then the canvas fades in over the SVG. */
-  var GL_V = '2'; // ?v= for paris3d.js: bump when it changes (three.js is pinned by version in the import map)
+  var GL_V = '3'; // ?v= for paris3d.js: bump when it changes (three.js is pinned by version in the import map)
   // import('three') through Function: a browser without dynamic import rejects here instead of failing to parse home.js
   function importThree() { try { return new Function('return import("three")')(); } catch (e) { return Promise.reject(e); } }
   function can3d() {
@@ -419,10 +437,12 @@
     var progress = function (f) { bar.style.setProperty('--p', Math.round(f * 100) + '%'); };
     // 3D mode from the start: the SVG base layers stay hidden; the canvas lays out invisible (so the scene can size itself)
     el.setAttribute('data-gl-warm', ''); set({ gl: 1 });
+    // the 3D can't run here (scripts, scene or GPU context failed): the SVG painting replaces it, for the rest of the session
     var no = function () {
       try { sessionStorage.setItem('dn-sky-3d', 'no'); } catch (e) {}
       if (gl) { gl.dispose(); gl = null; }
-      el.removeAttribute('data-gl-warm'); set({ gl: 0 }); bar.remove(); done();
+      bar.remove();
+      loadSvgPainting().then(function () { st.gl = 0; paintSky(); render(); done(); });
     };
     progress(0.04);
     importThree()

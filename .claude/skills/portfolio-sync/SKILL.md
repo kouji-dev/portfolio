@@ -92,20 +92,66 @@ follows the date. Tests pin the date with Playwright's clock (`page.clock.setFix
 - Changed `home.css`, `home.js` or `sky.js`? Bump the `?v=` on all three together
   (`index.html` for the CSS and JS, `home.js` for `sky.js`) so phones fetch the new files.
 
-### The 3D scene (paris3d.js)
+### The 3D scene (paris3d.js): integration checklist
 
-- Start-up is shader compiling, done by the GPU process one program at a time (~150 ms each on an Intel UHD), and any
-  synchronous program query waits for all of them. Keep the program count down: no clipping planes (reflections clip
-  with an oblique near plane), no new material variants without need. The fork's lazy gate compiles only what the frame
-  draws; an object that is switched off by a uniform must be transparent, depthWrite off, or get a `userData.off()`.
-- Merging all paint patterns into one shader was measured: start-up 7 s → 28 s (the D3D compiler flattens branches).
-- Frame on the Intel UHD: MSAA on the ink target ~55 ms, the ink quad ~17 ms, CPU ~35 ms (draw calls); triangles are
-  cheap. The fork batches meshes sharing geometry + material into instances (`sync()`), sway materials excepted.
-- Check every scene change with the pixel-diff harness against the previous fork: two versions of paris3d.js served via
-  `page.route`, its `Math.random` rewritten to a seeded generator, moment forced to '', `opts.manual` frames, then
-  `handle.whenReady()`; identical runs give 0 differing pixels. Remaining diffs vs the design: its NaN glitch dots.
-- Bump `GL_V` in home.js when paris3d.js changes. Production loads three.js from jsDelivr through the import map in
-  index.html, pinned to the version the design uses (0.158.0 today); change that pin only together with the design.
+Every design update of the scene is merged, never copied: `git merge-file` with the fork as "ours", the previous
+`design/paris3d.js` as the base and the new design as "theirs" (strip the module's first two lines,
+`import * as THREE` / `const __P3D_THREE`, before merging; the fork stays a classic script reading `window.THREE`).
+Do the same for the painting CSS section of `home.css`. Then walk this list: each item was measured on the Intel UHD
+laptop, keeps the picture identical (pixel harness) unless noted, and must hold for the new design's code too.
+
+**Start-up**
+1. `mountAsync`: the build yields between steps (`await step(f)`), including any new builder (buildVec, sky, clouds,
+   sleigh…); no single step over ~0.5 s. 33 s freeze → ~1 s.
+2. Lazy shader gate (`gate()`): compile only what the frame draws; a new object switched off by a uniform must be
+   transparent + `depthWrite:false` (uA/uOn ~0), or carry `userData.off()`, or it is compiled and drawn for nothing.
+3. Compiles queued in 30 ms slices, readiness polled on the oldest only, `checkShaderErrors` off; queue the shaders of
+   any new scene the frame renders (e.g. `vec.skyScene`, `vec.frontScene`) with the others before the first frame.
+4. No clipping planes: reflections clip with an oblique near plane (halves the program count).
+5. No throwaway WebGL contexts (`supported()` tests, `getContext` probes): ~0.7 s each.
+6. Tiers never switch shadows off (that recompiles every program): the lowest tier freezes the shadow map.
+7. Never merge shader variants into one uber shader (measured 7 s → 28 s start-up: the D3D compiler flattens branches).
+
+**Frame**
+8. Each tree crown kind draws only its own trees (the design drew every kind for every tree: 2.3M → 275K triangles).
+9. No MSAA: FXAA after the ink pass; the ink pass writes sRGB itself (`sRGBTransferOETF`) since it renders into a
+   target. MSAA cost ~55 ms a frame. Edges differ slightly (accepted).
+10. Reflections render only the rectangle the water samples (`setArea`), so three.js culls the rest.
+11. Batching: identical geometry+material → InstancedMesh; one paint/Lambert/Basic material with different shapes →
+    merged geometry + matrix texture (`batchVS`, depth material too). Never sway/vsnip or transparent materials.
+12. Static meshes the code never touches again (e.g. chimney shadows) are merged at build time.
+13. One matrix update per frame (`scene.matrixWorldAutoUpdate = false`, `sync()` updates once).
+14. No layout or style reads per frame: sizes from ResizeObserver (canvas, glass pane, rounded); colour tokens re-read
+    only when `.pt`'s data-sky/event/season/phase/wx change (MutationObserver), never on timers.
+15. Dynamic resolution: only on dpr > 1, only when the GPU is the limit (our JS < 60 % of the frame), never under dpr 1.
+16. Vector layers (the design's former SVG, `buildVec`): every drawing chunk is a sprite with its own texture (~485 draws
+    a frame on the 2026-10-28 design). The fork copies chunks ≤ 256 px into a 2048² atlas and draws runs of consecutive
+    chunks of one layer as one InstancedMesh, in paint order (`toAtlas`, `rebuildRuns`, `batchSync`); a chunk redrawn
+    3× in 2 s leaves the atlas. 485 → 111 draws. Per frame only layers that move are read (`L.live`); a MutationObserver
+    on `.pt` forces the full pass when the state changes. Together: 34–52 → ~60 fps with the layers on (A/B in-page).
+17. The ink pass: depth taps with `textureLod` and `1/near - d*(1/near - 1/far)`, edge test without divides.
+    Design bugs fixed in the fork (check they're still needed, or still fixed, after each sync):
+    - `buildVec`'s `build()` draws a non-moving group whole, so moving nodes under it never move: promote the static
+      ancestors of every moving node (387 of 1661 on 2026-10-28, the firework rockets among them). Pass-through groups
+      that don't animate themselves keep the last full pass's values instead of a per-frame style read.
+    - `.pt-fl` sets `inset:0`: the right Halloween web needs `left:auto` or it stacks on the left one (home.css and
+      home-svg.css). The glass pane's cobweb hub sits inside the panel's rounded corner (`cornerR`).
+
+**Page**
+18. three.js from jsDelivr through the import map, pinned to the design's version, `three.module.min.js`;
+    `import('three')` wrapped in `new Function` so old browsers fall back instead of failing to parse home.js.
+19. Loader centred in the panel; nothing of the painting shows until the scene is ready; then it fades in at once.
+20. Fallback: the frozen SVG painting (`sky-svg.js` + `home-svg.css`) only when the 3D can't run or fails.
+21. Skin picker hidden on https; switching skins keeps the time of day.
+22. SVG quality probe runs after the 3D is up and stops at "lite" (static would hide the weather).
+
+**Measure, every sync**
+- Pixel harness (two paris3d.js versions via `page.route`, seeded random, moment '', manual frames, `whenReady()`,
+  CSS animations frozen): 12 moments, previous fork vs merged; only the intended changes may differ.
+- A/B the real page against what is live: `git archive HEAD` served on port 4174 vs the working tree on 4173,
+  alternating runs (the laptop drifts with heat); fps, frame p50/p90, long tasks.
+- Draw calls per render call in one frame, and a CPU profile of the frame loop, before deciding what to optimise.
+- Bump `GL_V` in home.js when paris3d.js changes; change the three.js pin only together with the design.
 
 ## 5. Verify
 
