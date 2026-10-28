@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "serve -l 4173 .",
     "e2e": "playwright test",
-    "sky": "node scripts/build-sky.mjs"
+    "sky": "node scripts/build-sky.mjs",
+    "scene": "node scripts/build-scene.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.46.0",

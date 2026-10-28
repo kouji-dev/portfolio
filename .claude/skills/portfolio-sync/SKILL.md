@@ -11,12 +11,20 @@ hand-ported, build-free vanilla site. This skill moves one into the other.
 
 - Canvas (read/list with the Artifact tool): `https://claude.ai/artifact/2YNdeeZcPXtt4LFeiQkWA4`
   ("Driss Najih — Portfolio 3D"; the older SVG-only canvas `VMvVz9yXntjDfKbvotS985` is retired)
-- Files that matter: `project/Main.dc.html` (the page) and `project/canvas.json` (layout), plus two assets
-  the page loads by blob id (read with `path: <32-hex id>`): Three.js r158 → `design/three.min.js`, and the
-  layout + scene → `design/paris3d.js`. Rewrite the blob `src`s in `design/Main.dc.html` to those file names.
+- Files that matter: `project/Main.dc.html` (the page) and `project/canvas.json` (layout), plus the scene the page
+  loads as an ES module by blob id (read with `path: <32-hex id>`): layout + scene → `design/paris3d.js`. Three.js comes
+  from the import map in the page. Rewrite the blob `src` in `design/Main.dc.html` to `paris3d.js` (CV links → assets/).
   Keep the repo's `design/support.js`; never write back to the canvas.
-- `paris3d.js` at the repo root is a **production fork** of `design/paris3d.js` (its header lists every change).
-  Port scene changes by diffing the two `design/paris3d.js` versions and re-applying the hunks to the fork.
+- Production's scene is a **fork** of `design/paris3d.js`, split into ES modules under `paris3d/` (one file per
+  object, grouped by folder; `paris3d/index.js` holds the header listing every production change):
+  `core/` (view mapping, util, palette, textures, pb geometry builder, paint material + patterns, glows),
+  `city/` (scene, rows, bridge, tower), `nature/` (trees, bushes, garden, weather),
+  `water/` (water materials, reflection, fountain, river, cruiser), `traffic/`, `events/` (events, sleigh),
+  `sky/` (vec = the painting's vector layers, skydome, clouds), `effects/` (ink + FXAA, glass, glints),
+  and at the root `mount.js` (start-up, lazy shaders, batching, frame loop), `layout.js`, `state.js`.
+  The modules are the source; the page loads `paris3d.js`, one classic script generated from them by `pnpm run scene`
+  (it also runs from file://, where browsers refuse ES modules). Edit the modules, never paris3d.js; rebuild and bump
+  `GL_V` in home.js after any change.
 
 ## 1. Pull
 
@@ -94,10 +102,13 @@ follows the date. Tests pin the date with Playwright's clock (`page.clock.setFix
 
 ### The 3D scene (paris3d.js): integration checklist
 
-Every design update of the scene is merged, never copied: `git merge-file` with the fork as "ours", the previous
-`design/paris3d.js` as the base and the new design as "theirs" (strip the module's first two lines,
-`import * as THREE` / `const __P3D_THREE`, before merging; the fork stays a classic script reading `window.THREE`).
-Do the same for the painting CSS section of `home.css`. Then walk this list: each item was measured on the Intel UHD
+Every design update of the scene is merged, never copied. The design ships one file, production is modules, so:
+diff the previous `design/paris3d.js` against the new one, find each hunk's top-level function (the section headers
+`// ------ …` and the symbol → module table above), and apply it to that module; a new builder becomes a new module in
+its folder, imported by `mount.js` or its caller. A hunk in the layout (line 1) replaces `paris3d/layout.js`.
+Verify with the two-origin pixel harness (`git archive HEAD` served on 4174 vs the working tree on 4173; its
+`Math.random` rewrite must match every module path, nested folders included, or the runs aren't comparable).
+The painting CSS section of `home.css` is still merged with `git merge-file` (fork as ours, old design as base). Then walk this list: each item was measured on the Intel UHD
 laptop, keeps the picture identical (pixel harness) unless noted, and must hold for the new design's code too.
 
 **Start-up**
@@ -146,12 +157,12 @@ laptop, keeps the picture identical (pixel harness) unless noted, and must hold 
 22. SVG quality probe runs after the 3D is up and stops at "lite" (static would hide the weather).
 
 **Measure, every sync**
-- Pixel harness (two paris3d.js versions via `page.route`, seeded random, moment '', manual frames, `whenReady()`,
+- Pixel harness (two versions: two served origins, the scene's modules rewritten via `page.route`, seeded random, moment '', manual frames, `whenReady()`,
   CSS animations frozen): 12 moments, previous fork vs merged; only the intended changes may differ.
 - A/B the real page against what is live: `git archive HEAD` served on port 4174 vs the working tree on 4173,
   alternating runs (the laptop drifts with heat); fps, frame p50/p90, long tasks.
 - Draw calls per render call in one frame, and a CPU profile of the frame loop, before deciding what to optimise.
-- Bump `GL_V` in home.js when paris3d.js changes; change the three.js pin only together with the design.
+- Bump `GL_V` in home.js when the scene modules change; change the three.js pin only together with the design.
 
 ## 5. Verify
 

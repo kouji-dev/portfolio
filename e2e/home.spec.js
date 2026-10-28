@@ -11,7 +11,7 @@ const at = (page, iso) => page.clock.setFixedTime(new Date(iso));
 test.describe('home', () => {
   // the 3D scene (software WebGL here) is tested on its own below; the SVG painting's tests run without it
   test.beforeEach(async ({ page }, info) => {
-    if (!/3D/.test(info.title)) await page.addInitScript(() => sessionStorage.setItem('dn-sky-3d', 'no'));
+    if (!/3D/.test(info.title)) await page.addInitScript(() => sessionStorage.setItem('dn-svg-painting', '1'));
   });
 
   test('3D painting loads after the page behind a progress chip, then replaces the SVG painting', async ({ page }) => {
