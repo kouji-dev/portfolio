@@ -228,20 +228,32 @@
     var okR = !req || req === k.wx || (req[0] === 'p' && req.slice(1).indexOf(String(k.phase)) >= 0);
     return okT && okR;
   }
+  // a skin chosen by hand (the picker's values: auto, a season, a season:weather, an event, none)
+  function pickSkin(v) {
+    // the light stays as it is (day stays day, night stays night); New Year's Eve moves to 31 December, and at night
+    // jumps to 23:59:47 so the countdown and the finale play straight away
+    var now = new Date(), night = sky(clock()).name === 'night';
+    var t = v !== 'newyear' ? sameLight(now) : night ? new Date(now.getFullYear(), 11, 31, 23, 59, 47) : sameLight(new Date(now.getFullYear(), 11, 31));
+    vo = t.getTime() - now.getTime();
+    skinMode = v; clearTimeout(momentT); lastMoment = ''; first = true;
+    set({ moment: '' }); scheduleMoment(900);
+  }
+  // the same from the console or a script: Paris3D.eventsList() names the skins, Paris3D.setEvent(name) applies one
+  // (paris3d.js adds its own methods to this object when the 3D loads)
+  var SKIN_LIST = [].map.call(document.querySelectorAll('[data-skin-picker] option[value]'), function (o) { return o.value; }).filter(Boolean);
+  window.Paris3D = window.Paris3D || {};
+  window.Paris3D.eventsList = function () { return SKIN_LIST.slice(); };
+  window.Paris3D.setEvent = function (name) {
+    if (SKIN_LIST.indexOf(name) < 0) throw new Error('Paris3D.setEvent: unknown event "' + name + '" (one of: ' + SKIN_LIST.join(', ') + ')');
+    pickSkin(name);
+  };
   // the skin picker: only where the page isn't served over https (localhost, file://); production follows the date
   if (skinBtn && location.protocol !== 'https:') {
     skinBtn.hidden = false; skinLabel(snap());
     var skinSel = skinBtn.querySelector('select');
     skinSel.addEventListener('change', function () {
       var v = skinSel.value; skinSel.selectedIndex = 0;
-      if (!v) return;
-      // the light stays as it is (day stays day, night stays night); New Year's Eve moves to 31 December, and at night
-      // jumps to 23:59:47 so the countdown and the finale play straight away
-      var now = new Date(), night = sky(clock()).name === 'night';
-      var t = v !== 'newyear' ? sameLight(now) : night ? new Date(now.getFullYear(), 11, 31, 23, 59, 47) : sameLight(new Date(now.getFullYear(), 11, 31));
-      vo = t.getTime() - now.getTime();
-      skinMode = v; clearTimeout(momentT); lastMoment = ''; first = true;
-      set({ moment: '' }); scheduleMoment(900);
+      if (v) pickSkin(v);
     });
   }
   // on `day`, the time closest to the clock's time of day that has the same light (day / dusk / night) as now
@@ -409,7 +421,7 @@
      painting (its base layers) appears only if WebGL 2 is missing, the scripts or the scene fail, or the GPU context is lost. After the page's load, three.js (pinned in index.html's import map, from jsDelivr) and paris3d.js (built from the modules in paris3d/) load; the scene builds in
      small steps between frames and compiles only the shaders today's frame draws, without blocking (the rest compile the
      first time they show), while the loading overlay shows the progress; it lifts once the scene has drawn. */
-  var GL_V = '6'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
+  var GL_V = '7'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
   // three.js through the import map, imported via Function: a browser without dynamic import rejects here instead of
   // failing to parse home.js. The scene itself is paris3d.js, one classic script built from the modules in paris3d/
   // (pnpm run scene): it also runs from file://, where browsers refuse ES modules

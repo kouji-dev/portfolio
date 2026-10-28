@@ -149,9 +149,11 @@ laptop, keeps the picture identical (pixel harness) unless noted, and must hold 
       home-svg.css). The glass pane's cobweb hub sits inside the panel's rounded corner (`cornerR`).
 
 **Page**
-18. three.js from jsDelivr through the import map, pinned to the design's version, `three.module.min.js`;
+18. three.js from jsDelivr through the import map, `three.module.min.js`, pinned to r186.1 (the design still runs r158:
+    the scene renders pixel-identical on both, checked with `scripts/scene-diff.cjs`);
     `import('three')` wrapped in `new Function` so old browsers fall back instead of failing to parse home.js.
-19. Loader centred in the panel; nothing of the painting shows until the scene is ready; then it fades in at once.
+19. The design's loading overlay (`.pt-load`) covers the painting until the scene's `onReady` (frames drawn, every
+    painted layer checked); then it fades out and leaves the DOM.
 20. Fallback: the frozen SVG painting (`sky-svg.js` + `home-svg.css`) only when the 3D can't run or fails.
 21. Skin picker hidden on https; switching skins keeps the time of day.
 22. SVG quality probe runs after the 3D is up and stops at "lite" (static would hide the weather).
@@ -162,7 +164,9 @@ laptop, keeps the picture identical (pixel harness) unless noted, and must hold 
 - A/B the real page against what is live: `git archive HEAD` served on port 4174 vs the working tree on 4173,
   alternating runs (the laptop drifts with heat); fps, frame p50/p90, long tasks.
 - Draw calls per render call in one frame, and a CPU profile of the frame loop, before deciding what to optimise.
-- Bump `GL_V` in home.js when the scene modules change; change the three.js pin only together with the design.
+- Bump `GL_V` in home.js when the scene modules change; check any three.js pin change with `scripts/scene-diff.cjs`.
+- Stay on `WebGLRenderer`: a full port to `WebGPURenderer` + TSL (2026-10-28) measured 2.7× slower per frame on this
+  scene (many objects); the patch is archived in the main checkout's `.claude/archive/`.
 
 ## 5. Verify
 

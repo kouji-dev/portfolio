@@ -5,7 +5,7 @@ export function Reflection(renderer, dv) {
   dv = dv || 2; var clip = [new T.Plane(new T.Vector3(0, 1, 0), 0)];
   var rt = new T.WebGLRenderTarget(4, 4, { type: T.HalfFloatType }); rt.texture.generateMipmaps = false;
   var vc = new T.PerspectiveCamera(), TM = new T.Matrix4(), n = new T.Vector3(0, 1, 0), rp = new T.Vector3(), cp = new T.Vector3(), rot = new T.Matrix4(), look = new T.Vector3(), view = new T.Vector3(), target = new T.Vector3(), cc = new T.Color();
-  var pl = new T.Plane(), q4 = new T.Vector4(), c4 = new T.Vector4(), area = null, v4 = new T.Vector4();
+  var pl = new T.Plane(), q4 = new T.Vector4(), c4 = new T.Vector4(), area = null, v4 = new T.Vector4(), shadowed = false;
   return {
     tex: rt.texture, mat: TM, rt: rt,
     // prod: the water's corners in the world; only the part of the reflection the water can sample is rendered
@@ -38,7 +38,9 @@ export function Reflection(renderer, dv) {
       c4.set(pl.normal.x, pl.normal.y, pl.normal.z, pl.constant); c4.multiplyScalar(2 / c4.dot(q4));
       e[2] = c4.x; e[6] = c4.y; e[10] = c4.z + 1; e[14] = c4.w; vc.projectionMatrixInverse.copy(vc.projectionMatrix).invert();
       for (var i = 0; i < hide.length; i++) hide[i].visible = false;
-      var au = renderer.shadowMap.autoUpdate; renderer.shadowMap.autoUpdate = false;
+      // the main pass updates the shadow map; the reflection reuses it, except on the very first frame, when it renders before
+      // any shadow map exists (r186 reads shadows through a compare sampler and drops draws against a missing map)
+      var au = renderer.shadowMap.autoUpdate; if (shadowed) renderer.shadowMap.autoUpdate = false; shadowed = true;
       renderer.getClearColor(cc); var ca = renderer.getClearAlpha();
       renderer.setRenderTarget(rt); renderer.setClearColor(0x000000, 0); renderer.clear(); rt.viewport.set(px0, py0, px1 - px0, py1 - py0); renderer.setRenderTarget(rt);
       renderer.render(scene, vc); rt.viewport.set(0, 0, RW, RH); renderer.setRenderTarget(null);

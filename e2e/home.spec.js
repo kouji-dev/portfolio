@@ -190,6 +190,23 @@ test.describe('home', () => {
     await expect(readout).toContainText('commits ·');
   });
 
+  test('Paris3D.eventsList() names the skins and Paris3D.setEvent(name) applies one', async ({ page }) => {
+    const pt = page.locator('.sky .pt');
+    await at(page, '2026-07-01T13:00:00+02:00');
+    await page.goto('/');
+    await expect(pt).toHaveAttribute('data-season', 'summer');
+    const list = await page.evaluate(() => window.Paris3D.eventsList());
+    expect(list).toEqual(expect.arrayContaining(['auto', 'christmas', 'halloween', 'newyear', 'winter:rain', 'none']));
+    expect(list).not.toContain('');
+    await page.evaluate(() => window.Paris3D.setEvent('christmas'));
+    await expect(pt).toHaveAttribute('data-event', 'christmas');
+    await expect(pt).toHaveAttribute('data-season', 'winter');
+    await page.evaluate(() => window.Paris3D.setEvent('auto'));
+    await expect(pt).toHaveAttribute('data-event', '');
+    await expect(pt).toHaveAttribute('data-season', 'summer');
+    expect(await page.evaluate(() => { try { window.Paris3D.setEvent('nope'); return 'no error'; } catch (e) { return e.message; } })).toMatch(/unknown event "nope"/);
+  });
+
   test('hidden skin / moment groups do not animate', async ({ page }) => {
     await at(page, '2026-07-01T13:00:00+02:00');
     await page.goto('/');

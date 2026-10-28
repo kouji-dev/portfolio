@@ -22,4 +22,5 @@
 import './layout.js';
 import { mount, supported } from './mount.js';
 
-window.Paris3D = { mountAsync: mount, supported: supported };
+// home.js may have created the object already (eventsList, setEvent): add to it
+window.Paris3D = Object.assign(window.Paris3D || {}, { mountAsync: mount, supported: supported });
