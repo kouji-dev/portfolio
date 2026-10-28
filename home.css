@@ -27,10 +27,27 @@ a:hover{color:var(--accent);text-decoration-color:#a855f7}
 .sky-inner.is-in{opacity:1}
 .sky:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 /* the 3D painting loading over the SVG one (home.js load3d): a small status chip, gone once the scene fades in */
-.gl-load{position:absolute;left:50%;top:50%;translate:-50% -50%;z-index:3;display:flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;background:var(--chip);color:var(--muted);font:400 11px/1.4 'JetBrains Mono',monospace;box-shadow:0 1px 2px rgba(0,0,0,.12);pointer-events:none;animation:gl-in .4s ease both;transition:opacity .5s ease}
-.gl-load.is-done{opacity:0}
-.gl-load-b{position:relative;width:46px;height:3px;border-radius:2px;background:var(--ul);overflow:hidden}
-.gl-load-b i{position:absolute;inset:0 auto 0 0;width:var(--p,0%);background:var(--accent);transition:width .3s ease}
+/* the loading overlay over the painting while the 3D scene loads (design: .pt-load); lifted by .pt[data-loaded="1"] */
+@property --lp{syntax:"<number>";inherits:true;initial-value:0}
+.pt-load{position:absolute;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:auto;--ink:#1d2742;
+  background:linear-gradient(180deg,#86bbdc 0%,#a4d0e5 52%,#f4e6d2 100%);transition:opacity .9s ease,visibility 0s linear .9s,--lp .8s cubic-bezier(.3,.7,.3,1)}
+.pt[data-sky="dusk"] .pt-load{background:linear-gradient(180deg,#232a66 0%,#8a5a9a 50%,#f6a07a 100%);--ink:#fff1dc}
+.pt[data-sky="night"] .pt-load{background:linear-gradient(180deg,#070a22 0%,#1e2560 58%,#3a3474 100%);--ink:#f4e6d2}
+.pt[data-loaded="1"] .pt-load{opacity:0;visibility:hidden;pointer-events:none}
+.pt-load:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.2px);background-size:3px 3px;mix-blend-mode:overlay}
+.pt-load:after{content:"";position:absolute;left:0;right:0;bottom:0;height:11%;background:var(--ink);opacity:.07;
+  clip-path:polygon(0 60%,6% 60%,6% 38%,14% 38%,14% 52%,22% 52%,22% 30%,27% 30%,27% 46%,36% 46%,36% 56%,64% 56%,64% 42%,72% 42%,72% 28%,78% 28%,78% 48%,86% 48%,86% 36%,94% 36%,94% 54%,100% 54%,100% 100%,0 100%)}
+.pl-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif}
+.pl-tower{width:88px;height:162px;animation:pl-float 3.2s ease-in-out infinite;
+  clip-path:polygon(49% 0,51% 0,52% 9%,54.5% 28%,59% 44%,65% 45.5%,65% 49%,63% 49%,70% 66%,79% 67.5%,79% 71%,76% 71%,90% 96%,100% 98%,100% 100%,69% 100%,63% 88%,57% 83%,50% 81.5%,43% 83%,37% 88%,31% 100%,0 100%,0 98%,10% 96%,24% 71%,21% 71%,21% 67.5%,30% 66%,37% 49%,35% 49%,35% 45.5%,41% 44%,45.5% 28%,48% 9%);
+  background:linear-gradient(to top,var(--ink) 0,var(--ink) calc(var(--lp) * 100%),color-mix(in srgb,var(--ink) 22%,transparent) calc(var(--lp) * 100%),color-mix(in srgb,var(--ink) 22%,transparent) 100%)}
+@keyframes pl-float{50%{transform:translateY(-5px)}}
+.pl-title{font-size:12px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;margin-top:4px}
+.pl-bar{width:132px;height:2px;border-radius:2px;background:color-mix(in srgb,var(--ink) 22%,transparent);overflow:hidden}
+.pl-bar b{display:block;height:100%;background:var(--ink);transform-origin:0 50%;transform:scaleX(var(--lp))}
+.pl-msg{font-size:12px;min-height:1.3em;opacity:.78;animation:pl-blink 1.8s ease-in-out infinite}
+@keyframes pl-blink{50%{opacity:.42}}
+@media (prefers-reduced-motion: reduce){.pl-tower,.pl-msg{animation:none}}
 @keyframes gl-in{from{opacity:0;transform:translateY(4px)}}
 
 /* ---------- header ---------- */
@@ -313,8 +330,8 @@ html[data-ff] .pt,html[data-ff] .pt *{transition:none!important}
 @keyframes iconin{from{transform:rotate(-120deg) scale(.5);opacity:0}}
 @media (prefers-reduced-motion: reduce){.root,.sky-inner{transition:none}.theme-btn svg{animation:none}}
 .pt[data-event="christmas"][data-fw="1"] > .pt3d{animation:pt-jig1 .7s ease-in-out}.pt[data-event="christmas"][data-fw="2"] > .pt3d{animation:pt-jig2 .7s ease-in-out}
-/* while the 3D loads nothing of the painting shows (sky and skin layers included); it lays out invisible, then fades in at once */
-.pt[data-gl-warm]{visibility:hidden;opacity:0}
+/* while the 3D loads only the loading overlay shows (sky and skin layers hidden under it); the rest lays out invisible */
+.pt[data-gl-warm] > :not(.pt-load){visibility:hidden}
 .pt{transition:opacity .6s ease}
 .pt[data-gl-warm] .pt3d{display:block;opacity:0}
 .pt .pt3d{transition:opacity .6s ease}

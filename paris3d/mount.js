@@ -394,6 +394,8 @@ export async function mount(canvas, opts) {
     var now = (n - t0) / 1000; U.uTime.value = now; U.uStep.value = Math.floor(now * 12) / 12;
     resize(); update(dt, now); sync(); gate(); project();
     paintFrame();
+    // ready for the page's loading overlay: a few frames drawn and every painted layer checked and drawn once
+    if (!readySent && ++readyFrames >= 4 && (!vec || vec.scanned())) { readySent = true; if (opts.onReady) setTimeout(opts.onReady, 0); }
     acc += dt; frames++; jsAcc += performance.now() - n;
     if (frames >= 40) {
       var avg = acc / frames, js = jsAcc / frames / 1000; frames = 0; acc = 0; jsAcc = 0;
@@ -418,6 +420,7 @@ export async function mount(canvas, opts) {
   document.addEventListener('visibilitychange', onVis);
   var io = window.IntersectionObserver ? new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; start(); }) : null;
   if (io) io.observe(canvas);
+  var readySent = false, readyFrames = 0;
   // compile the scene's shaders without blocking, then the first frame (the shadow pass compiles there)
   renderer.debug.checkShaderErrors = false;
   resize(); update(0, 0); project();

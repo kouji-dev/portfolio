@@ -318,7 +318,7 @@
   }
 
 
-  var SKY_V = '7'; // ?v= for sky.js, sky-svg.js and home-svg.css: bump with home.css / home.js
+  var SKY_V = '8'; // ?v= for sky.js, sky-svg.js and home-svg.css: bump with home.css / home.js
   // the SVG painting (the design before it moved into the 3D scene): its markup and CSS load only when the 3D can't run
   function loadSvgPainting() {
     var css = new Promise(function (ok) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'home-svg.css?v=' + SKY_V; l.onload = l.onerror = ok; document.head.appendChild(l); });
@@ -408,8 +408,8 @@
      The painting is the 3D scene wherever WebGL 2 runs: while it loads, only the sky and the chip show; the old SVG
      painting (its base layers) appears only if WebGL 2 is missing, the scripts or the scene fail, or the GPU context is lost. After the page's load, three.js (pinned in index.html's import map, from jsDelivr) and paris3d.js (built from the modules in paris3d/) load; the scene builds in
      small steps between frames and compiles only the shaders today's frame draws, without blocking (the rest compile the
-     first time they show), while a chip shows the progress; then the canvas fades in over the SVG. */
-  var GL_V = '5'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
+     first time they show), while the loading overlay shows the progress; it lifts once the scene has drawn. */
+  var GL_V = '6'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
   // three.js through the import map, imported via Function: a browser without dynamic import rejects here instead of
   // failing to parse home.js. The scene itself is paris3d.js, one classic script built from the modules in paris3d/
   // (pnpm run scene): it also runs from file://, where browsers refuse ES modules
@@ -434,12 +434,22 @@
   function load3d(el, done) {
     if (gl) return done();
     if (!can3d()) { if (window.console) console.warn('[painting] 3D off, SVG painting instead:', window.WebGL2RenderingContext ? 'forced (dn-svg-painting)' : 'no WebGL 2'); return done(); }
-    var cv = el.querySelector('.pt3d'), bar = document.createElement('div');
+    var cv = el.querySelector('.pt3d');
     if (!cv) return done();
-    bar.className = 'gl-load'; bar.setAttribute('role', 'status');
-    bar.innerHTML = '<span class="gl-load-t">Painting in 3D</span><span class="gl-load-b"><i></i></span>';
-    skyEl.appendChild(bar);
-    var progress = function (f) { bar.style.setProperty('--p', Math.round(f * 100) + '%'); };
+    // the loading overlay (.pt-load, in the painting's markup): the design's stages, a slow creep between them, our real
+    // build progress on top; lifted once the scene has drawn a few frames with every painted layer (onReady)
+    var ov = el.querySelector('.pt-load'), msg = el.querySelector('.pl-msg'), lp = 0.06, cap = 0.5, lifted = false;
+    var load = function (f, m) { lp = Math.max(lp, f); if (ov) ov.style.setProperty('--lp', lp); if (m && msg) msg.textContent = m; };
+    var stop = function () { clearInterval(lt); clearTimeout(lsafe); };
+    var lift = function () {
+      if (lifted) return; lifted = true; stop(); load(1, 'Ready');
+      // prod: the overlay leaves the DOM once faded, so its looping animations stop
+      setTimeout(function () { el.setAttribute('data-loaded', '1'); setTimeout(function () { if (ov) ov.remove(); }, 950); }, 380);
+    };
+    var lt = setInterval(function () { load(Math.round((lp + (cap - lp) * 0.07) * 1000) / 1000); }, 320);
+    var lsafe = setTimeout(lift, 30000);
+    load(lp, 'Preparing the canvas');
+    if (reduced()) lift();
     // 3D mode from the start: the SVG base layers stay hidden; the canvas lays out invisible (so the scene can size itself)
     el.setAttribute('data-gl-warm', ''); set({ gl: 1 });
     // the 3D can't run (scripts, scene or GPU context failed): the SVG painting replaces it for this page load only, so a
@@ -447,23 +457,22 @@
     var no = function (why) {
       if (window.console) console.warn('[painting] 3D off, SVG painting instead:', why || 'unknown');
       if (gl) { gl.dispose(); gl = null; }
-      bar.remove();
+      stop();
       loadSvgPainting().then(function () { st.gl = 0; paintSky(); render(); done(); });
     };
-    progress(0.04);
     importThree()
       .then(function (T) { window.THREE = T; return script('paris3d.js?v=' + GL_V); })
       .then(function () {
-        progress(0.3);
-        return window.Paris3D.mountAsync(cv, { layout: window.PARIS3D_LAYOUT, tokens: el, state: state3d, onProgress: function (f) { progress(0.3 + f * 0.65); } });
+        cap = 0.62; load(0.55, 'Raising the tower');
+        return window.Paris3D.mountAsync(cv, { layout: window.PARIS3D_LAYOUT, tokens: el, state: state3d, onReady: lift, onProgress: function (f) { load(0.55 + f * 0.25); } });
       })
       .then(function (h) {
         if (!h) return no('the scene did not mount');
         gl = h;
         cv.addEventListener('webglcontextlost', function () { no('WebGL context lost'); });
-        progress(1);
+        cap = 0.96; load(0.8, 'Lighting the city');
         el.removeAttribute('data-gl-warm');
-        bar.classList.add('is-done'); setTimeout(function () { bar.remove(); }, 700); done();
+        done();
       })
       .catch(no);
   }

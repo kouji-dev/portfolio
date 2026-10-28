@@ -246,7 +246,7 @@ export function buildVec(ctx, view) {
     if (!c.cv || c.cv.width !== W || c.cv.height !== H) {
       if (c.tex) c.tex.dispose();
       c.cv = document.createElement('canvas'); c.cv.width = W; c.cv.height = H;
-      c.tex = new T.CanvasTexture(c.cv); c.tex.premultiplyAlpha = true; c.tex.minFilter = T.LinearMipmapLinearFilter; c.tex.magFilter = T.LinearFilter;
+      c.tex = new T.CanvasTexture(c.cv); c.tex.premultiplyAlpha = true; c.tex.generateMipmaps = false; c.tex.minFilter = T.LinearFilter; c.tex.magFilter = T.LinearFilter;
       if (c.mesh) { c.mesh.material.uniforms.map.value = c.tex; }
     }
     var g2 = c.cv.getContext('2d'); g2.setTransform(1, 0, 0, 1, 0, 0); g2.clearRect(0, 0, W, H);
@@ -315,11 +315,28 @@ export function buildVec(ctx, view) {
   }
   function visibleChain(c) { var o = G[c.owner]; while (o && !o.isScene) { if (!o.visible) return false; o = o.parent; } return true; }
   var byOwner = {}; chunks.forEach(function (c) { (byOwner[c.owner] = byOwner[c.owner] || []).push(c); });
+  // redraws go through a queue with a time budget per frame, so a busy moment never stalls the frame loop;
+  // a picture whose content keeps changing (an animation inside it) is redrawn at most a few times a second
+  var queue = [];
   function check(c, force) {
     if (!visibleChain(c)) { if (c.mesh) c.mesh.visible = false; return; }
     var k = ''; for (var j = 0; j < c.items.length; j++) k += '#' + keyOf(c.items[j], c.self);
-    if (k !== c.key || force) { c.key = k; if (c.mesh) c.mesh.visible = true; if (!raster(c) && c.mesh) c.mesh.visible = false; }
-    else if (c.mesh) c.mesh.visible = true;
+    if (k !== c.key || force) {
+      c.churn = c.key && !c.self ? (c.churn || 0) + 1 : 0; c.key = k;
+      if (!c.queued) { c.queued = true; queue.push(c); }
+    } else { c.churn = Math.max(0, (c.churn || 0) - 1); if (c.mesh && c.cv) c.mesh.visible = true; }
+  }
+  function drain(now) {
+    var t0 = performance.now(), budget = queue.length > 60 && !scanI ? 12 : 5, keep = [];
+    while (queue.length) {
+      var c = queue.shift();
+      if (!c.self && c.churn > 2 && c.lastR != null && now - c.lastR < 0.5 && now >= c.lastR) { keep.push(c); continue; }
+      if (performance.now() - t0 > budget) { keep.push(c); continue; }
+      c.queued = false; c.lastR = now;
+      if (!visibleChain(c)) { if (c.mesh) c.mesh.visible = false; continue; }
+      var ok = raster(c); if (c.mesh) c.mesh.visible = ok;
+    }
+    for (var q = 0; q < keep.length; q++) queue.push(keep[q]);
   }
   // prod: the painting's state attributes changed: a full pass on the next frame
   var stateMo = window.MutationObserver ? new MutationObserver(function () { scanAt = -9; }) : null;
@@ -343,6 +360,7 @@ export function buildVec(ctx, view) {
       dashAt = now;
       for (var q = 0; q < liveSelf.length; q++) { var c2 = liveSelf[q]; if (G[c2.owner].visible && visibleChain(c2)) check(c2, false); }
     }
+    drain(now);
   }
   var liveSelf = chunks.filter(function (c) { return c.self && N[c.owner].an && N[c.owner].t !== 'g'; });
 
@@ -355,7 +373,7 @@ export function buildVec(ctx, view) {
   // each redraw re-uploads the whole atlas.
   var AT = 2048, AMAX = 256, APAD = 8, atlasCv = document.createElement('canvas'); atlasCv.width = atlasCv.height = AT;
   var atlasG = atlasCv.getContext('2d'), atlas = new T.CanvasTexture(atlasCv), atlasDirty = false, runsDirty = true, runs = [];
-  atlas.premultiplyAlpha = true; atlas.minFilter = T.LinearMipmapLinearFilter; atlas.magFilter = T.LinearFilter;
+  atlas.premultiplyAlpha = true; atlas.generateMipmaps = false; atlas.minFilter = T.LinearFilter; atlas.magFilter = T.LinearFilter;
   var shelf = [0, 0, 0];
   function toAtlas(c, W, H) {
     if (c.at === null) {   // first raster: a slot, if it is small
@@ -470,7 +488,7 @@ export function buildVec(ctx, view) {
     return { x: (Math.min(p0[0], p1[0]) - view.x0) * s, y: (Math.min(p0[1], p1[1]) - view.y0) * s, w: Math.abs(p1[0] - p0[0]) * s, h: Math.abs(p1[1] - p0[1]) * s, op: G[layerOf[i]].visible ? G[layerOf[i]].userData.op : 0 };
   }
   function center(el) { var i = E.indexOf(el); if (i < 0 || !N[i].b) return null; var b = N[i].b; return [b[0] + b[2] / 2, b[1] + b[3] / 2]; }
-  return { root: root, skyScene: skyScene, frontScene: frontScene, update: function (now) { update(now); batchSync(); }, cutout: cutout, find: find, screenBox: screenBox, center: center, E: E, N: N, chunks: chunks, G: G, kids: kids, byId: byId,
+  return { root: root, skyScene: skyScene, frontScene: frontScene, update: function (now) { update(now); batchSync(); }, scanned: function () { return scanI !== 0 && queue.length === 0; }, cutout: cutout, find: find, screenBox: screenBox, center: center, E: E, N: N, chunks: chunks, G: G, kids: kids, byId: byId,
     visible: visibleNode, opacity: opacityNode, worldM: worldM, order: function (i) { return i; },
     layerM: function (i) { return layerM(G[layerOf[i]].userData.L); }, ownM: function (i) { return svgOwn(i); }, raster2D: function (g2, i, self) { drawNode(g2, i, self); }, paint: paint, num: num,
     dispose: function () { chunks.forEach(function (c) { if (c.tex) c.tex.dispose(); }); } };

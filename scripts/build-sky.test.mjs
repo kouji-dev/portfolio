@@ -6,6 +6,7 @@ import { build, skins } from './build-sky.mjs';
 test('build fills the root holes and turns inner holes into hooks', () => {
   const out = build('x<!--PT--><div class="pt" style="{{ ptStyle }}" data-sky="{{ sky }}" data-event="{{ event }}"><path d="{{ moonD }}"></path><text>Bonne année {{ year }}</text></div><!--/PT-->y');
   assert.equal(out, '<div class="pt" style="" data-sky="night" data-event=""><path d="" data-h-d="moonD"></path><text>Bonne année <tspan data-h="year"></tspan></text></div>');
+  assert.equal(build('<!--PT--><div class="pt"><div style="--lp:{{ loadP }}"></div></div><!--/PT-->'), '<div class="pt"><div style="--lp:0.06"></div></div>');
   assert.throws(() => build('<!--PT--><div {{ nope }}><!--/PT-->'), /unknown painting hole/);
   assert.throws(() => build('no markers'), /markers/);
 });

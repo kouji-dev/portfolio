@@ -14,18 +14,21 @@ test.describe('home', () => {
     if (!/3D/.test(info.title)) await page.addInitScript(() => sessionStorage.setItem('dn-svg-painting', '1'));
   });
 
-  test('3D painting loads after the page behind a progress chip, then replaces the SVG painting', async ({ page }) => {
+  test('3D painting loads after the page behind the loading overlay, then replaces the SVG painting', async ({ page }) => {
     test.setTimeout(180000);
     await page.goto('/');
     const pt = page.locator('.sky .pt');
-    await expect(page.locator('.sky .gl-load[role="status"]')).toBeVisible();
-    // while it loads, nothing of the painting shows (the loader sits in its centre), the old SVG base layers included
-    await expect(page.locator('.sky .pt')).toBeHidden();
+    const ov = page.locator('.sky .pt-load');
+    await expect(ov).toBeVisible();
+    await expect(ov.locator('.pl-title')).toHaveText('Painting Paris');
+    // while it loads, only the overlay shows: the old SVG base layers stay hidden
     await expect(page.locator('.sky .pt-b').first()).toBeHidden();
     await expect(pt).not.toHaveAttribute('data-gl-warm', '', { timeout: 170000 });
     await expect(pt).toHaveAttribute('data-gl', '1');
     await expect(page.locator('.sky .pt3d')).toBeVisible();
-    await expect(page.locator('.sky .gl-load')).toHaveCount(0);
+    // lifted once the scene has drawn every painted layer, then removed
+    await expect(pt).toHaveAttribute('data-loaded', '1', { timeout: 60000 });
+    await expect(ov).toHaveCount(0);
     // the scene's scripts are requested only once the page has loaded
     const t = await page.evaluate(() => [performance.getEntriesByType('navigation')[0].loadEventStart, performance.getEntriesByType('resource').find((r) => /three\.module\.min\.js/.test(r.name)).startTime]);
     expect(t[1]).toBeGreaterThanOrEqual(t[0]);
@@ -43,7 +46,7 @@ test.describe('home', () => {
     await expect(pt).toHaveAttribute('data-q', /full|lite|static/);
     await expect(pt).not.toHaveAttribute('data-gl', '1');
     await expect(page.locator('.sky .pt-b').first()).toBeVisible();
-    await expect(page.locator('.sky .gl-load')).toHaveCount(0);
+    await expect(page.locator('.sky .pt-load')).toHaveCount(0);
     expect(await page.evaluate(() => !!window.THREE)).toBe(false);
   });
 

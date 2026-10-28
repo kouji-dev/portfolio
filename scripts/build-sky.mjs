@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const DEFAULTS = {
   sky: 'night', fount: 'on', sparkle: '0', gust: '0', paused: '0', focus: '', ptStyle: '',
   season: '', phase: '1', wx: '', event: '', moment: '', fw: '0', shape: '', slot: '', corner: 'tl',
-  ny: '', day: '', year: '', gl: '0',
+  ny: '', day: '', year: '', gl: '0', loaded: '0', loadP: '0.06', loadMsg: 'Preparing the canvas',
 };
 
 function between(src, open, close) {
@@ -20,13 +20,16 @@ function between(src, open, close) {
 export function build(designHtml) {
   const p = between(designHtml, '<!--PT-->', '<!--/PT-->');
   const end = p.indexOf('>') + 1;
-  const root = p.slice(0, end).replace(/\{\{ (\w+) \}\}/g, (_, k) => {
+  const fill = (_, k) => {
     if (!(k in DEFAULTS)) throw new Error('unknown painting hole {{ ' + k + ' }}');
     return DEFAULTS[k];
-  });
-  // holes inside the painting become hooks home.js fills: an attribute → data-h-<attr>, text → <tspan data-h>
+  };
+  const root = p.slice(0, end).replace(/\{\{ (\w+) \}\}/g, fill);
+  // holes inside the painting become hooks home.js fills: an attribute → data-h-<attr>, text → <tspan data-h>;
+  // a hole inside a longer attribute value (style="--lp:{{ loadP }}") gets its default, and home.js sets it itself
   const body = p.slice(end)
     .replace(/ ([\w-]+)="\{\{ (\w+) \}\}"/g, ' $1="" data-h-$1="$2"')
+    .replace(/="[^"]*\{\{ \w+ \}\}[^"]*"/g, (m) => m.replace(/\{\{ (\w+) \}\}/g, fill))
     .replace(/\{\{ (\w+) \}\}/g, '<tspan data-h="$1"></tspan>');
   return root + body;
 }
