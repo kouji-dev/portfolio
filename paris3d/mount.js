@@ -243,6 +243,18 @@ export async function mount(canvas, opts) {
       scene.add(bm); mbatches.push({ list: list, data: data, tex: tex, bm: bm });
     });
   })();
+  // prod: the reflections skip what the water can't show: objects under ~3 units (grass tufts, leaves, sun flecks, lamps'
+  // parts, wires, people), a few pixels in the reflection targets and blurred by the ripples; ~40 % of their draws
+  (function () {
+    var inHide = new Set(reflHide);
+    scene.updateMatrixWorld();
+    scene.traverse(function (o) {
+      if (!(o.isMesh || o.isLine || o.isPoints) || o.userData.proxy || inHide.has(o) || !o.geometry || !o.geometry.attributes.position) return;
+      for (var x = o.parent; x; x = x.parent) if (inHide.has(x)) return;
+      if (!o.geometry.boundingSphere) o.geometry.computeBoundingSphere();
+      if (o.geometry.boundingSphere.radius * o.matrixWorld.getMaxScaleOnAxis() < 3) reflHide.push(o);
+    });
+  })();
   // prod: world matrices are updated once a frame here, not again by each of the frame's render calls (reflections, main)
   scene.matrixWorldAutoUpdate = false;
   // prod: a matrix is recomposed only when its object moved. three recomposes every auto-updated object's matrix on each

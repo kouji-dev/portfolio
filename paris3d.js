@@ -2096,7 +2096,7 @@
       dv = dv || 2; var clip = [new T.Plane(new T.Vector3(0, 1, 0), 0)];
       var rt = new T.WebGLRenderTarget(4, 4, { type: T.HalfFloatType }); rt.texture.generateMipmaps = false;
       var vc = new T.PerspectiveCamera(), TM = new T.Matrix4(), n = new T.Vector3(0, 1, 0), rp = new T.Vector3(), cp = new T.Vector3(), rot = new T.Matrix4(), look = new T.Vector3(), view = new T.Vector3(), target = new T.Vector3(), cc = new T.Color();
-      var pl = new T.Plane(), q4 = new T.Vector4(), c4 = new T.Vector4(), area = null, v4 = new T.Vector4(), shadowed = false;
+      var pl = new T.Plane(), q4 = new T.Vector4(), c4 = new T.Vector4(), area = null, v4 = new T.Vector4(), shadowed = false, was = [];
       return {
         tex: rt.texture, mat: TM, rt: rt,
         // prod: the water's corners in the world; only the part of the reflection the water can sample is rendered
@@ -2128,7 +2128,9 @@
           var e = vc.projectionMatrix.elements; q4.set((Math.sign(pl.normal.x) + e[8]) / e[0], (Math.sign(pl.normal.y) + e[9]) / e[5], -1, (1 + e[10]) / e[14]);
           c4.set(pl.normal.x, pl.normal.y, pl.normal.z, pl.constant); c4.multiplyScalar(2 / c4.dot(q4));
           e[2] = c4.x; e[6] = c4.y; e[10] = c4.z + 1; e[14] = c4.w; vc.projectionMatrixInverse.copy(vc.projectionMatrix).invert();
-          for (var i = 0; i < hide.length; i++) hide[i].visible = false;
+          // what the water doesn't show is hidden for the pass, then put back as it was (not forced visible: an object switched
+          // off by its scene stays off)
+          for (var i = 0; i < hide.length; i++) { was[i] = hide[i].visible; hide[i].visible = false; }
           // the main pass updates the shadow map; the reflection reuses it, except on the very first frame, when it renders before
           // any shadow map exists (r186 reads shadows through a compare sampler and drops draws against a missing map)
           var au = renderer.shadowMap.autoUpdate; if (shadowed) renderer.shadowMap.autoUpdate = false; shadowed = true;
@@ -2136,7 +2138,7 @@
           renderer.setRenderTarget(rt); renderer.setClearColor(0x000000, 0); renderer.clear(); rt.viewport.set(px0, py0, px1 - px0, py1 - py0); renderer.setRenderTarget(rt);
           renderer.render(scene, vc); rt.viewport.set(0, 0, RW, RH); renderer.setRenderTarget(null);
           renderer.setClearColor(cc, ca); renderer.shadowMap.autoUpdate = au;
-          for (i = 0; i < hide.length; i++) hide[i].visible = true;
+          for (i = 0; i < hide.length; i++) hide[i].visible = was[i];
         },
         dispose: function () { rt.dispose(); }
       };
@@ -5006,6 +5008,18 @@
           var bm = new T.Mesh(g2, mb); bm.customDepthMaterial = dm; bm.name = (a.name || 'mbatch') + '+'; bm.renderOrder = a.renderOrder; bm.castShadow = a.castShadow; bm.receiveShadow = a.receiveShadow; bm.frustumCulled = false;
           list.forEach(function (o) { o.userData.proxy = true; o.layers.mask = 0; });
           scene.add(bm); mbatches.push({ list: list, data: data, tex: tex, bm: bm });
+        });
+      })();
+      // prod: the reflections skip what the water can't show: objects under ~3 units (grass tufts, leaves, sun flecks, lamps'
+      // parts, wires, people), a few pixels in the reflection targets and blurred by the ripples; ~40 % of their draws
+      (function () {
+        var inHide = new Set(reflHide);
+        scene.updateMatrixWorld();
+        scene.traverse(function (o) {
+          if (!(o.isMesh || o.isLine || o.isPoints) || o.userData.proxy || inHide.has(o) || !o.geometry || !o.geometry.attributes.position) return;
+          for (var x = o.parent; x; x = x.parent) if (inHide.has(x)) return;
+          if (!o.geometry.boundingSphere) o.geometry.computeBoundingSphere();
+          if (o.geometry.boundingSphere.radius * o.matrixWorld.getMaxScaleOnAxis() < 3) reflHide.push(o);
         });
       })();
       // prod: world matrices are updated once a frame here, not again by each of the frame's render calls (reflections, main)
