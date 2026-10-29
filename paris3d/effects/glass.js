@@ -57,18 +57,25 @@ export function Glass(host, src, view) {
     for (var i = 0; i < frostStrokes.length; i++) { var s = frostStrokes[i]; if (s[4] > lim) break; fg.strokeStyle = 'rgba(250,253,255,' + (0.85 - 0.5 * s[4] / (lim + 1)).toFixed(3) + ')'; fg.lineWidth = s[5] * S; fg.beginPath(); fg.moveTo(s[0], s[1]); fg.lineTo(s[2], s[3]); fg.stroke(); }
     fg.globalCompositeOperation = 'destination-out'; for (var y = 0; y < H; y += 6) { var hw = nearTower(px(EX), y, 0) ? twv(Math.min(1012, y / (view.scale * S) + view.y0)) * view.scale * S + 12 * S : 0; if (hw) fg.fillRect(px(EX) - hw, y, hw * 2, 6); } fg.globalCompositeOperation = 'source-over';
   }
+  // rain on the pane: drops land small and stay stuck where they land (a little out of round: water clings to the glass);
+  // they grow only by joining, and let go once heavy enough (RUN); a running drop catches on the glass now and then, leaves
+  // water behind (a trail, tiny beads) and stops again once too light (STOP)
+  var MAXD = 65, RUN = 5.5 * S, STOP = 3.5 * S;
   function spawnDrop(r) {
-    for (var tries = 0; tries < 6; tries++) { var x = R() * W, y = R() * H * 0.95; if (nearTower(x, y, 10 * S)) continue; drops.push({ x: x, y: y, r: r || (3 + R() * R() * 9) * S, vy: 0, run: !!r, wob: R() * 6, t: 0 }); return; }
+    for (var tries = 0; tries < 6; tries++) { var x = R() * W, y = R() * H * 0.95; if (nearTower(x, y, 10 * S)) continue; drops.push({ x: x, y: y, r: r || (1.8 + R() * R() * 4.5) * S, vy: 0, run: !!r, wob: R() * 6, t: 0, ax: 0.78 + R() * 0.22, rot: R() * 3.1416, pin: 0, wet: 0 }); return; }
   }
   function drawDrop(d) {
     var r = d.r; if (r < 0.6) return;
-    g.save(); g.beginPath(); g.ellipse(d.x, d.y, r, r * (d.run ? 1.15 : 1), 0, 0, 6.2832); g.clip();
+    var ry = r * (d.run ? 1.15 : d.ax || 1), rot = d.run ? 0 : d.rot || 0;
+    // a tiny bead: a dark rim and a glint, no view through it (most of the drops, and cheap)
+    if (r < 2.2 * S) { g.fillStyle = 'rgba(24,34,70,.5)'; g.beginPath(); g.ellipse(d.x, d.y, r, ry, rot, 0, 6.2832); g.fill(); g.fillStyle = 'rgba(255,255,255,.9)'; g.beginPath(); g.arc(d.x - r * 0.3, d.y - r * 0.3, r * 0.35, 0, 6.2832); g.fill(); return; }
+    g.save(); g.beginPath(); g.ellipse(d.x, d.y, r, ry, rot, 0, 6.2832); g.clip();
     var gr = g.createLinearGradient(0, d.y - r, 0, d.y + r); gr.addColorStop(0, st.sky2); gr.addColorStop(1, st.sky); g.fillStyle = gr; g.fillRect(d.x - r, d.y - r * 1.2, r * 2, r * 2.4);
     // the scene behind, upside-down and shrunk, as a real drop shows it
     var k = src.width / W, span = r * 4.5;
     try { g.translate(d.x, d.y); g.rotate(Math.PI); g.globalAlpha = 0.9; g.drawImage(src, Math.max(0, (d.x - span) * k), Math.max(0, (d.y - span * 1.4) * k), span * 2 * k, span * 2 * k, -r, -r * 1.1, r * 2, r * 2.2); } catch (e) {}
     g.restore();
-    g.lineWidth = Math.max(0.8, 0.9 * S); g.strokeStyle = 'rgba(24,34,70,.55)'; g.beginPath(); g.ellipse(d.x, d.y, r, r * (d.run ? 1.15 : 1), 0, 0, 6.2832); g.stroke();
+    g.lineWidth = Math.max(0.8, 0.9 * S); g.strokeStyle = 'rgba(24,34,70,.55)'; g.beginPath(); g.ellipse(d.x, d.y, r, ry, rot, 0, 6.2832); g.stroke();
     g.fillStyle = 'rgba(20,30,60,.22)'; g.beginPath(); g.ellipse(d.x + r * 0.15, d.y + r * 0.55, r * 0.75, r * 0.32, 0, 0, 3.1416); g.fill();
     g.fillStyle = 'rgba(255,255,255,.9)'; g.beginPath(); g.ellipse(d.x - r * 0.38, d.y - r * 0.4, r * 0.22, r * 0.16, -0.6, 0, 6.2832); g.fill();
   }
@@ -90,21 +97,31 @@ export function Glass(host, src, view) {
       var frT = flags.snow ? 0.75 : flags.frost ? 0.38 : evName === 'christmas' ? 0.3 : 0; st.frostA = tr(st.frostA, frT, 0.08); if (flags.snap) { st.mistA = flags.fog ? 0.62 : 0; st.frostA = frT; }
       if (Math.abs(st.frostA - st.frostDrawn) > 0.012) { drawFrost(st.frostA); st.frostDrawn = st.frostA; }
       // rain: drops arrive, bead, join and run; a storm sends streams down the pane; after the rain they dry up within a minute
-      if (st.rain) { st.dryT = 0; var rate = st.storm ? 9 : flags.shower ? 1.2 : 3.2; var n = rate * dt + (R() < (rate * dt) % 1 ? 1 : 0); for (var i = 0; i < n && drops.length < 90; i++) spawnDrop(); if (st.storm && R() < dt * 1.4) spawnDrop((7 + R() * 4) * S); if (flags.snap && drops.length < 30) for (i = 0; i < 30; i++) spawnDrop(); }
+      if (st.rain) { st.dryT = 0; var rate = st.storm ? 7 : flags.shower ? 0.9 : 2.6; var n = rate * dt + (R() < (rate * dt) % 1 ? 1 : 0); for (var i = 0; i < n && drops.length < MAXD; i++) spawnDrop(); if (st.storm && R() < dt) spawnDrop((7 + R() * 3) * S); if (flags.snap && drops.length < 24) for (i = 0; i < 24; i++) spawnDrop(); }
       else st.dryT += dt;
       var shrink = st.rain ? 0 : dt / 60;
       drops.forEach(function (d) {
         d.t += dt; if (shrink) d.r -= shrink * (d.r * 2 + 9 * S);
-        if (!d.run && d.r > 6 * S && R() < dt * (st.storm ? 1.6 : 0.4)) d.run = true;
-        if (d.run) { d.vy = Math.min(d.vy + dt * 260 * S, (st.storm ? 260 : 120) * S * (0.5 + d.r / (12 * S))); var oy = d.y; d.y += d.vy * dt; d.x += Math.sin(d.t * 3 + d.wob) * 6 * S * dt; trails.push({ x0: d.x, y0: oy, x1: d.x, y1: d.y, w: d.r * 0.7, a: 1, blur: st.storm }); d.r -= dt * 0.25 * S; }
+        if (!d.run && d.r > RUN) { d.run = true; d.vy = 0; }
+        if (!d.run) return;
+        // caught on the glass for a moment, then on again: the stop-start of a real drop
+        if (d.pin > 0) { d.pin -= dt; return; }
+        if (R() < dt * (st.storm ? 0.6 : 1.4)) { d.pin = 0.06 + R() * 0.3; d.vy *= 0.25; }
+        d.vy = Math.min(d.vy + dt * 220 * S, (st.storm ? 240 : 110) * S * d.r / RUN);
+        var oy = d.y; d.y += d.vy * dt; d.x += Math.sin(d.t * 2.3 + d.wob) * 5 * S * dt;
+        trails.push({ x0: d.x, y0: oy, x1: d.x, y1: d.y, w: d.r * 0.7, a: 1, blur: st.storm });
+        // it leaves water behind: it shrinks, and now and then a tiny bead stays on its path
+        d.r -= dt * 0.7 * S; d.wet += d.y - oy;
+        if (d.wet > 10 * S) { d.wet = 0; if (R() < 0.55 && drops.length < MAXD + 25) drops.push({ x: d.x + (R() - 0.5) * d.r, y: oy, r: (0.7 + R() * 0.9) * S, vy: 0, run: false, wob: 0, t: 0, ax: 0.8 + R() * 0.2, rot: R() * 3.1416, pin: 0, wet: 0, bead: true }); }
+        if (d.r < STOP) { d.run = false; d.vy = 0; }   // too little water left: it stops and beads
       });
       // drops that touch join into one
-      for (var a = 0; a < drops.length; a++) for (var b = a + 1; b < drops.length; b++) { var A = drops[a], B = drops[b]; if (A.dead || B.dead) continue; var dx = A.x - B.x, dy = A.y - B.y; if (dx * dx + dy * dy < (A.r + B.r) * (A.r + B.r) * 0.6) { var big = A.r >= B.r ? A : B, sm = big === A ? B : A; big.r = Math.sqrt(big.r * big.r + sm.r * sm.r); sm.dead = true; if (big.r > 6 * S) big.run = true; } }
+      for (var a = 0; a < drops.length; a++) for (var b = a + 1; b < drops.length; b++) { var A = drops[a], B = drops[b]; if (A.dead || B.dead) continue; var dx = A.x - B.x, dy = A.y - B.y; if (dx * dx + dy * dy < (A.r + B.r) * (A.r + B.r) * 0.6) { var big = A.run ? A : B.run ? B : A.r >= B.r ? A : B, sm = big === A ? B : A; big.r = Math.sqrt(big.r * big.r + sm.r * sm.r); sm.dead = true; big.ax = Math.max(0.7, (big.ax || 1) - 0.04); } }
       drops = drops.filter(function (d) { return !d.dead && d.r > 0.5 && d.y < H + 20; });
       trails.forEach(function (t) { t.a -= dt / (st.storm ? 1.5 : 3); }); trails = trails.filter(function (t) { return t.a > 0; }); if (trails.length > 900) trails.splice(0, trails.length - 900);
       // snow: a few flakes stick to the pane and melt into drops
       if (flags.snow && R() < dt * 0.6 && flakes.length < 14) { var fx = R() * W, fy = R() * H * 0.9; if (!nearTower(fx, fy, 20 * S)) flakes.push({ x: fx, y: fy, s: (4 + R() * 5) * S, a: R() * 6, t: 0, life: 5 + R() * 6 }); }
-      flakes.forEach(function (f) { f.t += dt; if (f.t > f.life) { f.dead = true; drops.push({ x: f.x, y: f.y, r: f.s * 0.45, vy: 0, run: false, wob: R() * 6, t: 0 }); } }); flakes = flakes.filter(function (f) { return !f.dead; });
+      flakes.forEach(function (f) { f.t += dt; if (f.t > f.life) { f.dead = true; drops.push({ x: f.x, y: f.y, r: f.s * 0.45, vy: 0, run: false, wob: R() * 6, t: 0, ax: 0.9, rot: 0, pin: 0, wet: 0 }); } }); flakes = flakes.filter(function (f) { return !f.dead; });
       // fog: the pane mists over again slowly; the pointer wipes a clear streak
       var mw = mist.width, mh = mist.height;
       if (st.mistA > 0.01) {

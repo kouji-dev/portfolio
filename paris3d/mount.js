@@ -97,7 +97,9 @@ export async function mount(canvas, opts) {
   var ptr = { x: 0, y: 0, sx: 0, sy: 0, hover: 0 }, aside = host && host.closest ? (host.closest('aside') || host) : host;
   function onMove(e) { var r = aside.getBoundingClientRect(); ptr.x = clamp((e.clientX - r.left) / r.width * 2 - 1, -1, 1); ptr.y = clamp((e.clientY - r.top) / r.height * 2 - 1, -1, 1); ptr.hover = 1; }
   function onLeave() { ptr.x = 0; ptr.y = 0; ptr.hover = 0; }
-  if (aside) { aside.addEventListener('pointermove', onMove, { passive: true }); aside.addEventListener('pointerleave', onLeave); }
+  // on a touch screen the panel keeps sideways swipes (home.css: touch-action pan-y), so a swipe wipes the misted pane like
+  // the mouse does; the browser takes a vertical swipe for scrolling and cancels the pointer
+  if (aside) { aside.addEventListener('pointermove', onMove, { passive: true }); aside.addEventListener('pointerleave', onLeave); aside.addEventListener('pointercancel', onLeave); }
 
   var maxPR = Math.min(window.devicePixelRatio || 1, 2), minPR = Math.min(maxPR, 1), pr = maxPR, prAt = 0, jsAcc = 0, tier = 0, slow = 0, W = 0, H = 0, view = { x0: 0, y0: 0, vw: 816, vh: 1130, scale: 1 };
   var cw = canvas.clientWidth, ch = canvas.clientHeight;
@@ -479,7 +481,7 @@ export async function mount(canvas, opts) {
     dispose: function () {
       disposed = true; if (raf) cancelAnimationFrame(raf);
       document.removeEventListener('visibilitychange', onVis); if (io) io.disconnect(); if (ro) ro.disconnect(); if (tokMo) tokMo.disconnect();
-      if (aside) { aside.removeEventListener('pointermove', onMove); aside.removeEventListener('pointerleave', onLeave); }
+      if (aside) { aside.removeEventListener('pointermove', onMove); aside.removeEventListener('pointerleave', onLeave); aside.removeEventListener('pointercancel', onLeave); }
       if (vec) vec.dispose();
       scene.traverse(function (o) { if (o.geometry) o.geometry.dispose(); if (o.material) { (Array.isArray(o.material) ? o.material : [o.material]).forEach(function (m) { m.dispose(); }); } });
       refl.dispose(); if (glass) glass.dispose(); renderer.dispose();

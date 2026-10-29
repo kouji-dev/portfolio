@@ -320,3 +320,27 @@ test.describe('home', () => {
     await expect(page.locator('.sky .pt svg').first()).toBeVisible();
   });
 });
+
+test.describe('home on a touch screen', () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  test('3D fog on the pane: a sideways swipe wipes it, a vertical swipe still scrolls the page', async ({ page, context }) => {
+    test.setTimeout(180000);
+    await page.goto('/');
+    await page.waitForFunction(() => document.querySelector('.pt[data-loaded="1"]') && document.querySelector('.sky .pt-glass'), null, { timeout: 170000 });
+    await page.evaluate(() => window.Paris3D.setEvent('winter:fog'));
+    const mist = () => page.evaluate(() => { const cv = document.querySelector('.sky .pt-glass'); return cv.getContext('2d').getImageData(Math.round(cv.width * 0.5), Math.round(cv.height * 0.35), 1, 1).data[3]; });
+    await expect.poll(mist, { timeout: 40000 }).toBeGreaterThan(60);   // the pane mists over
+    const box = await page.locator('.sky').boundingBox(), y = box.y + box.height * 0.35, cdp = await context.newCDPSession(page);
+    const swipe = async (pts) => {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [pts[0]] });
+      for (const q of pts.slice(1)) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [q] }); await page.waitForTimeout(30); }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    };
+    await swipe(Array.from({ length: 13 }, (_, i) => ({ x: box.x + 30 + i * (box.width - 60) / 12, y })));
+    await expect.poll(mist).toBeLessThan(20);
+    const top = await page.evaluate(() => scrollY);
+    await swipe(Array.from({ length: 9 }, (_, i) => ({ x: box.x + box.width / 2, y: y + 150 - i * 25 })));
+    await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(top + 50);
+  });
+});
