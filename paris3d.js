@@ -4020,6 +4020,8 @@
       // two passes, composited like the SVG was: the sky stack (behind the WebGL canvas) into its own picture, the skins (in front) over the finished frame;
       // both blend in sRGB like the browser did, so glows and tints keep their painted strength
       var skyScene = new T.Scene(), frontScene = new T.Scene(), root = new T.Group(); root.name = 'vec';
+      // prod: their world matrices are updated once a frame, in sync() (after the clouds and the dome moved), not again by each render
+      skyScene.matrixWorldAutoUpdate = false; frontScene.matrixWorldAutoUpdate = false;
 
       // ---- sprite material: painting-space vertices placed at a depth, so every plane lands exactly where the SVG drew it
       var vs = 'uniform float uD; varying vec2 vUv; void main(){ vUv = uv; vec4 p = modelMatrix * vec4(position, 1.); float s = uD / ' + F.toFixed(1) + ';' +
@@ -4300,6 +4302,10 @@
         }
       }
       // which groups hold live ones (so a per-frame pass can skip the still branches)
+      // the groups whose rules read the sky-clock variables (sky.js SKY_LIT), outermost only (syncGroup reads their insides)
+      var litSel = (window.SKY_LIT || []).map(function (c) { return '.' + CSS.escape(c); }).join(',');
+      var litL = litSel ? layers.filter(function (L) { return L.el.matches(litSel); }) : [];
+      var litG = litSel ? gList.filter(function (i) { if (N[i].t === 'svg' || !E[i].matches(litSel)) return false; for (var a = E[i].parentElement; a && a.tagName !== 'svg'; a = a.parentElement) if (a.matches(litSel)) return false; return true; }) : [];
       function markLive() {
         for (var k = gList.length - 1; k >= 0; k--) { var g = G[gList[k]]; g.userData.liveIn = false; }
         for (var k2 = gList.length - 1; k2 >= 0; k2--) { var g2 = G[gList[k2]]; if ((g2.userData.live || g2.userData.liveIn) && g2.parent && g2.parent.userData) g2.parent.userData.liveIn = true; }
@@ -4345,6 +4351,14 @@
         } else {
           // prod: per frame only the layers that move or hold moving groups (each read can force a style recalc of the page)
           layers.forEach(function (L) { var g = G[L.i]; if (L.live || g.userData.liveIn || L.live == null) syncGroup(L.i, 1, false); });
+          // while the theme button fast-forwards the clock (html[data-ff]), the groups the sky-clock variables drive (moon, sun,
+          // sky tints: home.js sets the variables on them every frame, no CSS animation) are read every frame too; between full
+          // passes they lagged up to ~120 px behind and the moon stayed up after it had set
+          if (document.documentElement.hasAttribute('data-ff')) {
+            // a lit layer: its own opacity and place (and its moving groups); a lit group inside: all of it (they are small)
+            for (var ll = 0; ll < litL.length; ll++) if (!(litL[ll].live || G[litL[ll].i].userData.liveIn)) syncGroup(litL[ll].i, 1, false);
+            for (var li = 0; li < litG.length; li++) { var lg = G[litG[li]]; if (lg.parent && lg.parent.visible) syncGroup(litG[li], lg.parent.userData.op == null ? 1 : lg.parent.userData.op, true); }
+          }
         }
         // dashes and strokes that animate (the net's signals, the fountain jets, the kite string): redraw at 12 fps
         if (now - dashAt > 1 / 12 || now < dashAt) {
@@ -4419,7 +4433,6 @@
         if (runsDirty) rebuildRuns();
         if (atlasDirty) { atlasDirty = false; atlas.needsUpdate = true; }
         if (!runs.length) return;
-        skyScene.updateMatrixWorld(); frontScene.updateMatrixWorld();
         runs.forEach(function (r) {
           var g = r.im.geometry, bx = g.attributes.aBox.array, uv = g.attributes.aUv.array, op = g.attributes.aOp.array;
           r.list.forEach(function (c, k) {
@@ -4479,7 +4492,7 @@
         return { x: (Math.min(p0[0], p1[0]) - view.x0) * s, y: (Math.min(p0[1], p1[1]) - view.y0) * s, w: Math.abs(p1[0] - p0[0]) * s, h: Math.abs(p1[1] - p0[1]) * s, op: G[layerOf[i]].visible ? G[layerOf[i]].userData.op : 0 };
       }
       function center(el) { var i = E.indexOf(el); if (i < 0 || !N[i].b) return null; var b = N[i].b; return [b[0] + b[2] / 2, b[1] + b[3] / 2]; }
-      return { root: root, skyScene: skyScene, frontScene: frontScene, update: function (now) { update(now); batchSync(); }, scanned: function () { return scanI !== 0 && queue.length === 0; }, cutout: cutout, find: find, screenBox: screenBox, center: center, E: E, N: N, chunks: chunks, G: G, kids: kids, byId: byId,
+      return { root: root, skyScene: skyScene, frontScene: frontScene, update: update, sync: function () { skyScene.updateMatrixWorld(); frontScene.updateMatrixWorld(); batchSync(); }, scanned: function () { return scanI !== 0 && queue.length === 0; }, cutout: cutout, find: find, screenBox: screenBox, center: center, E: E, N: N, chunks: chunks, G: G, kids: kids, byId: byId,
         visible: visibleNode, opacity: opacityNode, worldM: worldM, order: function (i) { return i; },
         layerM: function (i) { return layerM(G[layerOf[i]].userData.L); }, ownM: function (i) { return svgOwn(i); }, raster2D: function (g2, i, self) { drawNode(g2, i, self); }, paint: paint, num: num,
         dispose: function () { chunks.forEach(function (c) { if (c.tex) c.tex.dispose(); }); } };
@@ -4886,7 +4899,9 @@
       function paintFrame() { skyPass(); reflect(); ink.render(scene, camera, inkOn); frontPass(); if (glass && tier < 1) glass.draw(); }
       var weather = buildWeather(ctx); await step(0.54); var events = buildEvents(ctx, renderer); await step(0.58);
       var reflHide = [seine, basinW, glintPts, glowPts]; ['lamp-halo', 'moths'].forEach(function (n) { var o = scene.getObjectByName(n); if (o) reflHide.push(o); }); events.reflHide.forEach(function (o) { reflHide.push(o); }); ctx.reflHide = reflHide;
-      var reflN = 0; function reflect() { if (U.uReflOn.value > 0.5) { refl.render(scene, camera, fr, -ctx.WL, reflHide); if ((reflN++ % (small ? 3 : 2)) === 0) reflB.render(scene, camera, fr, -ctx.BWL, reflHide); } }
+      // prod: one reflection a frame, in turn: the Seine on even frames, the basin on odd ones (each is a full render of the
+      // scene, ~6 ms a frame for both); the water shaders move the ripples every frame over the reflection drawn the frame before
+      var reflN = 0; function reflect() { if (U.uReflOn.value > 0.5) { if (reflN++ % 2 === 0) refl.render(scene, camera, fr, -ctx.WL, reflHide); else reflB.render(scene, camera, fr, -ctx.BWL, reflHide); } }
       // prod: lazy shader programs. Most of the scene's extras (each event's, weather's and moment's objects) sit in the scene
       // all day, visible but switched off by a uniform; the design compiled and drew all of them. Here an object is drawn only
       // while it can show something (visible, and not switched off by its uA / uOn), and its shader programs compile the first time it does,
@@ -4995,7 +5010,23 @@
       })();
       // prod: world matrices are updated once a frame here, not again by each of the frame's render calls (reflections, main)
       scene.matrixWorldAutoUpdate = false;
+      // prod: a matrix is recomposed only when its object moved. three recomposes every auto-updated object's matrix on each
+      // update and so redoes its world matrix and its children's: 1,026 a frame, most of them for objects that never move.
+      // Unchanged position, rotation, scale and parent: nothing to do (and the world matrix stays as it is)
+      var UM = T.Object3D.prototype.updateMatrix;
+      if (!UM.ifMoved) {
+        T.Object3D.prototype.updateMatrix = function () {
+          var p = this.position, q = this.quaternion, s = this.scale, v = this._mv;
+          if (v && this.pivot == null && v[0] === p.x && v[1] === p.y && v[2] === p.z && v[3] === q.x && v[4] === q.y && v[5] === q.z && v[6] === q.w &&
+            v[7] === s.x && v[8] === s.y && v[9] === s.z && v[10] === this.parent) return;
+          if (!v) v = this._mv = [];
+          v[0] = p.x; v[1] = p.y; v[2] = p.z; v[3] = q.x; v[4] = q.y; v[5] = q.z; v[6] = q.w; v[7] = s.x; v[8] = s.y; v[9] = s.z; v[10] = this.parent;
+          UM.call(this);
+        };
+        T.Object3D.prototype.updateMatrix.ifMoved = true;
+      }
       function sync() {
+        if (vec) vec.sync();
         scene.updateMatrixWorld();
         for (var mb = 0; mb < mbatches.length; mb++) {
           var Q = mbatches[mb], qa = false;

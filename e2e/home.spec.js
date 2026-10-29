@@ -39,6 +39,30 @@ test.describe('home', () => {
     await expect(pt).toHaveAttribute('data-q', 'lite');
   });
 
+  test('3D moon follows the sky clock every frame during the theme fast-forward', async ({ page }) => {
+    test.setTimeout(180000);
+    // the scene in manual mode, its handle on window.__gl
+    await page.addInitScript(() => { let real; Object.defineProperty(window, 'Paris3D', { configurable: true, get: () => real, set: (v) => {
+      real = v; const m = v.mountAsync; if (!m || m.__w) return;
+      v.mountAsync = async (c, o) => { const h = await m(c, Object.assign({}, o, { manual: true })); window.__gl = h; return h; }; v.mountAsync.__w = 1; } }); });
+    await at(page, '2026-10-28T23:00:00+01:00');
+    await page.goto('/');
+    await page.waitForFunction(() => window.__gl, null, { timeout: 170000 });
+    // the moon moved by the clock (home.js sets the variable on it) while the fast-forward runs: the next frame shows it there,
+    // not only the next full pass (4 a second), which let the moon lag and stay up after it had set
+    const x = await page.evaluate(() => {
+      const h = window.__gl, v = h.ctx.vec, el = document.querySelector('.pt .cel-moon'), g = v.G[v.E.indexOf(el)], at = () => Math.round(g.matrixWorld.elements[12]);
+      h.renderOnce(0.3); const before = at();
+      document.documentElement.setAttribute('data-ff', ''); el.style.setProperty('--monx', '123px');
+      h.renderOnce(0.001); const next = at();
+      h.renderOnce(0.3); const full = at();
+      document.documentElement.removeAttribute('data-ff');
+      return { before, next, full };
+    });
+    expect(x.full).not.toBe(x.before);
+    expect(x.next).toBe(x.full);
+  });
+
   test('3D painting is skipped without WebGL 2: the SVG painting stays', async ({ page }) => {
     await page.addInitScript(() => { delete window.WebGL2RenderingContext; });
     await page.goto('/');

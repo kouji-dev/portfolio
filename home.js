@@ -421,7 +421,7 @@
      painting (its base layers) appears only if WebGL 2 is missing, the scripts or the scene fail, or the GPU context is lost. After the page's load, three.js (pinned in index.html's import map, from jsDelivr) and paris3d.js (built from the modules in paris3d/) load; the scene builds in
      small steps between frames and compiles only the shaders today's frame draws, without blocking (the rest compile the
      first time they show), while the loading overlay shows the progress; it lifts once the scene has drawn. */
-  var GL_V = '7'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
+  var GL_V = '8'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
   // three.js through the import map, imported via Function: a browser without dynamic import rejects here instead of
   // failing to parse home.js. The scene itself is paris3d.js, one classic script built from the modules in paris3d/
   // (pnpm run scene): it also runs from file://, where browsers refuse ES modules

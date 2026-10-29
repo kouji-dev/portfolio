@@ -52,10 +52,19 @@ async function shot(b, origin, ab) {
   catch (e) { console.error('the scene did not mount on ' + ab + ':' + String.fromCharCode(10) + [...errs].map(([k, n]) => (n > 1 ? n + 'x ' : '') + k).join(String.fromCharCode(10))); throw e; }
   const r = await p.evaluate(async () => {
     const h = window.__gl, cv = document.querySelector('.pt3d');
+    // the page's own moments start on a random timer a few seconds after load: none in the captured frames (the scene
+    // mirrors the painting's CSS, so a moment the page shows would show in 3D too)
+    const pt = document.querySelector('.pt'); if (pt) pt.setAttribute('data-moment', '');
     document.getAnimations().forEach((x) => { try { x.pause(); x.currentTime = 0; } catch (e) {} });
     await new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
     h.U.uTime.value = 20; for (let i = 0; i < 4; i++) h.renderOnce(0.016);
     if (h.whenReady) await h.whenReady();
+    // every painted layer drawn: the raster queue works within a time budget per frame, so how much of it is done by a given
+    // frame depends on the machine's speed at that moment; frames until it is empty, then back to the captured instant
+    const v = h.ctx && h.ctx.vec;
+    // (a microsecond a frame: the cars and the fountain do not move meanwhile)
+    for (let i = 0; i < 600 && v && v.scanned && !v.scanned(); i++) h.renderOnce(1e-6);
+    h.U.uTime.value = 20; for (let i = 0; i < 4; i++) h.renderOnce(0.016);
     h.renderOnce(0.016);
     // what three can't draw on this renderer: GLSL materials (ShaderMaterial, onBeforeCompile) of visible objects, by name
     const left = {};
