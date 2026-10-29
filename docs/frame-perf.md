@@ -36,7 +36,7 @@ updates 4.0 · traversal 2.3 · front / sky passes 2.3 + 1.7 · driver 5.7.
 
 - [ ] M1 Your Chrome: 20–25 fps there vs 50 fps in a clean Chrome (screen scaling? extensions? the debugging extension?)
 - [ ] M2 A phone (high pixel density, mobile GPU)
-- [ ] M3 The Intel GPU's live loop since the last optimisations
+- [x] M3 The Intel GPU's live loop: start 5.4–13.6 fps (p90 167–217 ms) → now 11.6–15.0 fps (p90 117–150 ms)
 
 ## Quick wins
 
@@ -49,18 +49,18 @@ updates 4.0 · traversal 2.3 · front / sky passes 2.3 + 1.7 · driver 5.7.
 
 ## Medium
 
-- [ ] 6 **CSS animations through the Web Animations API** instead of `getComputedStyle` every frame — target: CSS reads
+- [x] ~~6 **CSS animations through the Web Animations API**~~ (not done: of the ~4 ms, style reads are 0.4 ms and string parsing 0.4 ms; 66 % of reads change every frame, so the JS interpolation would remain) instead of `getComputedStyle` every frame — target: CSS reads
       (387 a frame, 4.1 ms)
 - [x] ~~7 **Shared uniforms in one buffer** (`UniformsGroup`)~~ (three binds uniform buffers only for ShaderMaterial, the paint material is a patched Lambert; flat Float32Array uniforms instead: −0.1 ms, noise, not kept) — target: uniform uploads (1,694 a frame, 6.9 ms)
 - [x] 8 **Fewer objects in the reflections** — target: reflections (6.4 ms)
-- [ ] 9 **Fewer shader variants**, cheap ones only — trap measured before: one uber shader took start-up 7 s → 28 s on
+- [x] ~~9 **Fewer shader variants**~~ (draws sorted by program: switches 174 → 168, −0.1 ms, not kept; most switches are between one-off shaders), cheap ones only — trap measured before: one uber shader took start-up 7 s → 28 s on
       the Intel GPU
 
 ## Larger
 
-- [ ] 10 **Merge static meshes** (extend the batching / `BatchedMesh`) — target: draws (467), driver, traversal
-- [ ] 11 **Compile the painting CSS into data at build time** — target: all CSS reads
-- [ ] 12 **Static reflection cached**, moving objects redrawn into it — target: reflections
+- [x] ~~10 **Merge static meshes**~~ (what is left to merge: ~10 % of draws, mostly shadow depth draws, 0.32 ms a frame in all) (extend the batching / `BatchedMesh`) — target: draws (467), driver, traversal
+- [x] ~~11 **Compile the painting CSS into data at build time**~~ (same numbers as 6: under ~1 ms to win, a new build step for every design sync) — target: all CSS reads
+- [x] ~~12 **Static reflection cached**~~ (not feasible: the camera drifts every frame, so a cached reflection is stale at once; the reflection is 3.7 ms of a 31 ms frame now), moving objects redrawn into it — target: reflections
 
 ## Ruled out (measured)
 
@@ -79,5 +79,9 @@ updates 4.0 · traversal 2.3 · front / sky passes 2.3 + 1.7 · driver 5.7.
 | 5 Spread the full pass | +1 ms, p90 20.1 → 22.4 ms: not kept | — | — | — |
 | 7 Shared uniforms | flat arrays: −0.1 ms (noise), not kept | — | — | — |
 | 8 Small objects out of the reflections | −0.5 ms (−4.7 %), B faster 14/24 rounds; p90 14.3 → 13 ms | draws 412 → 361, uniform uploads 1,430 → 1,257 (−12 %) | day 469 px, night 1,071 px (missing glints in the water), Christmas 12 px | e2e 18/18 |
+| 9 Sort by program | switches 174 → 168, −0.1 ms: not kept | — | — | — |
+| 10 Merge static meshes | not done: ~10 % of draws left to merge, mostly shadow draws (0.32 ms) | — | — | — |
+| 12 Cached reflection | not feasible (camera drifts every frame) | reflection 3.7 ms of 31 ms | — | — |
+| Live, visible Chrome (start 47555ed → now) | RTX: 52.1 → 52.2 fps average, p90 33 → 17–33 ms; Intel UHD: 5.4–13.6 → 11.6–15.0 fps, p90 167–217 → 117–150 ms | same pixel ratio and quality on both | — | — |
 | Bug: reflection pass made hidden objects visible | the pass now restores each object's own visibility | — | — | e2e 18/18 |
 | Bug: 3D moon during the fast-forward | moon off by >15 px or shown after setting: 29 → 5 frames (night → day), 7 → 2 (day → night) | sky-clock groups read every frame while `html[data-ff]` | — | e2e + new test (fails without the fix) |
