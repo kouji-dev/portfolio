@@ -369,3 +369,23 @@ test.describe('home, the wipe button', () => {
     await expect(btn).toBeHidden();
   });
 });
+
+test.describe('home, the wind', () => {
+  test('3D snow drift: hovering speeds the wind up from now on, it never jumps the snow ahead', async ({ page }) => {
+    test.setTimeout(180000);
+    await page.addInitScript(() => { let real; Object.defineProperty(window, 'Paris3D', { configurable: true, get: () => real, set: (v) => {
+      real = v; const m = v.mountAsync; if (!m || m.__w) return;
+      v.mountAsync = async (c, o) => { const h = await m(c, Object.assign({}, o, { manual: true })); window.__gl = h; return h; }; v.mountAsync.__w = 1; } }); });
+    await page.goto('/');
+    await page.waitForFunction(() => window.__gl, null, { timeout: 170000 });
+    const box = await page.locator('.sky').boundingBox();
+    // a long time on the page (the bug grew with it), then the pointer comes over the painting
+    const d = await page.evaluate(() => { const h = window.__gl; h.U.uTime.value = 600; for (let i = 0; i < 5; i++) h.renderOnce(0.016); return h.U.uDrift.value; });
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    const steps = await page.evaluate(() => { const h = window.__gl, out = []; let last = h.U.uDrift.value; for (let i = 0; i < 60; i++) { h.renderOnce(0.016); out.push(h.U.uDrift.value - last); last = h.U.uDrift.value; } return out; });
+    // each frame the drift grows by the wind × the frame (at most the gust's 2.4 × 16 ms), and the wind rises under the pointer
+    expect(Math.max(...steps)).toBeLessThan(2.4 * 0.016 + 1e-6);
+    expect(steps[steps.length - 1]).toBeGreaterThan(steps[0]);
+    expect(d).toBeGreaterThan(0);
+  });
+});

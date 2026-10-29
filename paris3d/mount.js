@@ -44,7 +44,7 @@ export async function mount(canvas, opts) {
   var scene = new T.Scene(), camera = new T.PerspectiveCamera(50, 1, 3, 9000), ink = Ink(renderer), inkOn = opts.ink !== false, rain = Rain(renderer);
   var P = new Palette(L.tokens, el); P.read();
   var U = {
-    uPal: { value: P.tex }, uScr: { value: scratchTexture() }, uTime: { value: 0 }, uWind: { value: 0.45 }, uBand: { value: new T.Vector2(0.14, 0.8) },
+    uPal: { value: P.tex }, uScr: { value: scratchTexture() }, uTime: { value: 0 }, uWind: { value: 0.45 }, uDrift: { value: 0 }, uBand: { value: new T.Vector2(0.14, 0.8) },
     uScale: { value: 800 }, uPn: { value: 0 }, uFount: { value: 1 }, uGlint: { value: 270 }, uLeap: { value: 0 }, uHalf: { value: 0 }, uStyle: { value: new T.Vector4(1, 1.8, 1, 1) }, uCloud: { value: new T.Vector3(0, 0, 0) }, uWarm: { value: 0 }, uStep: { value: 0 }, uQ: { value: 1 }, uPx: { value: 1 }, uSeason: { value: new T.Vector4(0, 0, 1, 2) }, uSnow: { value: 0 }, uRain: { value: 0 }, uFrost: { value: 0 }, uFL: { value: new T.Vector3(.85, .93, 1) }, uIce: { value: 0 }, uPat: { value: 0 }, uHw: { value: (function () { var a = []; for (var i = 0; i < 24; i++) a.push(new T.Vector4(0, -999, 0, 0)); return a; })() }, uHwOn: { value: 0 }, uBst: { value: [new T.Vector4(), new T.Vector4(), new T.Vector4(), new T.Vector4()] }, uBstC: { value: [new T.Color(), new T.Color(), new T.Color(), new T.Color()] }, uBsx: { value: [new T.Vector2(), new T.Vector2(), new T.Vector2(), new T.Vector2()] }, uRimP: { value: 0 }, uTree: { value: new T.Vector4() }, uMet: { value: new T.Vector4() }, uFog: { value: 0 }, uFogC: { value: new T.Vector3(.8, .82, .86) }, uSnowAmt: { value: 0 }, uFlash: { value: 0 }, uMoon: { value: 0.5 }, uLamps: { value: (function () { var a = []; for (var i = 0; i < 24; i++) a.push(new T.Vector4(0, -999, 0, 1)); return a; })() }, uReflOn: { value: 1 }, uBoat: { value: new T.Vector4(0, 0, 0, 0) }
   };
   U.P = P;
@@ -383,6 +383,9 @@ export async function mount(canvas, opts) {
     gust = Math.max(0, gust - dt / 3.2);
     var tw = gust > 0 ? 2.4 : ptr.hover ? 1.25 : 0.45; wind += (tw - wind) * Math.min(1, dt * (gust > 0 ? 3 : 1));
     U.uWind.value = wind;
+    // how far the wind has carried things so far (the snow drifts by it): a stronger wind speeds the drift up from now on;
+    // wind × time moved every flake at once by the change × the time since the page opened
+    U.uDrift.value += wind * dt;
     // summer: a click makes the columns leap
     if (s.fw && s.fw !== lastFw) { lastFw = s.fw; if (st.season === 'summer') leap = 1; }
     leap = Math.max(0, leap - dt / 2.8); U.uLeap.value = Math.sin(Math.min(1, 1 - leap) * Math.PI) * (leap > 0 ? 1 : 0);

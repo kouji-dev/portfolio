@@ -9,9 +9,9 @@ export function buildWeather(ctx) {
   var fp = [], fa = [];
   for (var i = 0; i < 1400; i++) { var sz = i % 10 === 0 ? 2 : i % 3 === 0 ? 1 : 0, zz = sz === 2 ? 520 + R() * 70 : sz === 1 ? 430 + R() * 140 : 200 + R() * 380; fp.push((R() - 0.5) * (sz === 2 ? 60 : 160), R() * 40, zz); fa.push(sz, R() * 6.28, 0.6 + R() * 0.8); }
   var fg = new T.BufferGeometry(); fg.setAttribute('position', new T.Float32BufferAttribute(fp, 3)); fg.setAttribute('aF', new T.Float32BufferAttribute(fa, 3));
-  var flM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uOn: { value: 0 }, uWind: U.uWind },
-    vertexShader: 'attribute vec3 aF; uniform float uTime, uScale, uOn, uWind; varying float vS; void main(){ float sz = aF.x; vS = sz; float sp = (sz > 1.5 ? .9 : sz > .5 ? 1.5 : 2.2) * aF.z; vec3 p = position;\n' +
-      ' p.y = mod(p.y - uTime * sp, 40.) - 2.; float sw = sz > 1.5 ? 1.6 : sz > .5 ? .7 : .3; p.x += sin(uTime * (.7 + aF.z * .4) + aF.y) * sw + uWind * uTime * .3 * (sz + 1.) - floor((uWind * uTime * .3 * (sz + 1.) + 80.) / 160.) * 160.; p.z += cos(uTime * .5 + aF.y * 2.) * sw * .6;\n' +
+  var flM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uOn: { value: 0 }, uWind: U.uWind, uDrift: U.uDrift },
+    vertexShader: 'attribute vec3 aF; uniform float uTime, uScale, uOn, uWind, uDrift; varying float vS; void main(){ float sz = aF.x; vS = sz; float sp = (sz > 1.5 ? .9 : sz > .5 ? 1.5 : 2.2) * aF.z; vec3 p = position;\n' +
+      ' p.y = mod(p.y - uTime * sp, 40.) - 2.; float sw = sz > 1.5 ? 1.6 : sz > .5 ? .7 : .3; p.x += sin(uTime * (.7 + aF.z * .4) + aF.y) * sw + uDrift * .3 * (sz + 1.) - floor((uDrift * .3 * (sz + 1.) + 80.) / 160.) * 160.; p.z += cos(uTime * .5 + aF.y * 2.) * sw * .6;\n' +
       ' vec4 mv = modelViewMatrix * vec4(p, 1.); gl_Position = projectionMatrix * mv; gl_PointSize = uOn > .01 ? (sz > 1.5 ? .5 : sz > .5 ? .28 : .17) * uScale / max(-mv.z, 1.) : 0.; }',
     fragmentShader: 'uniform float uOn; varying float vS; void main(){ vec2 q = gl_PointCoord - .5; float d = length(q) * 2.; if (d > 1.) discard; float a = (1. - smoothstep(.55, 1., d)) * uOn; vec3 c = vec3(1.); if (vS > 1.5) { c = mix(vec3(.62, .7, .86), vec3(1.), smoothstep(.95, .7, d)); }\n gl_FragColor = vec4(c, a * (vS > 1.5 ? .95 : .85));\n#include <colorspace_fragment>\n}', transparent: true, depthWrite: false });
   var flakes = new T.Points(fg, flM); flakes.frustumCulled = false; flakes.renderOrder = 8; flakes.name = 'snowflakes'; scene.add(flakes);

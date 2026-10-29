@@ -4879,9 +4879,9 @@
       var fp = [], fa = [];
       for (var i = 0; i < 1400; i++) { var sz = i % 10 === 0 ? 2 : i % 3 === 0 ? 1 : 0, zz = sz === 2 ? 520 + R() * 70 : sz === 1 ? 430 + R() * 140 : 200 + R() * 380; fp.push((R() - 0.5) * (sz === 2 ? 60 : 160), R() * 40, zz); fa.push(sz, R() * 6.28, 0.6 + R() * 0.8); }
       var fg = new T.BufferGeometry(); fg.setAttribute('position', new T.Float32BufferAttribute(fp, 3)); fg.setAttribute('aF', new T.Float32BufferAttribute(fa, 3));
-      var flM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uOn: { value: 0 }, uWind: U.uWind },
-        vertexShader: 'attribute vec3 aF; uniform float uTime, uScale, uOn, uWind; varying float vS; void main(){ float sz = aF.x; vS = sz; float sp = (sz > 1.5 ? .9 : sz > .5 ? 1.5 : 2.2) * aF.z; vec3 p = position;\n' +
-          ' p.y = mod(p.y - uTime * sp, 40.) - 2.; float sw = sz > 1.5 ? 1.6 : sz > .5 ? .7 : .3; p.x += sin(uTime * (.7 + aF.z * .4) + aF.y) * sw + uWind * uTime * .3 * (sz + 1.) - floor((uWind * uTime * .3 * (sz + 1.) + 80.) / 160.) * 160.; p.z += cos(uTime * .5 + aF.y * 2.) * sw * .6;\n' +
+      var flM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uOn: { value: 0 }, uWind: U.uWind, uDrift: U.uDrift },
+        vertexShader: 'attribute vec3 aF; uniform float uTime, uScale, uOn, uWind, uDrift; varying float vS; void main(){ float sz = aF.x; vS = sz; float sp = (sz > 1.5 ? .9 : sz > .5 ? 1.5 : 2.2) * aF.z; vec3 p = position;\n' +
+          ' p.y = mod(p.y - uTime * sp, 40.) - 2.; float sw = sz > 1.5 ? 1.6 : sz > .5 ? .7 : .3; p.x += sin(uTime * (.7 + aF.z * .4) + aF.y) * sw + uDrift * .3 * (sz + 1.) - floor((uDrift * .3 * (sz + 1.) + 80.) / 160.) * 160.; p.z += cos(uTime * .5 + aF.y * 2.) * sw * .6;\n' +
           ' vec4 mv = modelViewMatrix * vec4(p, 1.); gl_Position = projectionMatrix * mv; gl_PointSize = uOn > .01 ? (sz > 1.5 ? .5 : sz > .5 ? .28 : .17) * uScale / max(-mv.z, 1.) : 0.; }',
         fragmentShader: 'uniform float uOn; varying float vS; void main(){ vec2 q = gl_PointCoord - .5; float d = length(q) * 2.; if (d > 1.) discard; float a = (1. - smoothstep(.55, 1., d)) * uOn; vec3 c = vec3(1.); if (vS > 1.5) { c = mix(vec3(.62, .7, .86), vec3(1.), smoothstep(.95, .7, d)); }\n gl_FragColor = vec4(c, a * (vS > 1.5 ? .95 : .85));\n#include <colorspace_fragment>\n}', transparent: true, depthWrite: false });
       var flakes = new T.Points(fg, flM); flakes.frustumCulled = false; flakes.renderOrder = 8; flakes.name = 'snowflakes'; scene.add(flakes);
@@ -5014,7 +5014,7 @@
       var scene = new T.Scene(), camera = new T.PerspectiveCamera(50, 1, 3, 9000), ink = Ink(renderer), inkOn = opts.ink !== false, rain = Rain(renderer);
       var P = new Palette(L.tokens, el); P.read();
       var U = {
-        uPal: { value: P.tex }, uScr: { value: scratchTexture() }, uTime: { value: 0 }, uWind: { value: 0.45 }, uBand: { value: new T.Vector2(0.14, 0.8) },
+        uPal: { value: P.tex }, uScr: { value: scratchTexture() }, uTime: { value: 0 }, uWind: { value: 0.45 }, uDrift: { value: 0 }, uBand: { value: new T.Vector2(0.14, 0.8) },
         uScale: { value: 800 }, uPn: { value: 0 }, uFount: { value: 1 }, uGlint: { value: 270 }, uLeap: { value: 0 }, uHalf: { value: 0 }, uStyle: { value: new T.Vector4(1, 1.8, 1, 1) }, uCloud: { value: new T.Vector3(0, 0, 0) }, uWarm: { value: 0 }, uStep: { value: 0 }, uQ: { value: 1 }, uPx: { value: 1 }, uSeason: { value: new T.Vector4(0, 0, 1, 2) }, uSnow: { value: 0 }, uRain: { value: 0 }, uFrost: { value: 0 }, uFL: { value: new T.Vector3(.85, .93, 1) }, uIce: { value: 0 }, uPat: { value: 0 }, uHw: { value: (function () { var a = []; for (var i = 0; i < 24; i++) a.push(new T.Vector4(0, -999, 0, 0)); return a; })() }, uHwOn: { value: 0 }, uBst: { value: [new T.Vector4(), new T.Vector4(), new T.Vector4(), new T.Vector4()] }, uBstC: { value: [new T.Color(), new T.Color(), new T.Color(), new T.Color()] }, uBsx: { value: [new T.Vector2(), new T.Vector2(), new T.Vector2(), new T.Vector2()] }, uRimP: { value: 0 }, uTree: { value: new T.Vector4() }, uMet: { value: new T.Vector4() }, uFog: { value: 0 }, uFogC: { value: new T.Vector3(.8, .82, .86) }, uSnowAmt: { value: 0 }, uFlash: { value: 0 }, uMoon: { value: 0.5 }, uLamps: { value: (function () { var a = []; for (var i = 0; i < 24; i++) a.push(new T.Vector4(0, -999, 0, 1)); return a; })() }, uReflOn: { value: 1 }, uBoat: { value: new T.Vector4(0, 0, 0, 0) }
       };
       U.P = P;
@@ -5353,6 +5353,9 @@
         gust = Math.max(0, gust - dt / 3.2);
         var tw = gust > 0 ? 2.4 : ptr.hover ? 1.25 : 0.45; wind += (tw - wind) * Math.min(1, dt * (gust > 0 ? 3 : 1));
         U.uWind.value = wind;
+        // how far the wind has carried things so far (the snow drifts by it): a stronger wind speeds the drift up from now on;
+        // wind × time moved every flake at once by the change × the time since the page opened
+        U.uDrift.value += wind * dt;
         // summer: a click makes the columns leap
         if (s.fw && s.fw !== lastFw) { lastFw = s.fw; if (st.season === 'summer') leap = 1; }
         leap = Math.max(0, leap - dt / 2.8); U.uLeap.value = Math.sin(Math.min(1, 1 - leap) * Math.PI) * (leap > 0 ? 1 : 0);
