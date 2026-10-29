@@ -15,10 +15,21 @@ export function svgCutout(host, sel, scaleUp, cb) {
   var out = { tex: t, w: r.w, h: r.h, cx: r.cx, cy: r.cy, ok: true }; if (cb) cb(out);
   return out;
 }
-export function spriteMesh(cut, worldW, castShadow) {
+export function spriteMesh(cut, worldW, castShadow, edge) {
   // a flat painted cut-out: always faces us, with an alpha-tested shadow
   var aspect = cut.h / cut.w, g = new T.PlaneGeometry(1, aspect);
   var m = new T.MeshBasicMaterial({ map: cut.tex, transparent: true, alphaTest: 0.35, side: T.DoubleSide, depthWrite: true, fog: false });
+  // it comes and goes as a dissolve, not a fade: opacity is how much of it is there, eaten away in a soft noise pattern with
+  // a thin edge in its trail's colour (the witch's sparkle green, the balloon's gold)
+  var eu = { value: new T.Color(edge || 0xffd166) };
+  m.onBeforeCompile = function (sh) {
+    sh.uniforms.uEdge = eu;
+    sh.fragmentShader = 'uniform vec3 uEdge;\nfloat dh(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }\n' +
+      'float dvn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f); return mix(mix(dh(i), dh(i + vec2(1., 0.)), f.x), mix(dh(i + vec2(0., 1.)), dh(i + 1.), f.x), f.y); }\n' +
+      sh.fragmentShader.replace('#include <alphatest_fragment>',
+        'float dn = dvn(vMapUv * 9.) * .65 + dvn(vMapUv * 31.) * .35; diffuseColor.a /= max(opacity, 1e-3); if (opacity < .999) { if (dn > opacity * 1.12) discard; diffuseColor.rgb = mix(diffuseColor.rgb, uEdge, smoothstep(opacity * 1.12 - .09, opacity * 1.12, dn)); }\n#include <alphatest_fragment>');
+  };
+  m.customProgramCacheKey = function () { return 'cutout-dissolve'; };
   var mesh = new T.Mesh(g, m); mesh.scale.setScalar(worldW); mesh.frustumCulled = false; mesh.renderOrder = 6; mesh.visible = false;
   if (castShadow) { mesh.castShadow = true; mesh.customDepthMaterial = new T.MeshDepthMaterial({ depthPacking: T.RGBADepthPacking, map: cut.tex, alphaTest: 0.35, side: T.DoubleSide }); }
   return mesh;
@@ -37,25 +48,26 @@ export function buildEvents(ctx, renderer) {
   pk.slice(0, 24).forEach(function (p, j) { U.uHw.value[j].set(p[0], p[1], p[2], R() * 6.28); });
   // low purple fog creeping through the gardens; green wisps over the basin
   var fp = [], fa = [];
-  for (i = 0; i < 90; i++) { var gz = 470 + R() * 110, gx = (R() < 0.5 ? -1 : 1) * (9 + R() * 50); fp.push(gx, 0.35 + R() * 0.5, gz); fa.push(R() * 6.28, 0, 5 + R() * 6); }
+  for (i = 0; i < 150; i++) { var gz = 470 + R() * 110, gx = (R() < 0.5 ? -1 : 1) * (9 + R() * 50), hi = i >= 100; fp.push(gx, hi ? 1.2 + R() * 1.2 : 0.3 + R() * 0.5, gz); fa.push(R() * 6.28, 0, hi ? 7 + R() * 7 : 5 + R() * 6); }
   for (i = 0; i < 40; i++) { fp.push((R() - 0.5) * 36, 0.2, 478 + R() * 80); fa.push(R() * 6.28, 1, 2.5 + R() * 3); }
   var fgeo = new T.BufferGeometry(); fgeo.setAttribute('position', new T.Float32BufferAttribute(fp, 3)); fgeo.setAttribute('aF', new T.Float32BufferAttribute(fa, 3));
-  var hfM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uA: { value: 0 } },
-    vertexShader: 'attribute vec3 aF; uniform float uTime, uScale, uA; varying float vA, vK; void main(){ vK = aF.y; vec3 p = position; float f = 0.;\n' +
-      ' if (aF.y < .5) { p.x += sin(uTime * .05 + aF.x) * 6. + uTime * .25 - floor((uTime * .25 + 40.) / 80.) * 80. * 0.; p.z += cos(uTime * .04 + aF.x * 2.) * 4.; vA = uA * (.5 + .5 * sin(uTime * .2 + aF.x)); }\n' +
+  var hfM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uA: { value: 0 }, uHw: U.uHw },
+    vertexShader: 'attribute vec3 aF; uniform float uTime, uScale, uA; uniform vec4 uHw[24]; varying float vA, vK, vL; void main(){ vK = aF.y; vec3 p = position; float f = 0.;\n' +
+      ' if (aF.y < .5) { float sw = uTime * .07 + aF.x; p.x += sin(sw) * 6. + sin(uTime * .21 + p.z * .08) * 2.5; p.z += cos(uTime * .04 + aF.x * 2.) * 4.; p.y += sin(uTime * .3 + aF.x * 3.) * .15; vA = uA * (.5 + .5 * sin(uTime * .2 + aF.x)); }\n' +
       ' else { f = fract(uTime * .08 + aF.x); p += vec3(sin(uTime * .5 + aF.x * 3.) * 1.5, f * 3., cos(uTime * .4 + aF.x) * 1.2); vA = uA * sin(f * 3.1416); }\n' +
+      ' vL = 0.; if (aF.y < .5) for (int i = 0; i < 24; i++) { vec3 d = p - uHw[i].xyz; vL += exp(-dot(d, d) / 30.) * (.8 + .2 * sin(uTime * 9. + uHw[i].w)); } vL = min(vL, 1.);\n' +
       ' vec4 mv = modelViewMatrix * vec4(p, 1.); gl_Position = projectionMatrix * mv; gl_PointSize = vA > .01 ? aF.z * (aF.y < .5 ? 1. : .6 + f) * uScale / max(-mv.z, 1.) : 0.; }',
-    fragmentShader: 'uniform float uTime; varying float vA, vK; void main(){ vec2 q = gl_PointCoord - .5; q.y *= vK < .5 ? 3. : 1.4; q.x += vK > .5 ? sin(q.y * 12.) * .05 : 0.; float d = length(q) * 2.; if (d > 1.) discard;\n' +
-      ' vec3 c = vK < .5 ? vec3(.55, .36, .78) : vec3(.5, 1., .6); gl_FragColor = vec4(c, (1. - smoothstep(.2, 1., d)) * vA * (vK < .5 ? .3 : .55));\n#include <colorspace_fragment>\n}', transparent: true, depthWrite: false });
+    fragmentShader: 'uniform float uTime; varying float vA, vK, vL; void main(){ vec2 q = gl_PointCoord - .5; q.y *= vK < .5 ? 3. : 1.4; q.x += vK > .5 ? sin(q.y * 12.) * .05 : 0.; float d = length(q) * 2.; if (d > 1.) discard;\n' +
+      ' vec3 c = vK < .5 ? mix(vec3(.55, .36, .78), vec3(1., .58, .25), vL * .75) : vec3(.5, 1., .6); gl_FragColor = vec4(c, (1. - smoothstep(.2, 1., d)) * vA * (vK < .5 ? .3 + vL * .15 : .55));\n#include <colorspace_fragment>\n}', transparent: true, depthWrite: false });
   var hfog = new T.Points(fgeo, hfM); hfog.frustumCulled = false; hfog.renderOrder = 5; hfog.name = 'halloween-fog'; scene.add(hfog);
 
   // ---- flying cut-outs: the witch, Santa's sleigh, the hot-air balloon (the painting's own drawings)
   var fly = {};
-  function addFly(name, sel, worldW, shadow) {
+  function addFly(name, sel, worldW, shadow, edge) {
     var c = svgCutout(host, sel, 8); if (!c) return;
-    var m = spriteMesh(c, worldW, shadow); m.name = 'fly-' + name; scene.add(m); fly[name] = { m: m, c: c, t0: -1, w: worldW };
+    var m = spriteMesh(c, worldW, shadow, edge); m.name = 'fly-' + name; scene.add(m); fly[name] = { m: m, c: c, t0: -1, w: worldW };
   }
-  addFly('witch', '.mo-witch .wwave .bob', 52, false);
+  addFly('witch', '.mo-witch .wwave .bob', 52, false, 0x9effb0);
   // Santa's sleigh is a 3D model now, its reindeer each following the path (see buildSleighTeam)
   var team = buildSleighTeam(ctx), slPath = function (p) { return orbitPath(p, 95, 215); }, slBack = new T.Vector3();
   addFly('hotair', '.mo-hotair .hab > g', 24, true);
@@ -78,6 +90,7 @@ export function buildEvents(ctx, renderer) {
     transparent: true, depthWrite: false });
   var trail = new T.Points(tgeo, trM); trail.frustumCulled = false; trail.renderOrder = 7; trail.name = 'fly-trails'; scene.add(trail);
   function emit(p, kind, now) { tp[ti * 3] = p[0] + (R() - 0.5) * 3; tp[ti * 3 + 1] = p[1] + (R() - 0.5) * 3; tp[ti * 3 + 2] = p[2]; ta[ti * 3] = now; ta[ti * 3 + 1] = kind; ti = (ti + 1) % NT; tgeo.attributes.position.needsUpdate = true; tgeo.attributes.aT.needsUpdate = true; }
+  // the witch materialises in view (her dissolve, spriteMesh) a little in from the left edge and vanishes before the right one
   // a loop round the tower: enters from the left, passes behind the tower, swings in front of it and leaves on the right
   // prod: the centre crosses the whole panel (-360..360) well faster than she circles it (r 45): she always moves forward. The
   // design's -90..360 at r 85 circled backwards as fast as the centre advanced: she hovered on the right edge for ~4 s
@@ -91,20 +104,39 @@ export function buildEvents(ctx, renderer) {
   }
 
   // ---- geese in a V, starlings folding behind the tower, swallows diving: dark painted birds drawn in the shader
-  var NG = 9 + 900 + 8, bp = new Float32Array(NG * 3), ba = new Float32Array(NG * 3);
-  for (i = 0; i < NG; i++) { ba[i * 3] = i < 9 ? 0 : i < 909 ? 1 : 2; ba[i * 3 + 1] = R(); ba[i * 3 + 2] = R(); bp[i * 3 + 1] = -999; }
+  // and on Halloween nights a flock of bats round the top of the tower (kind 3; each one's facing in aB.z)
+  var NBT = 18, NG = 9 + 900 + 8 + NBT, bp = new Float32Array(NG * 3), ba = new Float32Array(NG * 3);
+  for (i = 0; i < NG; i++) { ba[i * 3] = i < 9 ? 0 : i < 909 ? 1 : i < 917 ? 2 : 3; ba[i * 3 + 1] = R(); ba[i * 3 + 2] = R(); bp[i * 3 + 1] = -999; }
   var bgeo = new T.BufferGeometry(); bgeo.setAttribute('position', new T.BufferAttribute(bp, 3)); bgeo.setAttribute('aB', new T.BufferAttribute(ba, 3));
   var brdM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uPal: U.uPal, uTok: { value: P.i('bat') }, uTok2: { value: P.i('ink') }, uDir: { value: new T.Vector3(1, 1, 1) } },
-    vertexShader: 'attribute vec3 aB; uniform float uTime, uScale; uniform vec3 uDir; varying float vK, vF, vD; void main(){ vK = aB.x; vF = sin(uTime * (aB.x < .5 ? 9. : aB.x < 1.5 ? 22. : 14.) + aB.y * 6.28); vD = aB.x < .5 ? uDir.x : aB.x < 1.5 ? uDir.y : uDir.z;\n' +
-      ' vec4 mv = modelViewMatrix * vec4(position, 1.); gl_Position = projectionMatrix * mv; gl_PointSize = position.y < -900. ? 0. : (aB.x < .5 ? 7.5 : aB.x < 1.5 ? 1.5 : 1.3) * uScale / max(-mv.z, 1.); }',
+    vertexShader: 'attribute vec3 aB; uniform float uTime, uScale; uniform vec3 uDir; varying float vK, vF, vD; void main(){ vK = aB.x; vF = sin(uTime * (aB.x < .5 ? 9. : aB.x < 1.5 ? 22. : aB.x < 2.5 ? 14. : 17.) + aB.y * 6.28); vD = aB.x < .5 ? uDir.x : aB.x < 1.5 ? uDir.y : aB.x < 2.5 ? uDir.z : aB.z;\n' +
+      ' vec4 mv = modelViewMatrix * vec4(position, 1.); gl_Position = projectionMatrix * mv; gl_PointSize = position.y < -900. ? 0. : (aB.x < .5 ? 7.5 : aB.x < 1.5 ? 1.5 : aB.x < 2.5 ? 1.3 : 10.) * uScale / max(-mv.z, 1.); }',
     fragmentShader: 'uniform sampler2D uPal; uniform float uTok, uTok2; varying float vK, vF, vD; vec3 pal(float i){ return texelFetch(uPal, ivec2(int(i + .5), 0), 0).rgb; }\n' +
       'float seg(vec2 p, vec2 a, vec2 b, float r){ vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0., 1.); return length(pa - ba * h) - r; }\n' +
       'void main(){ vec2 q = (gl_PointCoord - .5) * 2.; q.y = -q.y; q.x *= vD < 0. ? -1. : 1.; float d;\n' +
       ' if (vK < .5) { d = seg(q, vec2(-.45, 0.), vec2(.35, 0.), .07); d = min(d, seg(q, vec2(.35, 0.), vec2(.55, .08), .045)); d = min(d, seg(q, vec2(0., .02), vec2(-.25, .5 * vF), .06)); d = min(d, seg(q, vec2(-.25, .5 * vF), vec2(-.55, .35 * vF + .1), .035)); }\n' +
       ' else if (vK < 1.5) { d = length(q) - .55; }\n' +
+      // a bat: a round body with ears, and two wings with a scalloped trailing edge, beating up and down
+      ' else if (vK > 2.5) { vec2 w = vec2(abs(q.x), q.y); float up = vF * .35; d = length((q - vec2(0., -.02)) * vec2(1.6, 1.)) - .16; d = min(d, seg(w, vec2(.05, .14), vec2(.1, .27), .03));\n' +
+      '   float wing = seg(w, vec2(.1, 0.), vec2(.85, .18 + up), .1); float sc = length(vec2(fract(w.x * 3.3 + .5) - .5, (w.y - (-.05 + up * w.x * 1.1)) * 1.6)) - .3; wing = max(wing, -sc); d = min(d, wing); }\n' +
       ' else { d = seg(q, vec2(-.5, 0.), vec2(.3, 0.), .09); d = min(d, seg(q, vec2(-.5, 0.), vec2(-.8, .2), .03)); d = min(d, seg(q, vec2(-.5, 0.), vec2(-.8, -.2), .03)); d = min(d, seg(q, vec2(0., 0.), vec2(-.3, .6 * vF), .05)); d = min(d, seg(q, vec2(0., 0.), vec2(-.15, -.55 * vF), .05)); }\n' +
       ' if (d > 0.) discard; gl_FragColor = vec4(pal(vK < 1.5 ? uTok : uTok2) * .9, 1.);\n#include <colorspace_fragment>\n}' });
   var birds = new T.Points(bgeo, brdM); birds.frustumCulled = false; birds.renderOrder = 6; birds.name = 'event-birds'; scene.add(birds);
+  // the flock: each bat steers to a point wandering round the top of the tower, keeps clear of the others and jinks
+  var bats = []; for (i = 0; i < NBT; i++) bats.push({ p: [(R() - 0.5) * 120, 170 + R() * 70, (R() - 0.5) * 80], v: [(R() - 0.5) * 30, 0, (R() - 0.5) * 30], ph: R() * 6.28 });
+  function flock(now, dt) {
+    dt = Math.min(dt, 0.05); var tx = Math.sin(now * 0.23) * 70, ty = 205 + Math.sin(now * 0.37) * 30, tz = Math.cos(now * 0.19) * 45;
+    bats.forEach(function (b, j) {
+      var a = [(tx - b.p[0]) * 0.6, (ty - b.p[1]) * 0.6, (tz - b.p[2]) * 0.6], c;
+      bats.forEach(function (o) { if (o === b) return; var dx = b.p[0] - o.p[0], dy = b.p[1] - o.p[1], dz = b.p[2] - o.p[2], d2 = dx * dx + dy * dy + dz * dz; if (d2 < 140) { a[0] += dx * 30 / (d2 + 1); a[1] += dy * 30 / (d2 + 1); a[2] += dz * 30 / (d2 + 1); } });
+      a[0] += Math.sin(now * 3.1 + b.ph) * 60; a[1] += Math.cos(now * 4.3 + b.ph * 2) * 50;
+      for (c = 0; c < 3; c++) b.v[c] += a[c] * dt;
+      var sp = Math.hypot(b.v[0], b.v[1], b.v[2]); if (sp > 55) for (c = 0; c < 3; c++) b.v[c] *= 55 / sp;
+      for (c = 0; c < 3; c++) b.p[c] += b.v[c] * dt;
+      var o3 = (917 + j) * 3; bp[o3] = b.p[0]; bp[o3 + 1] = b.p[1]; bp[o3 + 2] = b.p[2]; if (Math.abs(b.v[0]) > 4) ba[o3 + 2] = b.v[0] > 0 ? 1 : -1;
+    });
+    bgeo.attributes.aB.needsUpdate = true;
+  }
   var swl = []; for (i = 0; i < 8; i++) swl.push({ ph: R() * 6.28, c: [(R() - 0.5) * 120, 20 + R() * 40, 250 + R() * 220], r: 20 + R() * 25, sp: 0.35 + R() * 0.25 });
 
   // ---- Christmas: the tree's star ✦ and its lights on the ice, chimney smoke from the chalets, tiny shoppers, garlands on the bridge
@@ -160,8 +192,30 @@ export function buildEvents(ctx, renderer) {
     var st_ = g.getAttribute('style') || '', dl = parseFloat((/--dl:([\d.]+)/.exec(st_) || [0, 0])[1]), du = parseFloat((/--du:([\d.]+)/.exec(st_) || [0, 3.6])[1]);
     var c = g.querySelector('.rk s[data-n="circle"]'), cc = c && state.vec ? state.vec.center(c) : null, bx = cc ? cc[0] : 430, by = cc ? cc[1] : 400;
     var col = '#ffd166'; [].some.call(g.querySelectorAll('.bs s[data-n="path"], .bs s[data-n="circle"]'), function (e) { var cs = getComputedStyle(e), v = cs.stroke !== 'none' ? cs.stroke : cs.fill; if (/^rgb/.test(v) && !/^rgb\(255, 255, 255/.test(v)) { col = v; return true; } return false; });
-    bursts.push({ dl: dl, du: du, x: bx, y: by, p: at(bx, by, 500), c: new T.Color(col) });
+    var bp0 = at(bx, by, 500); bursts.push({ dl: dl, du: du, x: bx, y: by, p: bp0, c: new T.Color(col), r: Math.abs(at(bx + 125, by, 500)[0] - bp0[0]), pf: 1 });
   });
+  // sparks: each painted burst also throws 40 sparks in 3D as it opens, streaking out, falling and fading in its colour
+  // (8 bursts at once at most; a spark knows its burst by slot, and its own direction and speed)
+  var NSL = 8, NSP = 40, spP = [], spA = [], slot = 0, fwU = [], fwC = [];
+  for (i = 0; i < NSL; i++) { fwU.push(new T.Vector4(0, -999, 0, -99)); fwC.push(new T.Vector4(1, 1, 1, 1)); for (k = 0; k < NSP; k++) { spP.push(0, 0, 0); spA.push(i, R(), R()); } }
+  var spg = new T.BufferGeometry(); spg.setAttribute('position', new T.Float32BufferAttribute(spP, 3)); spg.setAttribute('aS', new T.Float32BufferAttribute(spA, 3));
+  var sparkM = new T.ShaderMaterial({ uniforms: { uTime: U.uTime, uScale: U.uScale, uFw: { value: fwU }, uFwC: { value: fwC }, uRes: { value: new T.Vector2(800, 1100) } },
+    vertexShader: 'attribute vec3 aS; uniform vec4 uFw[8], uFwC[8]; uniform float uTime, uScale; uniform vec2 uRes; varying vec3 vC; varying float vA; varying vec2 vD;\n' +
+      'vec3 pos(vec4 b, float r, vec3 dir, float age){ return b.xyz + dir * r * (1. - exp(-age * 2.6)) - vec3(0., r * .16 * age * age, 0.); }\n' +
+      'void main(){ int s = int(aS.x + .5); vec4 b = uFw[s]; vec4 cc = uFwC[s]; float age = uTime - b.w;\n' +
+      ' float ph = aS.y * 6.2832, ct = aS.z * 2. - 1., st = sqrt(1. - ct * ct); vec3 dir = vec3(st * cos(ph), ct, st * sin(ph) * .4) * (.7 + .3 * fract(aS.y * 7.31 + aS.z * 3.7));\n' +
+      ' vec4 P = projectionMatrix * modelViewMatrix * vec4(pos(b, cc.w, dir, age), 1.), Q = projectionMatrix * modelViewMatrix * vec4(pos(b, cc.w, dir, max(age - .09, 0.)), 1.);\n' +
+      ' vec2 d = (P.xy / P.w - Q.xy / Q.w) * .5 * uRes; float L = min(length(d), 26.), S = 2. * L + 6.; vD = L > .01 ? normalize(d) * L / S : vec2(0.);\n' +
+      ' vA = age > 0. && age < 2. ? 1. - smoothstep(1., 2., age) : 0.; vA *= .75 + .25 * step(.5, fract(age * 9. + aS.y * 13.)) * step(1., age) + step(age, 1.);\n' +
+      ' vC = mix(vec3(1., .96, .85), cc.rgb, smoothstep(.05, .45, age)); gl_Position = P; gl_PointSize = vA > .01 ? S : 0.; }',
+    fragmentShader: 'varying vec3 vC; varying float vA; varying vec2 vD; void main(){ vec2 q = gl_PointCoord - .5; q.y = -q.y;\n' +
+      // a streak from the spark's head (the centre) back along its path, thinning and fading towards the tail
+      ' vec2 ba = -vD; float h = dot(ba, ba) > 1e-6 ? clamp(dot(q, ba) / dot(ba, ba), 0., 1.) : 0.; float dd = length(q - ba * h); float w = mix(.09, .02, h);\n' +
+      ' float a = (1. - smoothstep(w * .5, w, dd)) * (1. - h * .85); if (a < .02) discard; gl_FragColor = vec4(vC, a * vA);\n#include <colorspace_fragment>\n}',
+    transparent: true, depthWrite: false });
+  var sparks = new T.Points(spg, sparkM); sparks.frustumCulled = false; sparks.renderOrder = 7; sparks.name = 'fw-sparks'; sparks.visible = false; scene.add(sparks);
+  var spLast = -99, spSize = new T.Vector2();
+  function spark(b, now) { fwU[slot].set(b.p[0], b.p[1], b.p[2], now); fwC[slot].set(b.c.r, b.c.g, b.c.b, b.r); slot = (slot + 1) % NSL; spLast = now; }
   var clickT0 = -99, lastFw = 0, nyMode = '', nyT0 = 0, finaleEnd = -999, wasFinale = false;
   // smoke drifting after the finale; confetti in 3D at the finale and on New Year clicks
   var skP = [], skA = [];
@@ -223,7 +277,7 @@ export function buildEvents(ctx, renderer) {
   var pileLeaves = new T.Points(lpg, lpM); pileLeaves.frustumCulled = false; pileLeaves.renderOrder = 4; pileLeaves.name = 'pile-leaves'; scene.add(pileLeaves);
 
   var mom = '', momT0 = 0, prev = {}, metNext = 0;
-  E.reflHide = [trail, birds, confetti, hfog, garl, meteor];
+  E.reflHide = [trail, birds, confetti, hfog, garl, meteor, sparks];
   E.update = function (st, s, now, dt) {
     var night = st.sky === 'night', dusk = st.sky === 'dusk', ev_ = st.event;
     if (st.moment !== mom) { mom = st.moment; momT0 = now; }
@@ -235,7 +289,7 @@ export function buildEvents(ctx, renderer) {
     // flying moments
     ['witch', 'sleigh', 'hotair'].forEach(function (n) { if (fly[n]) fly[n].m.visible = false; });
     var w_ = fly.witch, sl = fly.sleigh, ha = fly.hotair;
-    if (w_ && mom === 'witch') { var pw = mt / 15, a1 = clamp(Math.min(pw, 1 - pw) * 12, 0, 1), pos = loopPath(pw, 85, 118, 1.25), pv = loopPath(Math.max(0, pw - 0.004), 85, 118, 1.25); placeFly(w_, pos, pv, a1); if (w_.m.visible && R() < 0.8) emit([pos[0] - 8, pos[1] - 2, pos[2]], 0, now); }
+    if (w_ && mom === 'witch') { var pw = mt / 15, a1 = clamp((Math.min(pw, 1 - pw) - 0.22) / 0.12, 0, 1), pos = loopPath(pw, 85, 118, 1.25), pv = loopPath(Math.max(0, pw - 0.004), 85, 118, 1.25); placeFly(w_, pos, pv, a1); if (w_.m.visible && R() < 0.8) emit([pos[0] - 8, pos[1] - 2, pos[2]], 0, now); }
     if (team) {
       var slOn = mom === 'sleigh' || mom === 'circle', dur = mom === 'circle' ? 16 : 14, ps = slOn ? mt / dur : 0, a2 = slOn ? clamp(Math.min(ps, 1 - ps) * 12, 0, 1) : 0;
       var sp = team.update(slPath, ps, a2, now);
@@ -265,6 +319,8 @@ export function buildEvents(ctx, renderer) {
     var swOn = (st.season === 'spring' && st.phase !== 1 || st.season === 'summer') && st.sky === 'day' && st.wx !== 'rain';
     for (j = 0; j < 8; j++) { o = (909 + j) * 3; var w2 = swl[j]; if (!swOn) { bp[o + 1] = -999; continue; } var a = now * w2.sp + w2.ph; bp[o] = w2.c[0] + Math.cos(a) * w2.r * 1.6; bp[o + 1] = w2.c[1] + Math.sin(a * 2) * 12 - Math.max(0, Math.sin(a)) * 20; bp[o + 2] = w2.c[2] + Math.sin(a) * w2.r; any = true; }
     brdM.uniforms.uDir.value.z = 1;
+    var batOn = hw && st.sky !== 'day' && st.pn > 0.4;
+    if (batOn) { flock(now, dt); any = true; } else for (j = 0; j < NBT; j++) bp[(917 + j) * 3 + 1] = -999;
     bgeo.attributes.position.needsUpdate = true; birds.visible = any;
     // Christmas
     var xm = ev_ === 'christmas';
@@ -283,11 +339,13 @@ export function buildEvents(ctx, renderer) {
       var f = -1, inten = 0;
       if (now - clickT0 < 6) { var tb = now - clickT0 - b.dl; if (tb >= 0 && tb < 3) f = tb / 3; }
       else if (mode) { var per = mode === 'finale' ? 2.4 : mode === 'party' ? b.du * 1.7 : mode === 'volleys' ? b.du * 3 : b.du, del = mode === 'finale' ? b.dl * 0.5 : mode === 'party' ? b.dl * 2 : mode === 'volleys' ? b.dl * 4 : b.dl * 1.6, tb2 = now - nyT0 - del; if (tb2 >= 0) f = (tb2 / per) % 1; }
+      if (f >= 0.29 && b.pf < 0.29) spark(b, now); b.pf = f < 0 ? 1 : f;
       if (f >= 0.29 && f < 0.55) inten = f < 0.31 ? (f - 0.29) / 0.02 : 1 - (f - 0.31) / 0.24;
       if (inten > 0.01) sl4.push([inten, b]);
     });
     sl4.sort(function (a, b) { return b[0] - a[0]; });
     for (j = 0; j < 4; j++) { var e = sl4[j]; if (e) { U.uBst.value[j].set(e[1].p[0], e[1].p[1], e[1].p[2], e[0] * Math.max(0.35, st.pn)); U.uBstC.value[j].copy(e[1].c); U.uBsx.value[j].set(e[1].x, e[1].y); } else U.uBst.value[j].w = 0; }
+    sparks.visible = now - spLast < 2.2; if (sparks.visible) { renderer.getDrawingBufferSize(spSize); sparkM.uniforms.uRes.value.copy(spSize); }
     E.burstTint = sl4.length ? { c: sl4[0][1].c, a: sl4[0][0] * Math.max(0.35, st.pn) } : null;
     fsM.uniforms.uA.value = ev_ === 'newyear' && now - finaleEnd < 90 ? 1 - (now - finaleEnd) / 90 : 0; fwSmoke.visible = fsM.uniforms.uA.value > 0.01;
     confM.uniforms.uA.value = ev_ === 'newyear' && (isFin || /\byear\b/.test(ny) || now - clickT0 < 6) ? 1 : 0; confetti.visible = confM.uniforms.uA.value > 0;

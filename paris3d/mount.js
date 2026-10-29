@@ -11,6 +11,7 @@ import { buildGlints } from './effects/glints.js';
 import { Glows } from './core/glows.js';
 import { Ink } from './effects/ink.js';
 import { Rain } from './effects/rain.js';
+import { Glow } from './effects/glow.js';
 import { paintMaterial } from './core/paint.js';
 import { Palette } from './core/palette.js';
 import { Reflection } from './water/reflection.js';
@@ -41,7 +42,7 @@ export async function mount(canvas, opts) {
   await step(0.02);
   renderer.setClearColor(0x000000, 0); renderer.toneMapping = T.NoToneMapping;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap;
-  var scene = new T.Scene(), camera = new T.PerspectiveCamera(50, 1, 3, 9000), ink = Ink(renderer), inkOn = opts.ink !== false, rain = Rain(renderer);
+  var scene = new T.Scene(), camera = new T.PerspectiveCamera(50, 1, 3, 9000), ink = Ink(renderer), inkOn = opts.ink !== false, rain = Rain(renderer), glow = Glow(renderer);
   var P = new Palette(L.tokens, el); P.read();
   var U = {
     uPal: { value: P.tex }, uScr: { value: scratchTexture() }, uTime: { value: 0 }, uWind: { value: 0.45 }, uDrift: { value: 0 }, uBand: { value: new T.Vector2(0.14, 0.8) },
@@ -107,7 +108,7 @@ export async function mount(canvas, opts) {
   function resize() {
     var w = Math.max(1, cw), h = Math.max(1, ch);
     if (w === W && h === H && renderer.getPixelRatio() === pr) return;
-    W = w; H = h; renderer.setPixelRatio(pr); renderer.setSize(w, h, false); ink.setSize(Math.round(w * pr), Math.round(h * pr)); rain.setSize(Math.round(w * pr), Math.round(h * pr), pr, w); refl.setSize(Math.round(w * pr), Math.round(h * pr)); reflB.setSize(Math.round(w * pr), Math.round(h * pr)); ink.mat.uniforms.uW.value = Math.max(1, pr * 0.75); U.uPx.value = pr;
+    W = w; H = h; renderer.setPixelRatio(pr); renderer.setSize(w, h, false); ink.setSize(Math.round(w * pr), Math.round(h * pr)); rain.setSize(Math.round(w * pr), Math.round(h * pr), pr, w); glow.setSize(Math.round(w * pr), Math.round(h * pr)); refl.setSize(Math.round(w * pr), Math.round(h * pr)); reflB.setSize(Math.round(w * pr), Math.round(h * pr)); ink.mat.uniforms.uW.value = Math.max(1, pr * 0.75); U.uPx.value = pr;
     // the SVG viewBox with preserveAspectRatio="xMidYMid slice": the part of the painting the panel shows
     var s = Math.max(w / VBW, h / VBH); view.scale = s; view.vw = w / s; view.vh = h / s;
     view.x0 = VBW / 2 - view.vw / 2; view.y0 = VBY + VBH / 2 - view.vh / 2;
@@ -133,10 +134,17 @@ export async function mount(canvas, opts) {
     renderer.getClearColor(tmpC); var ca = renderer.getClearAlpha();
     renderer.setRenderTarget(skyRT); renderer.setClearColor(0x000000, 0); renderer.clear(); renderer.render(vec.skyScene, camera); renderer.setRenderTarget(null); renderer.setClearColor(tmpC, ca);
   }
+  // the painted moon's disc on the canvas (uv, y up): its centre is the CSS --monx/--mony in painting units, radius ~46
+  function moonOnScreen(s) {
+    // up as the sun goes down (home.js --mono), brighter the fuller the moon
+    var a = clamp(-(s.t || 0) / 30, 0, 1) * (0.3 + 0.7 * (s.moon == null ? 0.5 : s.moon)); if (s.monx == null || a < 0.01) return null;
+    return { x: (s.monx - view.x0) / view.vw, y: 1 - (s.mony - view.y0) / view.vh, r: 46 / view.vh, a: a };
+  }
   function frontPass() { if (!vec) return; var ac = renderer.autoClear; renderer.autoClear = false; renderer.render(vec.frontScene, camera); renderer.autoClear = ac; }
   // rain on the glass (effects/rain.js): the finished frame goes to the rain's target, the water pass puts it on the canvas;
   // the front layer (the project labels) stays in front of the glass, sharp
-  function paintFrame() { var wet = tier < 1 && rain.active(); skyPass(); reflect(); ink.render(scene, camera, inkOn, wet ? rain.target : null); if (wet) rain.render(); frontPass(); if (glass && tier < 1) glass.draw(); }
+  // the night glow (effects/glow.js) goes first, so the halos are seen through the wet glass
+  function paintFrame() { var wet = tier < 1 && rain.active(), lit = tier < 1 && glow.active(); skyPass(); reflect(); ink.render(scene, camera, inkOn, lit ? glow.target : wet ? rain.target : null); if (lit) glow.render(wet ? rain.target : null); if (wet) rain.render(); frontPass(); if (glass && tier < 1) glass.draw(); }
   var weather = buildWeather(ctx); await step(0.54); var events = buildEvents(ctx, renderer); await step(0.58);
   var reflHide = [seine, basinW, glintPts, glowPts]; ['lamp-halo', 'moths'].forEach(function (n) { var o = scene.getObjectByName(n); if (o) reflHide.push(o); }); events.reflHide.forEach(function (o) { reflHide.push(o); }); ctx.reflHide = reflHide;
   // prod: one reflection a frame, in turn: the Seine on even frames, the basin on odd ones (each is a full render of the
@@ -422,6 +430,8 @@ export async function mount(canvas, opts) {
     netV = Math.max(netV * Math.exp(-dt * 1.5), clamp(Math.abs(cx - lastCx) / Math.max(dt, 0.001) / 3, 0, 1)); lastCx = cx;
     if (net) { var nk = (netV > 0.15 ? 'running' : 'paused') + (netV * 10 | 0); if (nk !== netKey) { netKey = nk; net.style.setProperty('--netplay', netV > 0.15 ? 'running' : 'paused'); net.style.setProperty('--netv', netV.toFixed(1)); } }
     if (vec) vec.update(now);
+    // the glow: from dusk, full at night; the moon's disc on screen for its beams
+    if (tier < 1) glow.update(clamp((st.pn - 0.25) / 0.5, 0, 1), st.sky !== 'day' ? moonOnScreen(s) : null);
     if (sky) sky.update(now, camera);
     if (clouds3) clouds3.update(now);
   }
@@ -494,7 +504,7 @@ export async function mount(canvas, opts) {
       if (aside) { aside.removeEventListener('pointermove', onMove); aside.removeEventListener('pointerleave', onLeave); aside.removeEventListener('pointercancel', onLeave); }
       if (vec) vec.dispose();
       scene.traverse(function (o) { if (o.geometry) o.geometry.dispose(); if (o.material) { (Array.isArray(o.material) ? o.material : [o.material]).forEach(function (m) { m.dispose(); }); } });
-      refl.dispose(); rain.dispose(); if (glass) glass.dispose(); renderer.dispose();
+      refl.dispose(); rain.dispose(); glow.dispose(); if (glass) glass.dispose(); renderer.dispose();
     }
   };
 }

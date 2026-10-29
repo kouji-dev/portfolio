@@ -44,6 +44,9 @@ export function seineMaterial(ctx, refl) {
       // painted reflections, wobbling and broken into horizontal strokes
       ' float band = floor(sy * .6); vec4 rp = uTM * vec4(vW, 1.); vec2 ruv = rp.xy / rp.w;\n' +
       ' ruv.x += (h21(vec2(band, floor(uTime * 1.5))) - .5) * .007 + sin(sy * 1.3 + uTime * 2.1) * .0035; ruv.y += (h21(vec2(band, 7.)) - .5) * .006;\n' +
+      // rain: rings spreading from each drop (three scales of cells), and each ring bends the reflection as it passes
+      ' float rring = 0.; vec2 rdis = vec2(0.); if (uRain > .5) { for (int j = 0; j < 3; j++) { vec2 rq = vW.xz * (j == 0 ? .3 : j == 1 ? .45 : 0.63) + float(j) * 7.3; vec2 rcl = floor(rq); vec2 rfl = fract(rq) - .5 - (vec2(h21(rcl + 1.), h21(rcl + 2.)) - .5) * .5; float rt = fract(uTime * (1.1 + .4 * float(j)) + h21(rcl)); float re = length(rfl * vec2(1., 1.25)) - rt * .42;\n' +
+        '   rring = max(rring, (1. - smoothstep(.0, .035, abs(re))) * (1. - rt)); rdis += normalize(rfl + 1e-4) * exp(-re * re / .0025) * (1. - rt); } ruv += rdis * .006; }\n' +
       ' vec4 r4 = texture2D(uRefl, ruv); vec3 rc = r4.rgb / max(r4.a, .001);\n' +
       ' float gap = step(.22, h21(vec2(band, floor(sx * .07 + h21(vec2(band, 1.)) * 5.)))) * (1. - ruf * .5);\n' +
       ' c = mix(c, mix(rc, c, .38), clamp(r4.a, 0., 1.) * uReflOn * gap * (.62 + .25 * a.r));\n' +
@@ -74,7 +77,6 @@ export function seineMaterial(ctx, refl) {
       // specks of light dust on the water
       ' vec2 wq = vW.xz * vec2(.5, 1.2); vec2 wc = floor(wq); c = mix(c, pal(uTok.w), step(.985, h21(wc + 5.)) * (1. - smoothstep(.12, .22, length(fract(wq) - .5))) * .6);\n' +
       // rain rings all over the river; fog
-      ' float rring = 0.; if (uRain > .5) { for (int j = 0; j < 2; j++) { vec2 rq = vW.xz * (j == 0 ? .3 : .45) + float(j) * 7.3; vec2 rcl = floor(rq); vec2 rfl = fract(rq) - .5 - (vec2(h21(rcl + 1.), h21(rcl + 2.)) - .5) * .5; float rt = fract(uTime * 1.3 + h21(rcl)); rring = max(rring, (1. - smoothstep(.0, .035, abs(length(rfl * vec2(1., 1.25)) - rt * .42))) * (1. - rt)); } }\n' +
       ' for (int bj = 0; bj < 4; bj++) { if (uBst[bj].w > .01) { float bxd = sx - uBsx[bj].x; float bw = 10. + max(sy - 1045., 0.) * .25; c = mix(c, mix(uBstC[bj], vec3(1.), .25), clamp(exp(-bxd * bxd / (2. * bw * bw)) * (a.r * .9 + b.b * .4 + .15) * uBst[bj].w * 1.2, 0., 1.)); } }\n' +
       ' if (uMet.w > .5) { float mxd = sx - uMet.x; c = mix(c, vec3(.88, .94, 1.), clamp(exp(-mxd * mxd / 120.) * (a.r * 1.2 + .45) * uMet.y * step(.3, fract(sy * .35 + h21(vec2(floor(sy * .35), 3.)))), 0., 1.) * .95); }\n' +
       ' c = mix(c, pal(uTok.w), rring * .65); if (uFog > .01) c = mix(c, uFogC, uFog * clamp(1. - exp(-length(vW - cameraPosition) * .0013), 0., .9));\n' +
@@ -109,6 +111,9 @@ export function basinMaterial(ctx, refl) {
       ' vec4 rp = uTM * vec4(vW, 1.); vec2 ruv = rp.xy / rp.w; float band = floor(sy * .8);\n' +
       ' ruv.x += (sin(sy * 1.1 + uTime * 2.3) * .0045 + (h21(vec2(band, floor(uTime * 2.))) - .5) * .007) * act + sin(sy * .9 + uTime * 1.4) * .0012 * calm + ruf * .003;\n' +
       ' ruv.y += sin(sx * .3 + uTime * 1.7) * .002 * act;\n' +
+      // rain: rings spreading from each drop (three scales of cells), and each ring bends the reflection as it passes
+      ' float rring = 0.; vec2 rdis = vec2(0.); if (uRain > .5) { for (int j = 0; j < 3; j++) { vec2 rq = vW.xz * (j == 0 ? .7 : j == 1 ? 1. : 1.4) + float(j) * 7.3; vec2 rcl = floor(rq); vec2 rfl = fract(rq) - .5 - (vec2(h21(rcl + 1.), h21(rcl + 2.)) - .5) * .5; float rt = fract(uTime * (1.1 + .4 * float(j)) + h21(rcl)); float re = length(rfl * vec2(1., 1.25)) - rt * .42;\n' +
+        '   rring = max(rring, (1. - smoothstep(.0, .035, abs(re))) * (1. - rt)); rdis += normalize(rfl + 1e-4) * exp(-re * re / .0025) * (1. - rt); } ruv += rdis * .006; }\n' +
       ' vec4 r4 = texture2D(uRefl, ruv); vec3 rc = r4.rgb / max(r4.a, .001);\n' +
       ' float gap = mix(1., step(.13, h21(vec2(band, floor(sx * .06 + h21(vec2(band, 1.)) * 5.)))), act * .8) * (1. - ruf * .35);\n' +
       ' vec3 skyR = mix(pal(uSky.y), pal(uSky.x), smoothstep(-.2, .9, ruv.y)); c = mix(c, mix(skyR, c, .45), (1. - clamp(r4.a, 0., 1.)) * uReflOn * (.35 + .15 * calm) * (1. - ruf * .5));\n' +
@@ -138,7 +143,6 @@ export function basinMaterial(ctx, refl) {
       ' float rimF = (1. - smoothstep(.04, .2, de + (a.g - .5) * .12)) * (.45 + .55 * act); foam = max(foam, rimF * step(uIce, .5));\n' +
       ' c = mix(c, mix(pal(uTok.w), vec3(1.), .5), clamp(foam, 0., 1.) * .85);\n' +
       ' c += uFL * clamp(glow, 0., 1.4) * uPn * act * .6;\n' +
-      ' float rring = 0.; if (uRain > .5) { for (int j = 0; j < 2; j++) { vec2 rq = vW.xz * (j == 0 ? .7 : 1.) + float(j) * 7.3; vec2 rcl = floor(rq); vec2 rfl = fract(rq) - .5 - (vec2(h21(rcl + 1.), h21(rcl + 2.)) - .5) * .5; float rt = fract(uTime * 1.3 + h21(rcl)); rring = max(rring, (1. - smoothstep(.0, .035, abs(length(rfl * vec2(1., 1.25)) - rt * .42))) * (1. - rt)); } }\n' +
       ' for (int bj = 0; bj < 4; bj++) { if (uBst[bj].w > .01) { float bxd = sx - uBsx[bj].x; float bw = 10. + max(sy - 1045., 0.) * .25; c = mix(c, mix(uBstC[bj], vec3(1.), .25), clamp(exp(-bxd * bxd / (2. * bw * bw)) * (a.r * .9 + b.b * .4 + .15) * uBst[bj].w * 1.2, 0., 1.) * step(uIce, .5)); } }\n' +
       ' if (uMet.w > .5) { float mxd = sx - uMet.x; c = mix(c, vec3(.88, .94, 1.), clamp(exp(-mxd * mxd / 120.) * (a.r * 1.2 + .45) * uMet.y * step(.3, fract(sy * .35 + h21(vec2(floor(sy * .35), 3.)))), 0., 1.) * .95); }\n' +
       ' c = mix(c, pal(uTok.w), rring * .65 * step(uIce, .5)); if (uFog > .01) c = mix(c, uFogC, uFog * clamp(1. - exp(-length(vW - cameraPosition) * .0013), 0., .9));\n' +

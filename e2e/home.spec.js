@@ -355,7 +355,9 @@ test.describe('home, the wipe button', () => {
     await page.goto('/');
     await page.waitForFunction(() => window.__gl && document.querySelector('.pt[data-loaded="1"]'), null, { timeout: 170000 });
     const btn = page.locator('.sky [data-sky-wipe]');
-    await expect(btn).toBeHidden();
+    // dry weather: hidden, unless a passing shower (a random moment) is wetting the glass
+    const dry = () => page.evaluate(() => /^(shower|storm|fogroll)$/.test(document.querySelector('.sky .pt').getAttribute('data-moment')) || document.querySelector('[data-sky-wipe]').hidden);
+    await expect.poll(dry).toBe(true);
     await page.evaluate(() => window.Paris3D.setEvent('winter:rain'));
     await expect(btn).toBeVisible();
     await expect(btn).toHaveAccessibleName('Wipe the window');
@@ -366,7 +368,7 @@ test.describe('home, the wipe button', () => {
     await page.evaluate(() => window.Paris3D.setEvent('winter:fog'));
     await expect(btn).toBeVisible();
     await page.evaluate(() => window.Paris3D.setEvent('auto'));
-    await expect(btn).toBeHidden();
+    await expect.poll(dry).toBe(true);
   });
 });
 
@@ -408,5 +410,24 @@ test.describe('home, the witch', () => {
       return out; });
     expect(xs.length).toBeGreaterThan(10);
     for (let i = 1; i < xs.length; i++) expect(xs[i] - xs[i - 1]).toBeGreaterThan(10);
+  });
+});
+
+test.describe('home, night effects', () => {
+  test('3D Halloween night: a bat flock round the tower; a click throws firework sparks', async ({ page }) => {
+    test.setTimeout(180000);
+    await page.addInitScript(() => { let real; Object.defineProperty(window, 'Paris3D', { configurable: true, get: () => real, set: (v) => {
+      real = v; const m = v.mountAsync; if (!m || m.__w) return;
+      v.mountAsync = async (c, o) => { const h = await m(c, Object.assign({}, o, { manual: true })); window.__gl = h; return h; }; v.mountAsync.__w = 1; } }); });
+    await at(page, '2026-10-30T22:00:00+01:00');
+    await page.goto('/');
+    await page.waitForFunction(() => window.__gl && document.querySelector('.pt[data-loaded="1"]'), null, { timeout: 170000 });
+    // the bats (the birds' last 18 points) fly, the rest of the year they are parked out of sight
+    const bats = await page.evaluate(() => { const h = window.__gl, a = h.scene.getObjectByName('event-birds').geometry.attributes.position.array; for (let i = 0; i < 10; i++) h.renderOnce(0.1); let n = 0; for (let j = 917; j < 935; j++) if (a[j * 3 + 1] > -900) n++; return n; });
+    expect(bats).toBe(18);
+    const box = await page.locator('.sky').boundingBox();
+    await page.mouse.click(box.x + box.width * 0.7, box.y + box.height * 0.2);
+    const spawned = await page.evaluate(() => { const h = window.__gl, s = h.scene.getObjectByName('fw-sparks'); for (let i = 0; i < 40; i++) h.renderOnce(0.1); return s.material.uniforms.uFw.value.filter((v) => v.w > -99).length; });
+    expect(spawned).toBeGreaterThan(0);
   });
 });
