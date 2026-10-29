@@ -19,6 +19,8 @@
   var html = document.documentElement;
   var btn = document.querySelector('[data-theme-toggle]');
   var skyEl = document.querySelector('[data-sky]');
+  // the painting's description goes on the image itself (the panel also holds the wipe button)
+  var skyImg = document.querySelector('[data-sky-inner]'), wipeBtn = document.querySelector('[data-sky-wipe]');
   var vo = 0; // fast-forward offset (ms) added to the clock
   var skinMode = 'auto'; // the skin picker's choice ('auto' follows the date; the picker shows only off https)
   var skinBtn = document.querySelector('[data-skin-picker]');
@@ -165,7 +167,9 @@
     var label = dark ? 'Fast-forward to sunrise' : 'Fast-forward to sunset';
     btn.setAttribute('aria-label', label);
     btn.title = label;
-    if (skyEl) skyEl.setAttribute('aria-label', skyLabel(k, name));
+    if (skyImg) skyImg.setAttribute('aria-label', skyLabel(k, name));
+    // the wipe button: only where there is something on the glass to wipe (the 3D's rain and fog)
+    if (wipeBtn) wipeBtn.hidden = !(st.gl && (k.wx === 'rain' || k.wx === 'fog' || /^(shower|storm|fogroll)$/.test(st.moment)));
     if (skinBtn && !skinBtn.hidden) skinLabel(k);
     var el = pt();
     if (!el) return;
@@ -303,6 +307,7 @@
   // a click: a shaped firework (the skin's shapes in turn), the skin's flourish, and the sparkle (night) or a gust (day)
   var gustT, pokeT, fwT, shapeIx = {};
   if (skyEl) {
+    if (wipeBtn) wipeBtn.addEventListener('click', function (e) { e.stopPropagation(); if (gl && gl.wipe) gl.wipe(); });
     skyEl.addEventListener('click', function (e) {
       if (!pt()) return;
       var k = snap(), name = k.sk.name, key = k.event || k.season || '', S = (window.SKY_SK && window.SKY_SK.shapes) || {};
@@ -330,7 +335,7 @@
   }
 
 
-  var SKY_V = '9'; // ?v= for sky.js, sky-svg.js and home-svg.css: bump with home.css / home.js
+  var SKY_V = '10'; // ?v= for sky.js, sky-svg.js and home-svg.css: bump with home.css / home.js
   // the SVG painting (the design before it moved into the 3D scene): its markup and CSS load only when the 3D can't run
   function loadSvgPainting() {
     var css = new Promise(function (ok) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'home-svg.css?v=' + SKY_V; l.onload = l.onerror = ok; document.head.appendChild(l); });
@@ -421,7 +426,7 @@
      painting (its base layers) appears only if WebGL 2 is missing, the scripts or the scene fail, or the GPU context is lost. After the page's load, three.js (pinned in index.html's import map, from jsDelivr) and paris3d.js (built from the modules in paris3d/) load; the scene builds in
      small steps between frames and compiles only the shaders today's frame draws, without blocking (the rest compile the
      first time they show), while the loading overlay shows the progress; it lifts once the scene has drawn. */
-  var GL_V = '9'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
+  var GL_V = '11'; // ?v= for paris3d.js: bump when the scene changes (three.js is pinned by version in the import map)
   // three.js through the import map, imported via Function: a browser without dynamic import rejects here instead of
   // failing to parse home.js. The scene itself is paris3d.js, one classic script built from the modules in paris3d/
   // (pnpm run scene): it also runs from file://, where browsers refuse ES modules

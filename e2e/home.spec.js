@@ -118,7 +118,7 @@ test.describe('home', () => {
     await expect(pt).toHaveAttribute('data-event', 'halloween');
     await expect(pt).toHaveAttribute('data-season', 'autumn');
     await expect(pt).toHaveAttribute('data-sky', 'night');
-    await expect(page.locator('.sky')).toHaveAttribute('aria-label', /Dressed for Halloween/);
+    await expect(page.locator('.sky .sky-inner')).toHaveAttribute('aria-label', /Dressed for Halloween/);
     // the skin's signature moment (the witch) plays first, a few seconds in
     await expect(pt).toHaveAttribute('data-moment', 'witch', { timeout: 10000 });
 
@@ -185,7 +185,7 @@ test.describe('home', () => {
       await page.goto('/');
       await expect(pt).toHaveAttribute('data-wx', wx);
     }
-    await expect(page.locator('.sky')).toHaveAttribute('aria-label', /snow falling/);
+    await expect(page.locator('.sky .sky-inner')).toHaveAttribute('aria-label', /snow falling/);
     // rain day: the rain layer shows and is not marked hidden
     await at(page, '2027-01-10T15:00:00+01:00');
     await page.reload();
@@ -342,5 +342,30 @@ test.describe('home on a touch screen', () => {
     const top = await page.evaluate(() => scrollY);
     await swipe(Array.from({ length: 9 }, (_, i) => ({ x: box.x + box.width / 2, y: y + 150 - i * 25 })));
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(top + 50);
+  });
+});
+
+test.describe('home, the wipe button', () => {
+  test('3D wipe button: shown in rain and fog only; a click wipes the glass, not a firework', async ({ page }) => {
+    test.setTimeout(180000);
+    await page.addInitScript(() => { let real; Object.defineProperty(window, 'Paris3D', { configurable: true, get: () => real, set: (v) => {
+      real = v; const m = v.mountAsync; if (!m || m.__w) return;
+      v.mountAsync = async (c, o) => { const h = await m(c, o); window.__wipes = 0; const w = h.wipe; h.wipe = function () { window.__wipes++; return w.apply(this, arguments); }; window.__gl = h; return h; }; v.mountAsync.__w = 1; } }); });
+    await at(page, '2026-07-01T13:00:00+02:00');
+    await page.goto('/');
+    await page.waitForFunction(() => window.__gl && document.querySelector('.pt[data-loaded="1"]'), null, { timeout: 170000 });
+    const btn = page.locator('.sky [data-sky-wipe]');
+    await expect(btn).toBeHidden();
+    await page.evaluate(() => window.Paris3D.setEvent('winter:rain'));
+    await expect(btn).toBeVisible();
+    await expect(btn).toHaveAccessibleName('Wipe the window');
+    const fw = await page.locator('.sky .pt').getAttribute('data-fw');
+    await btn.click();
+    expect(await page.evaluate(() => window.__wipes)).toBe(1);
+    await expect(page.locator('.sky .pt')).toHaveAttribute('data-fw', fw);
+    await page.evaluate(() => window.Paris3D.setEvent('winter:fog'));
+    await expect(btn).toBeVisible();
+    await page.evaluate(() => window.Paris3D.setEvent('auto'));
+    await expect(btn).toBeHidden();
   });
 });

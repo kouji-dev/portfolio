@@ -37,7 +37,7 @@
   <link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/fonts/fonts.css">
 
-  <link rel="stylesheet" href="home.css?v=9">
+  <link rel="stylesheet" href="home.css?v=11">
 
   <!-- three.js for the 3D painting, imported by home.js once the page has loaded; pinned to the version the scene (paris3d/) is written for -->
   <script type="importmap">
@@ -174,8 +174,12 @@
   </main>
 
   <!-- the Eiffel Tower seen from the Trocadéro; home.js injects sky.js and drives sky / sparkle / gust -->
-  <aside class="sky" data-sky role="img" aria-label="A hand-painted view of the Eiffel Tower from the Trocadéro">
-    <div class="sky-inner" data-sky-inner></div>
+  <aside class="sky" data-sky>
+    <div class="sky-inner" data-sky-inner role="img" aria-label="A hand-painted view of the Eiffel Tower from the Trocadéro"></div>
+    <!-- shown in rain and fog (home.js): sweeps the drops and the mist off the glass -->
+    <button class="sky-wipe" type="button" data-sky-wipe hidden aria-label="Wipe the window" title="Wipe the window">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16"/><path d="M6 5l1 3h10l1-3"/><path d="M12 8v12"/></svg><span>Wipe</span>
+    </button>
   </aside>
   </div>
 </div>
@@ -183,6 +187,6 @@
   <script src="analytics.js" defer></script>
   <script src="blog-data.js" defer></script>
   <script src="trajectory-data.js" defer></script>
-  <script src="home.js?v=13" defer></script>
+  <script src="home.js?v=15" defer></script>
 </body>
 </html>

@@ -56,11 +56,12 @@ export function Ink(renderer) {
   return {
     mat: mat, rt: rt, quad: sc, aa: aaSc,
     setSize: function (w, h) { rt.setSize(w, h); rtA.setSize(w, h); mat.uniforms.uTex.value.set(1 / w, 1 / h); },
-    render: function (scene, camera, on) {
+    // target: where the finished frame goes (the canvas by default; the rain's target while it rains)
+    render: function (scene, camera, on, target) {
       mat.uniforms.uIw.value.set(1 / camera.near, 1 / camera.near - 1 / camera.far); mat.uniforms.uOn.value = on ? 1 : 0;
       renderer.setRenderTarget(rt); renderer.clear(); renderer.render(scene, camera);
       renderer.setRenderTarget(rtA); renderer.clear(); renderer.render(sc, cam);
-      renderer.setRenderTarget(null); renderer.clear(); renderer.render(aaSc, cam);
+      renderer.setRenderTarget(target || null); renderer.clear(); renderer.render(aaSc, cam);
     },
     dispose: function () { rt.dispose(); rtA.dispose(); mat.dispose(); aaMat.dispose(); }
   };

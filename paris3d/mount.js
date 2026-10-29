@@ -10,6 +10,7 @@ import { Glass } from './effects/glass.js';
 import { buildGlints } from './effects/glints.js';
 import { Glows } from './core/glows.js';
 import { Ink } from './effects/ink.js';
+import { Rain } from './effects/rain.js';
 import { paintMaterial } from './core/paint.js';
 import { Palette } from './core/palette.js';
 import { Reflection } from './water/reflection.js';
@@ -40,7 +41,7 @@ export async function mount(canvas, opts) {
   await step(0.02);
   renderer.setClearColor(0x000000, 0); renderer.toneMapping = T.NoToneMapping;
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap;
-  var scene = new T.Scene(), camera = new T.PerspectiveCamera(50, 1, 3, 9000), ink = Ink(renderer), inkOn = opts.ink !== false;
+  var scene = new T.Scene(), camera = new T.PerspectiveCamera(50, 1, 3, 9000), ink = Ink(renderer), inkOn = opts.ink !== false, rain = Rain(renderer);
   var P = new Palette(L.tokens, el); P.read();
   var U = {
     uPal: { value: P.tex }, uScr: { value: scratchTexture() }, uTime: { value: 0 }, uWind: { value: 0.45 }, uBand: { value: new T.Vector2(0.14, 0.8) },
@@ -106,7 +107,7 @@ export async function mount(canvas, opts) {
   function resize() {
     var w = Math.max(1, cw), h = Math.max(1, ch);
     if (w === W && h === H && renderer.getPixelRatio() === pr) return;
-    W = w; H = h; renderer.setPixelRatio(pr); renderer.setSize(w, h, false); ink.setSize(Math.round(w * pr), Math.round(h * pr)); refl.setSize(Math.round(w * pr), Math.round(h * pr)); reflB.setSize(Math.round(w * pr), Math.round(h * pr)); ink.mat.uniforms.uW.value = Math.max(1, pr * 0.75); U.uPx.value = pr;
+    W = w; H = h; renderer.setPixelRatio(pr); renderer.setSize(w, h, false); ink.setSize(Math.round(w * pr), Math.round(h * pr)); rain.setSize(Math.round(w * pr), Math.round(h * pr), pr, w); refl.setSize(Math.round(w * pr), Math.round(h * pr)); reflB.setSize(Math.round(w * pr), Math.round(h * pr)); ink.mat.uniforms.uW.value = Math.max(1, pr * 0.75); U.uPx.value = pr;
     // the SVG viewBox with preserveAspectRatio="xMidYMid slice": the part of the painting the panel shows
     var s = Math.max(w / VBW, h / VBH); view.scale = s; view.vw = w / s; view.vh = h / s;
     view.x0 = VBW / 2 - view.vw / 2; view.y0 = VBY + VBH / 2 - view.vh / 2;
@@ -133,7 +134,9 @@ export async function mount(canvas, opts) {
     renderer.setRenderTarget(skyRT); renderer.setClearColor(0x000000, 0); renderer.clear(); renderer.render(vec.skyScene, camera); renderer.setRenderTarget(null); renderer.setClearColor(tmpC, ca);
   }
   function frontPass() { if (!vec) return; var ac = renderer.autoClear; renderer.autoClear = false; renderer.render(vec.frontScene, camera); renderer.autoClear = ac; }
-  function paintFrame() { skyPass(); reflect(); ink.render(scene, camera, inkOn); frontPass(); if (glass && tier < 1) glass.draw(); }
+  // rain on the glass (effects/rain.js): the finished frame goes to the rain's target, the water pass puts it on the canvas;
+  // the front layer (the project labels) stays in front of the glass, sharp
+  function paintFrame() { var wet = tier < 1 && rain.active(); skyPass(); reflect(); ink.render(scene, camera, inkOn, wet ? rain.target : null); if (wet) rain.render(); frontPass(); if (glass && tier < 1) glass.draw(); }
   var weather = buildWeather(ctx); await step(0.54); var events = buildEvents(ctx, renderer); await step(0.58);
   var reflHide = [seine, basinW, glintPts, glowPts]; ['lamp-halo', 'moths'].forEach(function (n) { var o = scene.getObjectByName(n); if (o) reflHide.push(o); }); events.reflHide.forEach(function (o) { reflHide.push(o); }); ctx.reflHide = reflHide;
   // prod: one reflection a frame, in turn: the Seine on even frames, the basin on odd ones (each is a full render of the
@@ -408,7 +411,9 @@ export async function mount(canvas, opts) {
     if (hot > 0.01) { PV.set(0, 0.1, 466).project(camera); var v0 = PV.y * 0.5 + 0.5; PV.set(0, 0.1, 436).project(camera); var v1 = PV.y * 0.5 + 0.5; ink.mat.uniforms.uShim.value.set(hot, v0, v1, now); } else ink.mat.uniforms.uShim.value.x = 0;
     if (glass) {
       if (host && (skyV !== tokV || (!tokMo && now - skyAt > 1.5))) { skyV = tokV; skyAt = now; var cs = getComputedStyle(host); skyCol = [(cs.getPropertyValue('--c-skb1') || '#9fc0e0').trim() || '#9fc0e0', (cs.getPropertyValue('--c-sks1') || '#d8e6f2').trim() || '#d8e6f2']; }
-      glass.update(dt, now, st, ptr, { ev: st.event, conf: events.confetti, met: events.meteor, tint: events.burstTint, rain: st.wx === 'rain', storm: st.storm, shower: st.shower, snow: st.wx === 'snow', fog: st.wx === 'fog', frost: st.wx === 'frost', hw: st.event === 'halloween', flash: U.uFlash.value, hot: hot, sunx: s.sunx || 430, suny: s.suny || 300, sky: skyCol[0], sky2: skyCol[1], snap: s.snap });
+      // the rain on the glass is the WebGL pass (rain.js); the 2D glass keeps the fog, the frost, the snow, the rest
+      rain.update(dt, tier < 1 ? (st.storm ? 'storm' : st.shower ? 'shower' : st.wx === 'rain' ? 'rain' : '') : '', ptr.sx, ptr.sy);
+      glass.update(dt, now, st, ptr, { ev: st.event, conf: events.confetti, met: events.meteor, tint: events.burstTint, rain: false, storm: st.storm, shower: st.shower, snow: st.wx === 'snow', fog: st.wx === 'fog', frost: st.wx === 'frost', hw: st.event === 'halloween', flash: U.uFlash.value, hot: hot, sunx: s.sunx || 430, suny: s.suny || 300, sky: skyCol[0], sky2: skyCol[1], snap: s.snap });
       glass.el.style.visibility = tier < 1 ? '' : 'hidden';
     }
     netV = Math.max(netV * Math.exp(-dt * 1.5), clamp(Math.abs(cx - lastCx) / Math.max(dt, 0.001) / 3, 0, 1)); lastCx = cx;
@@ -475,6 +480,8 @@ export async function mount(canvas, opts) {
   start();
   return {
     renderer: renderer, scene: scene, camera: camera, U: U, ctx: ctx, whenReady: whenReady, setTier: function (t) { tier = t; setTier(t); },
+    // the wipe button (home.js): the rain and the mist swept off the glass
+    wipe: function () { rain.wipe(); if (glass) glass.wipe(); },
     poke: function (info) { info = info || {}; if (info.day) gust = 1; if (glass) glass.poke(st.season, !!info.day); },
     step: function (dt) { var now = U.uTime.value + dt; U.uTime.value = now; U.uStep.value = Math.floor(now * 12) / 12; update(dt, now); },
     renderOnce: function (dt) { var now = U.uTime.value + (dt || 0); U.uTime.value = now; U.uStep.value = Math.floor(now * 12) / 12; resize(); update(dt || 0.016, now); sync(); gate(); project(); if (window.__dbgCam) window.__dbgCam(camera, T); paintFrame(); },
@@ -484,7 +491,7 @@ export async function mount(canvas, opts) {
       if (aside) { aside.removeEventListener('pointermove', onMove); aside.removeEventListener('pointerleave', onLeave); aside.removeEventListener('pointercancel', onLeave); }
       if (vec) vec.dispose();
       scene.traverse(function (o) { if (o.geometry) o.geometry.dispose(); if (o.material) { (Array.isArray(o.material) ? o.material : [o.material]).forEach(function (m) { m.dispose(); }); } });
-      refl.dispose(); if (glass) glass.dispose(); renderer.dispose();
+      refl.dispose(); rain.dispose(); if (glass) glass.dispose(); renderer.dispose();
     }
   };
 }

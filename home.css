@@ -25,6 +25,12 @@ a:hover{color:var(--accent);text-decoration-color:#a855f7}
 .sky{position:sticky;top:10vh;height:80vh;min-height:560px;cursor:pointer;flex:1 1 380px;max-width:520px;min-width:0;overflow:hidden;border-radius:22px;border:1px solid var(--panel-bd);background:var(--panel);box-shadow:var(--panel-sh);transition:background-color .9s,box-shadow .9s;touch-action:pan-y pinch-zoom}
 .sky-inner{position:relative;width:100%;height:100%;opacity:0;transition:opacity .6s ease}
 .sky-inner.is-in{opacity:1}
+/* the wipe button: over the painting, bottom left, in rain and fog only (home.js) */
+.sky-wipe{position:absolute;left:14px;bottom:14px;z-index:40;display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 13px 0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(14,20,38,.72);color:#fff;font:600 13px/1 'Space Grotesk',sans-serif;letter-spacing:.02em;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.28);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:background .2s,border-color .2s,transform .15s}
+.sky-wipe:hover{background:rgba(14,20,38,.88);border-color:rgba(255,255,255,.7)}
+.sky-wipe:active{transform:scale(.96)}
+.sky-wipe:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.sky-wipe[hidden]{display:none}
 .sky:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 /* the 3D painting loading over the SVG one (home.js load3d): a small status chip, gone once the scene fades in */
 /* the loading overlay over the painting while the 3D scene loads (design: .pt-load); lifted by .pt[data-loaded="1"] */
