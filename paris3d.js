@@ -1196,7 +1196,9 @@
       var trail = new T.Points(tgeo, trM); trail.frustumCulled = false; trail.renderOrder = 7; trail.name = 'fly-trails'; scene.add(trail);
       function emit(p, kind, now) { tp[ti * 3] = p[0] + (R() - 0.5) * 3; tp[ti * 3 + 1] = p[1] + (R() - 0.5) * 3; tp[ti * 3 + 2] = p[2]; ta[ti * 3] = now; ta[ti * 3 + 1] = kind; ti = (ti + 1) % NT; tgeo.attributes.position.needsUpdate = true; tgeo.attributes.aT.needsUpdate = true; }
       // a loop round the tower: enters from the left, passes behind the tower, swings in front of it and leaves on the right
-      function loopPath(p, r, yb, laps) { var th = Math.PI + 2 * Math.PI * laps * p, cx = lerp(-90, 360, p); return [cx + Math.cos(th) * r, yb + Math.sin(p * Math.PI * 4) * 14, Math.sin(th) * r * 0.85]; }
+      // prod: the centre crosses the whole panel (-360..360) well faster than she circles it (r 45): she always moves forward. The
+      // design's -90..360 at r 85 circled backwards as fast as the centre advanced: she hovered on the right edge for ~4 s
+      function loopPath(p, r, yb, laps) { r = Math.min(r, 45); var th = Math.PI + 2 * Math.PI * laps * p, cx = lerp(-360, 360, p); return [cx + Math.cos(th) * r, yb + Math.sin(p * Math.PI * 4) * 14, Math.sin(th) * r * 0.85]; }
       function orbitPath(p, r, yb) { var th = Math.PI + 2 * Math.PI * 2 * p; return [Math.cos(th) * r * (p < 0.08 ? 1 + (0.08 - p) * 30 : p > 0.92 ? 1 + (p - 0.92) * 30 : 1), yb + Math.sin(th * 2) * 10, Math.sin(th) * r * 0.85]; }
       function placeFly(f, pos, prev, a) {
         var m = f.m; m.visible = a > 0.01 && f.c.ok; if (!m.visible) return;

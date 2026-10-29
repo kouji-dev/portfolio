@@ -23,8 +23,7 @@ hand-ported, build-free vanilla site. This skill moves one into the other.
   `sky/` (vec = the painting's vector layers, skydome, clouds), `effects/` (ink + FXAA, glass, glints),
   and at the root `mount.js` (start-up, lazy shaders, batching, frame loop), `layout.js`, `state.js`.
   The modules are the source; the page loads `paris3d.js`, one classic script generated from them by `pnpm run scene`
-  (it also runs from file://, where browsers refuse ES modules). Edit the modules, never paris3d.js; rebuild and bump
-  `GL_V` in home.js after any change.
+  (it also runs from file://, where browsers refuse ES modules). Edit the modules, never paris3d.js; rebuild after any change.
 
 ## 1. Pull
 
@@ -97,8 +96,9 @@ follows the date. Tests pin the date with Playwright's clock (`page.clock.setFix
 - `sky.js` loads after `load` (`home.js` → `loadSky`); never put it back in the markup.
 - Don't re-add things that measured no gain: layer splitting, `will-change` on painting layers,
   path minifying.
-- Changed `home.css`, `home.js` or `sky.js`? Bump the `?v=` on all three together
-  (`index.html` for the CSS and JS, `home.js` for `sky.js`) so phones fetch the new files.
+- No version numbers on the files (`?v=`): Vercel serves everything with `max-age=0, must-revalidate` and an ETag, so a
+  browser re-checks each file on every visit and gets a changed one at once. Locally, `serve.json` sends `no-cache` for
+  the same behaviour (without it `serve` sends no caching rules and browsers keep stale copies).
 
 ### The 3D scene (paris3d.js): integration checklist
 
@@ -164,7 +164,7 @@ laptop, keeps the picture identical (pixel harness) unless noted, and must hold 
 - A/B the real page against what is live: `git archive HEAD` served on port 4174 vs the working tree on 4173,
   alternating runs (the laptop drifts with heat); fps, frame p50/p90, long tasks.
 - Draw calls per render call in one frame, and a CPU profile of the frame loop, before deciding what to optimise.
-- Bump `GL_V` in home.js when the scene modules change; check any three.js pin change with `scripts/scene-diff.cjs`.
+- Check any three.js pin change with `scripts/scene-diff.cjs`.
 - Stay on `WebGLRenderer`: a full port to `WebGPURenderer` + TSL (2026-10-28) measured 2.7× slower per frame on this
   scene (many objects); the patch is archived in the main checkout's `.claude/archive/`.
 

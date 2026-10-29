@@ -389,3 +389,24 @@ test.describe('home, the wind', () => {
     expect(d).toBeGreaterThan(0);
   });
 });
+
+test.describe('home, the witch', () => {
+  test('3D witch: crosses the painting without hovering in one place', async ({ page }) => {
+    test.setTimeout(180000);
+    await page.addInitScript(() => { let real; Object.defineProperty(window, 'Paris3D', { configurable: true, get: () => real, set: (v) => {
+      real = v; const m = v.mountAsync; if (!m || m.__w) return;
+      v.mountAsync = async (c, o) => { const h = await m(c, Object.assign({}, o, { manual: true })); window.__gl = h; return h; }; v.mountAsync.__w = 1; } }); });
+    await at(page, '2026-10-30T22:00:00+01:00');
+    await page.goto('/');
+    await page.waitForFunction(() => window.__gl && document.querySelector('.pt[data-loaded="1"]') && window.Paris3D.setEvent, null, { timeout: 170000 });
+    await page.evaluate(() => window.Paris3D.setEvent('halloween'));
+    // Halloween night's first moment is the witch (home.js playMoment)
+    await expect(page.locator('.sky .pt')).toHaveAttribute('data-moment', 'witch', { timeout: 20000 });
+    // her on-screen x every 0.7 s of scene time while she flies (the bug: ~4 s within a few pixels at the right edge)
+    const xs = await page.evaluate(() => { const h = window.__gl, fw = h.scene.getObjectByName('fly-witch'), w = document.querySelector('.pt3d').clientWidth, v = new THREE.Vector3(), out = [];
+      for (let i = 0; i < 23; i++) { for (let k = 0; k < 7; k++) h.renderOnce(0.1); if (fw.visible) { v.setFromMatrixPosition(fw.matrixWorld).project(h.camera); out.push((v.x * 0.5 + 0.5) * w); } }
+      return out; });
+    expect(xs.length).toBeGreaterThan(10);
+    for (let i = 1; i < xs.length; i++) expect(xs[i] - xs[i - 1]).toBeGreaterThan(10);
+  });
+});
