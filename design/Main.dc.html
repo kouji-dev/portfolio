@@ -7,12 +7,12 @@
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/"
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
   }
 }
 </script>
-<script type="module" async src="paris3d.js"></script>
+<script type="module" async src="paris3d-loader.js"></script>
 </head>
 <body>
 <x-dc>
@@ -488,18 +488,21 @@ class Component extends DCLogic {
     if (this.reduced() || !(window.WebGL2RenderingContext)) lift();
     this._mount3d = () => {
       if (this._3d || this._gone || !window.Paris3D || !window.PARIS3D_LAYOUT || this.reduced()) return;
+      if (this._mounting) return; this._mounting = true;
       this._stage = 1; this.setState({ loadP: Math.max(this.state.loadP, 0.55), loadMsg: 'Raising the tower' });
-      // let the overlay paint its new stage before the (synchronous) build of the scene
-      requestAnimationFrame(() => requestAnimationFrame(() => {
-        if (this._3d || this._gone) return;
-        try {
-          const cv = document.querySelector('.pt3d');
-          this._3d = cv ? window.Paris3D.mount(cv, { layout: window.PARIS3D_LAYOUT, tokens: cv.parentElement, state: () => this.state3d(), onReady: lift }) : null;
-          if (this._3d) { this._stage = 2; this.setState({ gl: 1, loadP: Math.max(this.state.loadP, 0.8), loadMsg: 'Lighting the city' }); } else lift();
-        } catch (e) { this._3d = null; lift(); }
-      }));
+      // the production scene (kouji-dev/portfolio paris3d/ modules): it builds in steps between frames and reports its progress
+      const cv = document.querySelector('.pt3d');
+      if (!cv) { lift(); return; }
+      const P3 = window.Paris3D, opts = { layout: window.PARIS3D_LAYOUT, tokens: cv.parentElement, state: () => this.state3d(), onReady: lift,
+        onProgress: (f) => { if (!this._gone && !this.state.loaded) this.setState({ loadP: Math.max(this.state.loadP, Math.round((0.55 + f * 0.25) * 1000) / 1000) }); } };
+      Promise.resolve(P3.mountAsync ? P3.mountAsync(cv, opts) : P3.mount(cv, opts)).then((h) => {
+        if (this._gone) { if (h) h.dispose(); return; }
+        if (!h) { lift(); return; }
+        this._3d = h; this._stage = 2; this.setState({ gl: 1, loadP: Math.max(this.state.loadP, 0.8), loadMsg: 'Lighting the city' });
+      }).catch((e) => { if (window.console) console.error('[painting] 3D failed', e); lift(); });
     };
-    if (window.Paris3D) this._mount3d(); else { window.addEventListener('paris3d-ready', this._mount3d, { once: true }); if (window.Paris3D === undefined && !window.WebGL2RenderingContext) lift(); }
+    this._3dFail = () => lift();
+    if (window.Paris3D && window.Paris3D.mountAsync && window.PARIS3D_LAYOUT) this._mount3d(); else { window.addEventListener('paris3d-ready', this._mount3d, { once: true }); window.addEventListener('paris3d-failed', this._3dFail, { once: true }); if (!window.WebGL2RenderingContext) lift(); }
   }
   // what the 3D scene reads every frame: the sky clock (sun and moon where the painting puts them) and the skin of the moment
   state3d() {
@@ -516,7 +519,7 @@ class Component extends DCLogic {
     if (this._move) window.removeEventListener('pointermove', this._move);
     (this._trailDots || []).forEach((d) => d.el.remove());
     document.removeEventListener('visibilitychange', this._vis);
-    this._gone = true; window.removeEventListener('paris3d-ready', this._mount3d); clearInterval(this._lt); clearTimeout(this._lsafe);
+    this._gone = true; window.removeEventListener('paris3d-ready', this._mount3d); window.removeEventListener('paris3d-failed', this._3dFail); clearInterval(this._lt); clearTimeout(this._lsafe);
     if (this._3d) { this._3d.dispose(); this._3d = null; }
   }
   reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
