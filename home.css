@@ -85,7 +85,11 @@ a:hover{color:var(--accent);text-decoration-color:#a855f7}
 .rows{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
 .rows li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 16px;padding:7px 0}
 .rows-proj li{align-items:baseline;flex-wrap:nowrap}
+/* work: company | what · role | years, on every screen width */
 .rows-proj li > span:last-child{white-space:nowrap;flex-shrink:0}
+.rows-work li{display:grid;grid-template-columns:128px minmax(0,1fr) auto;column-gap:16px;align-items:baseline}
+.rows-work .meta{white-space:nowrap;text-align:right}
+@media (max-width:520px){.rows-work li{grid-template-columns:96px minmax(0,1fr) auto;column-gap:12px}}
 .dim{color:var(--muted)}
 .meta{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
 .more{align-self:flex-start;display:inline-flex;align-items:center;min-height:44px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
@@ -126,6 +130,8 @@ a:hover{color:var(--accent);text-decoration-color:#a855f7}
 .ai-chip:focus-visible{box-shadow:0 0 0 2px var(--accent)}
 .ai-tip{position:absolute;left:0;top:calc(100% + 8px);z-index:20;width:max-content;max-width:280px;white-space:normal;padding:8px 10px;border-radius:10px;font-size:11.5px;line-height:1.5;color:#f4f4f6;background:#14162a;border:1px solid rgba(168,85,247,.45);box-shadow:0 12px 30px -12px rgba(20,10,60,.6);opacity:0;transform:translateY(-4px);pointer-events:none;transition:opacity .18s,transform .18s}
 .ai-chip:hover .ai-tip,.ai-chip:focus .ai-tip{opacity:1;transform:none}
+/* the kouji skills chip in the header (a link to the plugin marketplace) */
+.kj-skills{font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.6;text-decoration:none}.kj-skills{transition:transform .2s}.kj-skills:hover{transform:translateY(-1px)}.kj-skills:hover .ai-tip,.kj-skills:focus-visible .ai-tip{opacity:1;transform:none}.kj-skills:focus-visible{outline:none}
 .tokens .tk{border-radius:3px;transition:background-color .25s}
 .tokens:hover .tk0{background:rgba(255,93,158,.10)}.tokens:hover .tk1{background:rgba(168,85,247,.10)}.tokens:hover .tk2{background:rgba(34,211,238,.10)}
 .rows-proj li[data-p]{cursor:default;transition:color .2s}
@@ -136,7 +142,7 @@ a:hover{color:var(--accent);text-decoration-color:#a855f7}
 
 /* ---------- small screens: painting moves under the header ---------- */
 @media (max-width: 960px){
-  .rows-proj li,.rows-work li{flex-direction:column;align-items:flex-start;gap:2px}
+  .rows-proj li{flex-direction:column;align-items:flex-start;gap:2px}
   .tagline{flex-wrap:nowrap;gap:10px;white-space:nowrap}
   .tagline .tl-full{display:none}
   .tagline .tl-short{display:inline}

@@ -88,6 +88,20 @@ test.describe('home', () => {
     await expect(page.locator('#contact a[download][href*="cv-fr-short"]')).toBeVisible();
   });
 
+  test('header kouji skills chip links to the marketplace; work rows read company | what · role | years', async ({ page }) => {
+    await page.goto('/');
+    const kj = page.locator('.head-id a.kj-skills');
+    await expect(kj).toHaveAttribute('href', 'https://github.com/kouji-dev/kouji-ai-marketplace');
+    await expect(kj).toHaveAttribute('target', '_blank');
+    await expect(page.locator('#kj-tip')).toHaveCSS('opacity', '0');
+    await kj.hover();
+    await expect(page.locator('#kj-tip')).toHaveCSS('opacity', '1');
+    const row = page.locator('.rows-work li').first();
+    await expect(row.locator('> span')).toHaveText(['Amundi ITS', 'low-code platform · senior full-stack & AI dev', '2023 — now']);
+    await expect(row).toHaveCSS('display', 'grid');
+    await expect(page.locator('.rows-work li').last().locator('> span').nth(1)).toHaveText('insurance · developer → team lead');
+  });
+
   test('writing shows latest posts, or hides when empty', async ({ page }) => {
     await page.goto('/');
     const n = await page.evaluate(() => (window.BLOG_POSTS_SORTED || []).length);
@@ -277,7 +291,7 @@ test.describe('home', () => {
     await page.locator('[data-act-chart]').scrollIntoViewIfNeeded();
     await expect(page.locator('[data-act-chart]')).toHaveAttribute('data-drawn', '1');
 
-    await page.locator('.ai-chip').focus();
+    await page.locator('.tagline .ai-chip').focus();
     await expect(page.locator('#ai-tip')).toHaveCSS('opacity', '1');
     await expect(page.locator('.ai-trail')).toHaveCount(7);
   });

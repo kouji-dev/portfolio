@@ -16,13 +16,13 @@ I build with agents: skills, MCP servers, evals and benchmarks, then review ever
 
 ## Work
 
-| Company | Role | Years |
+| Company | What · role | Years |
 |---|---|---|
-| Amundi ITS | AI-augmented dev | 2023 — now |
-| Société Générale | Backend Java developer | 2023 |
-| Colas | Global CRM | 2023 |
-| gloody.co | HR SaaS | 2022 |
-| SCOR | Developer → project lead | 2019 — 2022 |
+| Amundi ITS | Low-code platform · senior full-stack & AI dev | 2023 — now |
+| Société Générale | Internal portal · senior Java developer | 2023 |
+| Colas | CRM · full-stack dev | 2023 |
+| gloody.co | HR SaaS · full-stack dev | 2022 |
+| SCOR | Insurance · developer → team lead | 2019 — 2022 |
 
 ## Projects
 
@@ -32,6 +32,7 @@ I build with agents: skills, MCP servers, evals and benchmarks, then review ever
 | [kouji/ui](https://ui.kouji.dev) | Angular design system | 60+ components |
 | [Vortex](https://github.com/kouji-dev/vortex) | Enterprise LLM gateway | Node.js · Hono · Drizzle · Angular 22 |
 | [Pages](https://github.com/kouji-dev/pages) | Jira + Confluence in one | Python · FastAPI · Angular 20 |
+| [kouji skills](https://github.com/kouji-dev/kouji-ai-marketplace) | Claude Code plugin marketplace: the design and build rules my projects share | Claude Code plugins |
 | [Chartify](https://www.figma.com/community/plugin/1361309122482309141/chartify) | Charts inside Figma | Figma plugin |
 
 ## Contact
