@@ -16,6 +16,8 @@ How to reach him: book a call at https://calendar.app.google/KTPtgPtkgrbJUEjm7 o
 ## Pages
 
 - [Home](https://www.kouji.dev/index.md): bio, current work, experience, projects, contact (markdown version of https://www.kouji.dev/)
+- [About](https://www.kouji.dev/about): bio, experience and projects
+- [Contact](https://www.kouji.dev/contact): book a call, email, CV
 - [Blog](https://www.kouji.dev/blogs): engineering notes on agents, retrieval and platform work
 - [Privacy](https://www.kouji.dev/privacy): what the site collects (Google Analytics only)
 

@@ -21,7 +21,7 @@ test.describe('agent readiness', () => {
     const sitemap = await request.get('/sitemap.xml');
     expect(sitemap.status()).toBe(200);
     const xml = await sitemap.text();
-    for (const loc of ['https://www.kouji.dev/', 'https://www.kouji.dev/blogs', 'https://www.kouji.dev/privacy']) expect(xml).toContain(`<loc>${loc}</loc>`);
+    for (const loc of ['https://www.kouji.dev/', 'https://www.kouji.dev/blogs', 'https://www.kouji.dev/about', 'https://www.kouji.dev/contact', 'https://www.kouji.dev/privacy']) expect(xml).toContain(`<loc>${loc}</loc>`);
     expect(xml).toMatch(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
   });
 
@@ -40,6 +40,18 @@ test.describe('agent readiness', () => {
     expect((await page.locator('main').innerText()).length).toBeGreaterThan(500);
     await page.goto('/');
     await expect(page.locator('footer a[href="/privacy"]')).toHaveCount(1);
+  });
+
+  test('about and contact pages exist with real content and are linked from the home footer', async ({ page }) => {
+    for (const [path, h1] of [['/about', 'About Driss Najih'], ['/contact', 'Contact']]) {
+      const res = await page.goto(path);
+      expect(res.status()).toBe(200);
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(h1);
+      expect((await page.locator('main').innerText()).length).toBeGreaterThan(500);
+    }
+    await expect(page.locator('main a[href="mailto:najih.driss73@gmail.com"]')).toHaveCount(1);
+    await page.goto('/');
+    for (const href of ['/about', '/contact']) await expect(page.locator(`footer a[href="${href}"]`)).toHaveCount(1);
   });
 
   test('home carries canonical, og:image and Person / business JSON-LD', async ({ page, request }) => {
