@@ -37,8 +37,7 @@ commit sparkline.
 | `middleware.js`| Vercel Routing Middleware for `Accept: text/markdown`: `/` gets `index.md`, an unknown path a markdown 404. Its page list follows `sitemap.xml`. |
 | `llms.txt`, `index.md` | The site for AI agents: summary with when-to-use, and the home page as markdown. **Update both when the home content changes.** |
 | `robots.txt`, `sitemap.xml` | Crawler entry points (bump `lastmod` when a page changes). |
-| `404.html`, `privacy.html` | Not-found page with links to recover; privacy notice (GA4). |
-| `about.html`, `contact.html` | Trust pages agents check (`/about`, `/contact`): same facts as the home page. |
+| `404.html`, `privacy.html`, `page.css` | Not-found page with links to recover; privacy notice (GA4). Both styled by `page.css`, the design's NotFound board system (`/about`, `/contact` redirect to the home sections). |
 | `og.png`       | 1200×630 social preview (screenshot of the home page).            |
 | `assets/`      | Generated CV PDFs, served and linked from the page. **Never edit by hand.** |
 | `cv-source/`   | CV pipeline: YAML sources + generator that writes into `assets/`. |

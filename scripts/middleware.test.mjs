@@ -24,7 +24,7 @@ test('an unknown path asked for in markdown gets a markdown 404 that points at t
 });
 
 test('real pages and browsers pass through', () => {
-  for (const p of ['/blogs', '/about', '/contact', '/privacy', '/about/']) assert.equal(md(p), undefined, p);
+  for (const p of ['/blogs', '/privacy', '/privacy/', '/about', '/contact']) assert.equal(md(p), undefined, p);
   assert.equal(middleware(new Request('https://www.kouji.dev/', { headers: { accept: 'text/html,*/*' } })), undefined);
   assert.equal(middleware(new Request('https://www.kouji.dev/nope')), undefined);
 });

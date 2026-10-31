@@ -6,8 +6,8 @@
 // only extensionless paths: files (.css, .txt, .pdf…) never reach this
 export const config = { matcher: '/((?!.*\\.).*)' };
 
-// the site's pages (keep in step with sitemap.xml)
-const PAGES = new Set(['/', '/blogs', '/about', '/contact', '/privacy']);
+// the site's pages (keep in step with sitemap.xml), plus /about and /contact, which vercel.json redirects to the home sections
+const PAGES = new Set(['/', '/blogs', '/privacy', '/about', '/contact']);
 
 const NOT_FOUND = `# 404 — page not found
 
