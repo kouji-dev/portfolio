@@ -23,10 +23,20 @@
       "expand": "fill",
       "is_interactive": true,
       "title": "Portfolio — 3D painting"
+    },
+    "NotFound.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1280,
+      "h": 900,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "404 — page not found"
     }
   },
   "order": [
-    "Main.dc.html"
+    "Main.dc.html",
+    "NotFound.dc.html"
   ],
   "notes": {},
   "designSystems": []

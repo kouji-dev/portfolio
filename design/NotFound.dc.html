@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Page not found</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300..700&amp;family=Space+Grotesk:wght@400..700&amp;family=JetBrains+Mono:wght@400..700&amp;display=swap" rel="stylesheet">
+<style>
+    /* the home page's design system (home.css): theme tokens, Sora / Space Grotesk / JetBrains Mono, the brand gradient */
+    [data-theme="dark"]{--chip:#121422;--fg:#EDEDEC;--muted:#A1A09A;--ul:rgba(237,237,236,0.28);--accent:#9DB9FF;--bg:#0c0e16;
+      --bgimg:radial-gradient(520px 320px at 50% -60px, rgba(122,162,255,0.10), rgba(122,162,255,0) 70%), linear-gradient(180deg, #11131d 0, #0c0e16 900px, #08090f 1900px);
+      --panel-bd:rgba(157,185,255,0.10);--btn:rgba(255,255,255,0.04);--btn-bd:rgba(255,255,255,0.10);--ink:#EDEDEC;color-scheme:dark}
+    [data-theme="light"]{--chip:#f8f6f1;--fg:#1B1D24;--muted:#64635E;--ul:rgba(27,29,36,0.25);--accent:#3F5FD1;--bg:#f3f1ec;
+      --bgimg:radial-gradient(560px 340px at 50% -60px, rgba(255,190,160,0.22), rgba(255,190,160,0) 70%), linear-gradient(180deg, #fbf9f5 0, #f6f4ef 900px, #f1efe9 1900px);
+      --panel-bd:rgba(40,50,110,0.10);--btn:rgba(27,29,36,0.03);--btn-bd:rgba(27,29,36,0.12);--ink:#1B1D24;color-scheme:light}
+    body{margin:0}
+    .root{min-height:100vh;box-sizing:border-box;background:var(--bgimg);color:var(--fg);font-family:'Sora',sans-serif;font-size:15px;line-height:1.7;
+      padding:clamp(48px,9vw,112px) 20px 64px;display:flex;justify-content:center}
+    .col{width:100%;max-width:600px;display:flex;flex-direction:column;gap:44px}
+    a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--ul);text-underline-offset:3px}
+    a:hover{color:var(--accent);text-decoration-color:#a855f7}
+    a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+    .ai-grad{background:linear-gradient(100deg,#ff5d9e,#a855f7 50%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .name{margin:0;font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:600;letter-spacing:-0.6px;line-height:1.05}
+    .name a{text-decoration:none}
+    .name-at{font-weight:500;margin-right:2px}
+    .tagline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted)}
+
+    .lost{display:flex;align-items:flex-end;gap:28px;padding:28px;border:1px solid var(--panel-bd);border-radius:22px;background:var(--btn)}
+    .code{margin:0;font-family:'Space Grotesk',sans-serif;font-size:clamp(84px,18vw,132px);font-weight:600;letter-spacing:-4px;line-height:.82}
+    /* the tower from the painting's loading screen, drawn in ink, its tip lost in a dashed line */
+    .tower{flex:none;width:56px;height:104px;background:var(--ink);opacity:.9;
+      clip-path:polygon(49% 0,51% 0,52% 9%,54.5% 28%,59% 44%,65% 45.5%,65% 49%,63% 49%,70% 66%,79% 67.5%,79% 71%,76% 71%,90% 96%,100% 98%,100% 100%,69% 100%,63% 88%,57% 83%,50% 81.5%,43% 83%,37% 88%,31% 100%,0 100%,0 98%,10% 96%,24% 71%,21% 71%,21% 67.5%,30% 66%,37% 49%,35% 49%,35% 45.5%,41% 44%,45.5% 28%,48% 9%);
+      animation:sway 5s ease-in-out infinite;transform-origin:50% 100%}
+    @keyframes sway{50%{transform:rotate(-2deg)}}
+    .lost-text{display:flex;flex-direction:column;gap:6px;min-width:0}
+    .lost-text h2{margin:0;font-size:18px;font-weight:600;line-height:1.35}
+    .lost-text p{margin:0;color:var(--muted)}
+    .path{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);word-break:break-all}
+    .path b{font-weight:500;color:var(--fg);background:var(--chip);border:1px solid var(--btn-bd);border-radius:6px;padding:1px 6px}
+
+    section{display:flex;flex-direction:column;gap:14px}
+    h3{margin:0;font-size:15px;font-weight:500;color:var(--muted)}
+    .go{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+    .go li{display:grid;grid-template-columns:128px minmax(0,1fr);column-gap:16px;align-items:baseline;padding:7px 0}
+    .go span{color:var(--muted)}
+    .home-btn{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:12px;border:1px solid var(--btn-bd);background:var(--btn);
+      color:var(--fg);text-decoration:none;font-size:14px;transition:border-color .2s,color .2s}
+    .home-btn:hover{border-color:#a855f7;color:var(--fg)}
+    @media (max-width:520px){.lost{flex-direction:column;align-items:flex-start}.go li{grid-template-columns:96px minmax(0,1fr)}}
+    @media (prefers-reduced-motion:reduce){.tower{animation:none}}
+  </style>
+</helmet>
+<div class="root" data-theme="{{ theme }}">
+<main class="col">
+      <header>
+        <p class="name"><a href="Main.dc.html"><span aria-hidden="true" class="name-at ai-grad">@</span>NAJIH Driss</a></p>
+        <div class="tagline"><span>404</span><span aria-hidden="true">/</span><span>page not found</span><span aria-hidden="true">/</span><span>paris</span></div>
+      </header>
+
+      <div class="lost">
+        <div class="tower" aria-hidden="true"></div>
+        <div class="lost-text">
+          <h1 class="code ai-grad">404</h1>
+          <h2>This street isn’t on the map.</h2>
+          <p class="path">Nothing lives at <b>/projects/eiffel-tower</b>.</p>
+        </div>
+      </div>
+
+      <section aria-labelledby="go-h">
+        <h3 id="go-h">Where to instead</h3>
+        <ul class="go">
+          <li><a href="Main.dc.html">Home</a><span>bio, work and the painted sky</span></li>
+          <li><a href="https://kouji.dev/blogs">Writing</a><span>notes from things that shipped</span></li>
+          <li><a href="https://calendar.app.google/KTPtgPtkgrbJUEjm7">Book a call</a><span>pick a time that suits you</span></li>
+          <li><a href="mailto:najih.driss73@gmail.com">Email</a><span>najih.driss73@gmail.com</span></li>
+        </ul>
+      </section>
+
+      <a class="home-btn" href="Main.dc.html"><span aria-hidden="true">←</span> Back to the Trocadéro</a>
+    </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["auto","light","dark"],"default":"auto"},"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // like the home page: light by day, dark from dusk (the Theme tweak can pin one)
+    const t = this.props.theme ?? 'auto', h = new Date().getHours();
+    return { theme: t === 'auto' ? (h >= 7 && h < 19 ? 'light' : 'dark') : t };
+  }
+}
+</script>
+</body>
+</html>
