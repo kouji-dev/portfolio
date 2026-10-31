@@ -190,10 +190,9 @@
     var hv = { 'data-h-moond': md, 'data-h-count': k.count, 'data-h-year': k.year };
     hooks.holes.forEach(function (e) { for (var a in hv) if (e.hasAttribute('data-h-' + a) && e.getAttribute(a) !== String(hv[a])) e.setAttribute(a, hv[a]); });
     // stop the animations of every hidden skin / moment / firework group (Chrome keeps ticking them under display:none)
-    hooks.toggles.forEach(function (g) {
-      var off = getComputedStyle(g).display === 'none';
-      if (g.classList.contains('off') !== off) g.classList.toggle('off', off);
-    });
+    // read every display first, then write: toggling inside the read loop forced a style recalc per group (~600 ms)
+    var offs = hooks.toggles.map(function (g) { return getComputedStyle(g).display === 'none'; });
+    hooks.toggles.forEach(function (g, i) { if (g.classList.contains('off') !== offs[i]) g.classList.toggle('off', offs[i]); });
   }
   function set(next) { for (var n in next) st[n] = next[n]; render(); }
 
@@ -328,7 +327,8 @@
     // the 3D painting's markup (sky.js), or straight away the SVG painting where the 3D can't run
     var loadSky = function () {
       var three = can3d();
-      (three ? script('sky.js') : loadSvgPainting()).then(function () { mountSky(three); });
+      // the painting's CSS (home-paint.css) is out of home.css so it never blocks the first paint
+      Promise.all([style('home-paint.css'), three ? script('sky.js') : loadSvgPainting()]).then(function () { mountSky(three); });
     };
     if (document.readyState === 'complete') loadSky();
     else window.addEventListener('load', loadSky);
@@ -337,8 +337,7 @@
 
   // the SVG painting (the design before it moved into the 3D scene): its markup and CSS load only when the 3D can't run
   function loadSvgPainting() {
-    var css = new Promise(function (ok) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'home-svg.css'; l.onload = l.onerror = ok; document.head.appendChild(l); });
-    return Promise.all([css, script('sky-svg.js')]);
+    return Promise.all([style('home-svg.css'), script('sky-svg.js')]);
   }
   // put the painting's markup (window.SKY_SVG) in the panel and find the elements the clock drives
   function paintSky() {
@@ -435,6 +434,9 @@
     try { sessionStorage.removeItem('dn-sky-3d'); if (sessionStorage.getItem('dn-svg-painting') === '1') return false; } catch (e) {}
     // no throwaway context to test (~0.7 s on an Intel UHD): mounting fails cleanly without WebGL 2
     return !!window.WebGL2RenderingContext;
+  }
+  function style(href) {
+    return new Promise(function (ok) { var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = href; l.onload = l.onerror = ok; document.head.appendChild(l); });
   }
   function script(src) {
     return new Promise(function (ok, ko) { var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });

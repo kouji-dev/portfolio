@@ -12,10 +12,64 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="NAJIH Driss — Senior AI-Augmented Developer · Paris">
   <meta property="og:description" content="Platforms other teams build on — Angular frameworks, Java and Node backends — and the AI inside them.">
-  <meta property="og:url" content="https://kouji.dev">
+  <meta property="og:url" content="https://www.kouji.dev/">
+  <meta property="og:image" content="https://www.kouji.dev/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="NAJIH Driss — Senior AI-Augmented Developer, Paris">
+  <meta name="twitter:image" content="https://www.kouji.dev/og.png">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://www.kouji.dev/">
+  <link rel="alternate" type="text/markdown" href="/index.md" title="This page as markdown">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://www.kouji.dev/#person",
+        "name": "Driss Najih",
+        "alternateName": ["NAJIH Driss", "kouji"],
+        "jobTitle": "Senior AI-Augmented Developer",
+        "description": "Software engineer who builds platforms other teams build on — Angular frameworks, Java and Node backends — and, lately, the AI inside them. 8 years in, freelance, based in Paris.",
+        "url": "https://www.kouji.dev/",
+        "image": "https://www.kouji.dev/og.png",
+        "email": "mailto:najih.driss73@gmail.com",
+        "address": { "@type": "PostalAddress", "addressLocality": "Paris", "addressCountry": "FR" },
+        "knowsAbout": ["Angular", "Java", "Node.js", "TypeScript", "Rust", "AI agents", "MCP servers", "LLM evaluation", "Design systems"],
+        "worksFor": { "@id": "https://www.kouji.dev/#business" },
+        "sameAs": ["https://github.com/kouji-dev", "https://www.linkedin.com/in/najih-driss/", "https://x.com/NajihDriss1"]
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://www.kouji.dev/#business",
+        "name": "kouji.dev — Driss Najih, freelance software engineering",
+        "description": "Freelance senior software engineering: Angular platforms and design systems, Java and Node backends, AI agents and developer tooling.",
+        "url": "https://www.kouji.dev/",
+        "logo": "https://www.kouji.dev/favicon.svg",
+        "image": "https://www.kouji.dev/og.png",
+        "founder": { "@id": "https://www.kouji.dev/#person" },
+        "email": "najih.driss73@gmail.com",
+        "areaServed": ["FR", "EU", "Remote"],
+        "address": { "@type": "PostalAddress", "addressLocality": "Paris", "addressCountry": "FR" },
+        "contactPoint": { "@type": "ContactPoint", "contactType": "sales", "email": "najih.driss73@gmail.com", "url": "https://calendar.app.google/KTPtgPtkgrbJUEjm7", "availableLanguage": ["English", "French"] },
+        "sameAs": ["https://github.com/kouji-dev", "https://www.linkedin.com/in/najih-driss/"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.kouji.dev/#website",
+        "url": "https://www.kouji.dev/",
+        "name": "Driss Najih",
+        "publisher": { "@id": "https://www.kouji.dev/#person" },
+        "inLanguage": "en"
+      }
+    ]
+  }
+  </script>
 
   <!-- Google tag (gtag.js) -->
   <script>
@@ -109,7 +163,7 @@
       <ul class="now">
         <li>Building <a href="https://orrery.kouji.dev" aria-label="Orrery" class="orr"><svg aria-hidden="true" width="18" height="18"><use href="#orr-logo"/></svg><span><span class="orr-o">O</span>rrery</span></a>, the ultimate harness for coding agents</li>
         <li>Shipping AI dev tooling at Amundi — skills, MCP servers, agent benchmarks</li>
-        <li>Maintaining <a href="https://ui.kouji.dev" aria-label="Kouji UI" class="kj"><span aria-hidden="true" class="kj-dot"></span>kouji/ui</a>, 60+ accessible Angular components</li>
+        <li>Maintaining <a href="https://ui.kouji.dev" class="kj"><span aria-hidden="true" class="kj-dot"></span>kouji/ui</a>, 60+ accessible Angular components</li>
       </ul>
     </section>
 
@@ -129,7 +183,7 @@
         <h2 id="act-h" class="sec-h">Activity</h2>
         <span class="act-readout" data-act-readout aria-live="polite"></span>
       </div>
-      <div class="act-chart" data-act-chart tabindex="0" aria-label="Weekly commits. Use the left and right arrow keys to read each week.">
+      <div class="act-chart" data-act-chart role="group" tabindex="0" aria-label="Weekly commits. Use the left and right arrow keys to read each week.">
         <svg aria-hidden="true" viewBox="0 0 600 64" preserveAspectRatio="none">
           <path class="act-area" data-act-area></path>
           <path class="act-line" data-act-line pathLength="1" vector-effect="non-scaling-stroke" stroke-width="1.5" stroke-linejoin="round"></path>
@@ -146,7 +200,7 @@
       <h2 id="proj-h" class="sec-h">Projects</h2>
       <ul class="rows rows-proj">
         <li data-p="orrery"><span><a href="https://orrery.kouji.dev" aria-label="Orrery" class="orr"><svg aria-hidden="true" width="18" height="18"><use href="#orr-logo"/></svg><span><span class="orr-o">O</span>rrery</span></a> <span class="dim">— the ultimate harness</span></span><span class="meta">Rust · Tauri · Angular 22</span></li>
-        <li data-p="kouji"><span><a href="https://ui.kouji.dev" aria-label="Kouji UI" class="kj"><span aria-hidden="true" class="kj-dot"></span>kouji/ui</a> <span class="dim">— Angular design system</span></span><span class="meta">60+ components</span></li>
+        <li data-p="kouji"><span><a href="https://ui.kouji.dev" class="kj"><span aria-hidden="true" class="kj-dot"></span>kouji/ui</a> <span class="dim">— Angular design system</span></span><span class="meta">60+ components</span></li>
         <li data-p="vortex"><span><a href="https://github.com/kouji-dev/vortex">Vortex</a> <span class="dim">— enterprise LLM gateway</span></span><span class="meta">Node.js · Hono · Drizzle · Angular 22</span></li>
         <li data-p="pages"><span><a href="https://github.com/kouji-dev/pages">Pages</a> <span class="dim">— Jira + Confluence in one</span></span><span class="meta">Python · FastAPI · Angular 20</span></li>
         <li><span><a href="https://www.figma.com/community/plugin/1361309122482309141/chartify">Chartify</a> <span class="dim">— charts inside Figma</span></span><span class="meta">Figma plugin</span></li>
@@ -170,7 +224,7 @@
       </div>
     </section>
 
-    <footer class="foot">Built with agents<span class="ai-grad"> ✦ </span>reviewed by a human.</footer>
+    <footer class="foot">Built with agents<span class="ai-grad"> ✦ </span>reviewed by a human. · <a href="/privacy">Privacy</a></footer>
   </main>
 
   <!-- the Eiffel Tower seen from the Trocadéro; home.js injects sky.js and drives sky / sparkle / gust -->

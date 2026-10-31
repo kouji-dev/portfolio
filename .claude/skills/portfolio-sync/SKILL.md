@@ -1,6 +1,6 @@
 ---
 name: portfolio-sync
-description: Pull the latest portfolio design from the Claude Design artifact canvas into design/, diff it, and port the changes into the production home page (index.html, home.css, home.js, sky.js) without regressing load speed or animation smoothness. Use on "sync the design", "portfolio sync", "I updated the artifact", "pull the design changes".
+description: Pull the latest portfolio design from the Claude Design artifact canvas into design/, diff it, and port the changes into the production home page (index.html, home.css, home-paint.css, home.js, sky.js) without regressing load speed or animation smoothness. Use on "sync the design", "portfolio sync", "I updated the artifact", "pull the design changes".
 version: 1.0
 ---
 
@@ -55,8 +55,8 @@ Then copy both files into `design/`.
 | Design part | Production target | How |
 |---|---|---|
 | Painting markup (between `<!--PT-->` and `<!--/PT-->`) | `sky.js` | `pnpm run sky`. It fills the `{{ holes }}`; a new hole fails loudly, so add its default to `DEFAULTS` in `scripts/build-sky.mjs` and drive it from `home.js` |
-| Painting CSS (`.pt…`, `@keyframes pt-*`, palettes) | `home.css` after `/*PAINT*/` | copy changed rules verbatim, replacing the old line in place |
-| Page CSS | `home.css` above `/*PAINT*/` | inline styles become classes; media queries instead of JS layout |
+| Painting CSS (`.pt…`, `@keyframes pt-*`, palettes) | `home-paint.css` (between `/*PAINT*/` markers) | copy changed rules verbatim, replacing the old line in place |
+| Page CSS | `home.css` (page only: it is the render-blocking CSS, keep painting rules out) | inline styles become classes; media queries instead of JS layout |
 | Markup | `index.html` | class-based, same structure and copy |
 | Component logic (`renderVals`, handlers, state) | `home.js` | plain DOM: attributes on `.pt` or elements, no framework |
 
@@ -76,7 +76,7 @@ follows the date. Tests pin the date with Playwright's clock (`page.clock.setFix
 - Every **animated SVG element** costs main-thread style recalc and a paint re-record each frame;
   count matters more than size. Only animations on an outer `<svg>`/HTML element via
   `transform`/`opacity` (the clouds) run free on the compositor.
-- **Any new animated class in the painting** must be added to the quality levels in `home.css`:
+- **Any new animated class in the painting** must be added to the quality levels in `home-paint.css`:
   - `.pt[data-q="lite"] .<class>` for micro-animations (twinkle, sway, wheels, jets…)
   - `.pt[data-q="static"] .<class>` for everything except the clouds
   - the `@media (max-width: 960px)` list when the design's own rule includes it
@@ -108,7 +108,7 @@ diff the previous `design/paris3d.js` against the new one, find each hunk's top-
 its folder, imported by `mount.js` or its caller. A hunk in the layout (line 1) replaces `paris3d/layout.js`.
 Verify with the two-origin pixel harness (`git archive HEAD` served on 4174 vs the working tree on 4173; its
 `Math.random` rewrite must match every module path, nested folders included, or the runs aren't comparable).
-The painting CSS section of `home.css` is still merged with `git merge-file` (fork as ours, old design as base). Then walk this list: each item was measured on the Intel UHD
+The painting CSS (`home-paint.css`) is still merged with `git merge-file` (fork as ours, old design as base). Then walk this list: each item was measured on the Intel UHD
 laptop, keeps the picture identical (pixel harness) unless noted, and must hold for the new design's code too.
 
 **Start-up**
@@ -145,7 +145,7 @@ laptop, keeps the picture identical (pixel harness) unless noted, and must hold 
     - `buildVec`'s `build()` draws a non-moving group whole, so moving nodes under it never move: promote the static
       ancestors of every moving node (387 of 1661 on 2026-10-28, the firework rockets among them). Pass-through groups
       that don't animate themselves keep the last full pass's values instead of a per-frame style read.
-    - `.pt-fl` sets `inset:0`: the right Halloween web needs `left:auto` or it stacks on the left one (home.css and
+    - `.pt-fl` sets `inset:0`: the right Halloween web needs `left:auto` or it stacks on the left one (home-paint.css and
       home-svg.css). The glass pane's cobweb hub sits inside the panel's rounded corner (`cornerR`).
 
 **Page**

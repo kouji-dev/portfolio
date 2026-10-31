@@ -23,7 +23,8 @@ commit sparkline.
 | Path           | Purpose                                                           |
 |----------------|-------------------------------------------------------------------|
 | `index.html`   | Home: all markup and content (bio, now, work, activity, projects, writing, contact). |
-| `home.css`     | Home tokens (dark/light), layout, and the painting CSS.          |
+| `home.css`     | Home tokens (dark/light) and layout: the only render-blocking CSS. |
+| `home-paint.css` | The painting CSS (between `/*PAINT*/` markers), loaded by `home.js` with the painting after window load. |
 | `home.js`      | Paris-sun theme, sky switches, activity sparkline, latest posts. |
 | `sky.js`       | The Eiffel Tower painting as `window.SKY_SVG`, generated from `design/Main.dc.html` (`sky-svg.js`: the frozen SVG painting, the fallback when the 3D can’t run); injected by `home.js` (works from file://). |
 | `paris3d/`     | The 3D painting's source: ES modules, one per object (`core/`, `city/`, `nature/`, `water/`, `traffic/`, `events/`, `sky/`, `effects/`, `mount.js`), a production fork of `design/paris3d.js`. |
@@ -33,6 +34,11 @@ commit sparkline.
 | `styles.css`, `cosmos.js` | Blog page (`blogs.html`) styles + WebGL backdrop.  |
 | `favicon.svg`  | Orbital mark.                                                     |
 | `vercel.json`  | Clean URLs + cache/security headers.                              |
+| `middleware.js`| Vercel Routing Middleware: `Accept: text/markdown` on `/` gets `index.md`. |
+| `llms.txt`, `index.md` | The site for AI agents: summary with when-to-use, and the home page as markdown. **Update both when the home content changes.** |
+| `robots.txt`, `sitemap.xml` | Crawler entry points (bump `lastmod` when a page changes). |
+| `404.html`, `privacy.html` | Not-found page with links to recover; privacy notice (GA4). |
+| `og.png`       | 1200×630 social preview (screenshot of the home page).            |
 | `assets/`      | Generated CV PDFs, served and linked from the page. **Never edit by hand.** |
 | `cv-source/`   | CV pipeline: YAML sources + generator that writes into `assets/`. |
 | `.vercelignore`| Keeps authoring tooling (`cv-source/`, `.claude/`, `kouji/`) out of the deploy. |
