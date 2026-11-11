@@ -39,6 +39,30 @@ test.describe('home', () => {
     await expect(pt).toHaveAttribute('data-q', 'lite');
   });
 
+  test('3D clouds are lit from the side where the sun stands on the painting', async ({ page }) => {
+    test.setTimeout(180000);
+    await page.addInitScript(() => { let real; Object.defineProperty(window, 'Paris3D', { configurable: true, get: () => real, set: (v) => {
+      real = v; const m = v.mountAsync; if (!m || m.__w) return;
+      v.mountAsync = async (c, o) => { const h = await m(c, Object.assign({}, o, { manual: true })); window.__gl = h; return h; }; v.mountAsync.__w = 1; } }); });
+    await at(page, '2026-07-10T10:00:00+02:00');
+    await page.goto('/');
+    await page.waitForFunction(() => window.__gl, null, { timeout: 170000 });
+    const r = await page.evaluate(() => {
+      const h = window.__gl, v = h.ctx.vec; h.renderOnce(0.3); h.renderOnce(0.3);
+      const lp = h.ctx.skyLight;
+      return { w: lp[4], clouds: h.ctx.clouds3.clouds.filter((c) => c.g.visible).map((c) => {
+        const b = v.N[c.body].b, m = v.worldM(c.i), L = c.U.uL.value;
+        return { dx: lp[0] - (b[0] + b[2] / 2 + m[4]), dy: (b[1] + b[3] / 2 + m[5]) - lp[1], x: L.x, y: L.y, z: L.z }; }) };
+    });
+    expect(r.w).toBe(0);                       // full day: the sun alone
+    expect(r.clouds.length).toBeGreaterThan(0);
+    for (const c of r.clouds) {
+      if (Math.abs(c.dx) > 20) expect(Math.sign(c.x)).toBe(Math.sign(c.dx));
+      if (Math.abs(c.dy) > 20) expect(Math.sign(c.y)).toBe(Math.sign(c.dy));
+      expect(c.z).toBeGreaterThan(0);          // the face towards us is never fully in shade
+    }
+  });
+
   test('3D moon follows the sky clock every frame during the theme fast-forward', async ({ page }) => {
     test.setTimeout(180000);
     // the scene in manual mode, its handle on window.__gl
@@ -97,7 +121,7 @@ test.describe('home', () => {
     await kj.hover();
     await expect(page.locator('#kj-tip')).toHaveCSS('opacity', '1');
     const row = page.locator('.rows-work li').first();
-    await expect(row.locator('> span')).toHaveText(['Amundi ITS', 'low-code platform · senior full-stack & AI dev', '2023 — now']);
+    await expect(row.locator('> span')).toHaveText(['TotalEnergies', 'Digital Factory · senior full-stack AI dev', '2026 — now']);
     await expect(row).toHaveCSS('display', 'grid');
     await expect(page.locator('.rows-work li').last().locator('> span').nth(1)).toHaveText('insurance · developer → team lead');
   });

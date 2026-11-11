@@ -386,6 +386,8 @@ export async function mount(canvas, opts) {
     var el2 = clamp((900 - sy) / 700, 0.3, 0.85);
     Ldir.set(clamp((sx - 430) / 520, -0.9, 0.9) - 0.25, el2 * 1.3, 0.75).normalize();
     sun.position.copy(Ldir).multiplyScalar(1400).add(sun.target.position);
+    // for the clouds: where the sun and the moon stand on the painting, and how far the moon has taken over (home.js --mono)
+    ctx.skyLight = [s.sunx != null ? s.sunx : 430, s.suny != null ? s.suny : 300, s.monx != null ? s.monx : 270, s.mony != null ? s.mony : 300, clamp(-t / 30, 0, 1)];
     U.uGlint.value = clamp(st.sky === 'night' ? (s.monx || 270) : sx, 120, 420);
     // wind: a breeze, more under the pointer, a gust on a click by day
     gust = Math.max(0, gust - dt / 3.2);

@@ -49,7 +49,7 @@ commit sparkline.
 - **About** — positioning, key stats, and a six-cell skills grid.
 - **Featured Work** — Orrery and Kouji UI as *live, interactive* iframe embeds in browser frames.
 - **Also building** — Vortex, Pages, GamerGG, Chartify → GitHub.
-- **Experience** — seven-year timeline (Amundi → Scor).
+- **Experience** — seven-year timeline (TotalEnergies → Scor).
 - **Contact** — email, LinkedIn, GitHub.
 
 ## Accessibility & performance

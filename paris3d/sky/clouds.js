@@ -25,8 +25,8 @@ export function buildClouds(ctx, vec) {
   var fsh = 'uniform vec3 uBody, uShade, uRim, uBelly, uL; uniform float uOp, uRimA, uBellyA, uShadeA; varying vec3 vN, vV, vW; varying float vB, vH;\n' +
     'void main(){ vec3 n = normalize(vN); float ndl = dot(n, normalize(uL));\n' +
     // flat painted bands: the lit body, a soft shade on the side away from the light, and the shaded belly band along the base (with a wavy top edge)
-    '  float lit = smoothstep(-.18, -.08, ndl);\n' +
-    '  vec3 c = mix(mix(uBody, uShade, .45 * uShadeA), uBody, lit);\n' +
+    '  float lit = smoothstep(.02, .14, ndl);\n' +
+    '  vec3 c = mix(mix(uBody, uShade, .7 * uShadeA), uBody, lit) * mix(.87, 1., lit);\n' +   // the day palette's shade is close to the body: darken the far side a little so it reads
     '  float band = 1. - smoothstep(.0, .02, vH - (.2 + .045 * sin(vW.x * .045) + .03 * sin(vW.x * .13 + 1.3)));\n' +
     '  c = mix(c, uShade, max(band, vB) * uShadeA);\n' +
     '  float fr = 1. - abs(dot(n, normalize(vV))); c = mix(c, uRim, smoothstep(.62, .78, fr) * uRimA * step(-.1, ndl));\n' +
@@ -104,14 +104,23 @@ export function buildClouds(ctx, vec) {
   });
   var tmp = [0, 0, 0, 1], colAt = -9;
   function update(now) {
-    var readCols = now - colAt > 0.3 || now < colAt; if (readCols) colAt = now;
+    // colours every 0.3 s, every frame while the theme button fast-forwards the clock (html[data-ff]), so the rim and belly fade with the light
+    var readCols = now - colAt > 0.3 || now < colAt || document.documentElement.hasAttribute('data-ff'); if (readCols) colAt = now;
+    var lp = ctx.skyLight;
     clouds.forEach(function (c) {
       // the painted cloud's place and visibility: its layer's drift and its own animation (rain clouds sway)
       var vis = vec.visible(c.i), op = vis ? vec.opacity(c.i) : 0;
       c.g.visible = op > 0.004; if (!c.g.visible) return;
       var m = vec.worldM(c.i);      // painting-space matrix of the cloud (layer drift × its own transform)
       c.g.position.x = m[4] * c.sW; c.g.position.y = -m[5] * c.sW;
-      c.U.uOp.value = op; c.U.uL.value.copy(ctx.Ldir);
+      c.U.uOp.value = op;
+      // lit from where the sun or the moon stands on the painting, seen from this cloud (painting units, y down): the side facing the
+      // disc is bright, the far side shaded; frontal when the disc is behind the cloud. Sun and moon cross-fade at dusk (lp[4])
+      if (lp) { var b = N[c.body].b, cx = b[0] + b[2] / 2 + m[4], cy = b[1] + b[3] / 2 + m[5];
+        var sx = lp[0] - cx, sy = cy - lp[1], sl = Math.hypot(sx, sy) || 1, sk = Math.min(1, sl / 260) / sl;
+        var mx = lp[2] - cx, my = cy - lp[3], ml = Math.hypot(mx, my) || 1, mk = Math.min(1, ml / 260) / ml, w = lp[4];
+        c.U.uL.value.set(sx * sk * (1 - w) + mx * mk * w, sy * sk * (1 - w) + my * mk * w, 0.3).normalize();
+      } else c.U.uL.value.copy(ctx.Ldir);
       if (!readCols) return;
       var cs = getComputedStyle(E[c.body]); parseCol(cs.fill, tmp); c.U.uBody.value.setRGB(tmp[0], tmp[1], tmp[2]);
       if (c.shade.length) { var ss = getComputedStyle(E[c.shade[0]]); parseCol(ss.fill, tmp); c.U.uShade.value.setRGB(tmp[0], tmp[1], tmp[2]); c.U.uShadeA.value = clamp(vec.num(ss.opacity, 0.5) * 1.1, 0.2, 0.9); }

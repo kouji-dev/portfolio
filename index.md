@@ -11,14 +11,15 @@ I build with agents: skills, MCP servers, evals and benchmarks, then review ever
 ## Now
 
 - Building [Orrery](https://orrery.kouji.dev), the ultimate harness for coding agents
-- Shipping AI dev tooling at Amundi — skills, MCP servers, agent benchmarks
+- Building AI-powered apps at TotalEnergies Digital Factory — TypeScript and Python
 - Maintaining [kouji/ui](https://ui.kouji.dev), 60+ accessible Angular components
 
 ## Work
 
 | Company | What · role | Years |
 |---|---|---|
-| Amundi ITS | Low-code platform · senior full-stack & AI dev | 2023 — now |
+| TotalEnergies | Digital Factory · senior full-stack AI dev | 2026 — now |
+| Amundi ITS | Low-code platform · senior full-stack & AI dev | 2023 — 2026 |
 | Société Générale | Internal portal · senior Java developer | 2023 |
 | Colas | CRM · full-stack dev | 2023 |
 | gloody.co | HR SaaS · full-stack dev | 2022 |
