@@ -136,7 +136,7 @@ window.BLOG_POSTS = [
       { t: 'code', lang: 'terminal', text: '$ git worktree add ../shop-checkout -b feat/checkout\n$ git worktree add ../shop-search -b feat/search' },
 
       { t: 'h2', text: 'My IDE was built for a job I no longer did' },
-      { t: 'p', text: 'With agents working in parallel, IntelliJ started to struggle. It got slow, it ate memory and it felt clunky. And I noticed something else: I was barely using it. I had committed to AI in my workflow, so what I needed from an editor had shrunk to a short list.' },
+      { t: 'p', text: 'With agents working in parallel, IntelliJ could not keep up. It was slow, it ate memory and it felt clunky, and at the time it had no way to manage worktrees, the one thing my new workflow was built on. And I noticed something else: I was barely using the rest of it. I had committed to AI in my workflow, so what I needed from an editor had shrunk to a short list.' },
       { t: 'list', items: ['Find a file.', 'Open it.', 'Edit it, only when necessary.', 'Review what the agent changed.'] },
       { t: 'p', text: 'So I went looking for the lightest tool that could do just that.' },
 
@@ -150,7 +150,7 @@ window.BLOG_POSTS = [
       { t: 'pull', text: 'I did not need a better editor. I needed a place to run agents.' },
 
       { t: 'table', label: 'The tools I went through, what each did well and why I moved on', head: ['Tool', 'What it did well', 'Why I moved on'], rows: [
-        ['IntelliJ', 'Everything', 'Heavy once agents ran in parallel'],
+        ['IntelliJ', 'The IDE I knew by heart', 'Slow, heavy, and no worktree management at the time'],
         ['Terminal + Vim', 'Light', 'Too many shortcuts for simple needs'],
         ['Zed', 'Fast, free, built with Rust', 'Git graph and review did not fit my workflow'],
         ['**Orrery ADE**', 'Agents, worktrees and review in one window', 'Still here'],
