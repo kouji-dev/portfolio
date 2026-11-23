@@ -97,7 +97,7 @@ test.describe('home', () => {
     await kj.hover();
     await expect(page.locator('#kj-tip')).toHaveCSS('opacity', '1');
     const row = page.locator('.rows-work li').first();
-    await expect(row.locator('> span')).toHaveText(['Amundi ITS', 'low-code platform · senior full-stack & AI dev', '2023 — now']);
+    await expect(row.locator('> span')).toHaveText(['TotalEnergies', 'senior full-stack AI dev', '2026 — now']);
     await expect(row).toHaveCSS('display', 'grid');
     await expect(page.locator('.rows-work li').last().locator('> span').nth(1)).toHaveText('insurance · developer → team lead');
   });

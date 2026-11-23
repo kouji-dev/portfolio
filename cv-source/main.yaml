@@ -115,18 +115,42 @@ experiences:
     period: { start: "2026-11", end: null }
     client: null
     context:
-      en: "**TotalEnergies Digital Factory** — the group's in-house unit building digital products used across the company."
-      fr: "**TotalEnergies Digital Factory** — l'entité interne du groupe qui conçoit les produits numériques utilisés dans toute l'entreprise."
+      en: "**TotalEnergies Digital Factory** — the group's in-house unit building digital products used across the company. Working on the design system: an accessible Angular UI library and the AI products around it."
+      fr: "**TotalEnergies Digital Factory** — l'entité interne du groupe qui conçoit les produits numériques utilisés dans toute l'entreprise. Intervention sur le design system : une librairie UI Angular accessible et les produits IA qui l'entourent."
     responsibilities:
+      - in: [short, long]
+        text:
+          en: "Create and maintain a high-standard, accessible **internal UI library** built on **Angular 22**"
+          fr: "Création et maintenance d'une **librairie UI interne** accessible et de haut niveau d'exigence, bâtie sur **Angular 22**"
+      - in: [short]
+        text:
+          en: "Automate **Figma-to-code** and **application migrations** on an **agentic platform** (agents as a service, **MCP**, **Claude Code**)"
+          fr: "Automatisation du **Figma-to-code** et de la **migration des applications** sur une **plateforme agentique** (agents as a service, **MCP**, **Claude Code**)"
       - in: [long]
         text:
-          en: "Full stack development of **AI-powered applications**, across **back end and front end**"
-          fr: "Développement full stack d'**applications intégrant l'IA**, côté **back end et front end**"
+          en: "Design the architecture of the library and of the **AI products** built around it"
+          fr: "Conception de l'architecture de la librairie et des **produits IA** construits autour"
       - in: [long]
         text:
-          en: "Services and interfaces built mainly in **TypeScript** and **Python**"
-          fr: "Services et interfaces développés principalement en **TypeScript** et **Python**"
-    tech: "TypeScript, Python, Angular, Node.js, Git, GitHub, GitHub Actions"
+          en: "Translate **Figma** designs into Angular components, documented in **Storybook**"
+          fr: "Traduction des maquettes **Figma** en composants Angular, documentés dans **Storybook**"
+      - in: [long]
+        text:
+          en: "Set up the library's **delivery chain** on **GitHub**, with **Playwright** automated tests"
+          fr: "Mise en place de la **chaîne de livraison** de la librairie sur **GitHub**, avec tests automatisés **Playwright**"
+      - in: [long]
+        text:
+          en: "Automate the **Figma-to-code pipeline** on an **agentic platform** running **agents as a service**"
+          fr: "Automatisation du **pipeline Figma-to-code** sur une **plateforme agentique** exploitant des **agents as a service**"
+      - in: [long]
+        text:
+          en: "Automate the **migration of the applications** using the library, on the same platform"
+          fr: "Automatisation de la **migration des applications** utilisant la librairie, sur la même plateforme"
+      - in: [long]
+        text:
+          en: "AI-assisted engineering on a daily basis with **Claude Code** and **MCP** servers"
+          fr: "Ingénierie assistée par IA au quotidien avec **Claude Code** et des serveurs **MCP**"
+    tech: "Angular 22, TypeScript, Storybook, Figma, Playwright, MCP, Claude Code, Node.js, AWS, GitHub"
 
   - in: [short, long]
     company: "Preesm Group"
