@@ -28,7 +28,8 @@ How to reach him: book a call at https://calendar.app.google/KTPtgPtkgrbJUEjm7 o
 
 ## Projects
 
-- [Orrery](https://orrery.kouji.dev): the harness for coding agents (Rust, Tauri, Angular)
+- [Orrery Harness](https://getorrery.dev): Rust agent runtime to build your own coding agent (Rust, Ratatui, AG-UI, MCP)
+- [Orrery ADE](https://getorrery.dev): desktop app running coding agents in parallel (Rust, native shell, Angular)
 - [kouji/ui](https://ui.kouji.dev): 60+ accessible Angular components
 - [Vortex](https://github.com/kouji-dev/vortex): enterprise LLM gateway (Node.js, Hono, Drizzle, Angular)
 - [kouji skills](https://github.com/kouji-dev/kouji-ai-marketplace): Claude Code plugin marketplace with the design and build rules shared by every project

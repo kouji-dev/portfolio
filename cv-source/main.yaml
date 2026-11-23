@@ -56,18 +56,18 @@ skills:
   - in: [short, long]
     category: { en: "Languages", fr: "Langages" }
     items:
-      en: "JavaScript, TypeScript, Java 8/11/17/21, Python (AI/automation – PoC), Rust, Go"
-      fr: "JavaScript, TypeScript, Java 8/11/17/21, Python (IA/automatisation – PoC), Rust, Go"
-  - in: [short, long]
-    category: { en: "Front-End", fr: "Front-End" }
-    items:
-      en: "Angular (15 → 22), RxJS, NGRX, NGXS, Angular Material, React, Redux, TailwindCSS, Ant Design, MUI, HTML5, CSS3/SCSS, Lexical, AG-Grid, ECharts"
-      fr: "Angular (15 → 22), RxJS, NGRX, NGXS, Angular Material, React, Redux, TailwindCSS, Ant Design, MUI, HTML5, CSS3/SCSS, Lexical, AG-Grid, ECharts"
+      en: "Rust, TypeScript, JavaScript, Java 8/11/17/21, Python (AI/automation – PoC), Go"
+      fr: "Rust, TypeScript, JavaScript, Java 8/11/17/21, Python (IA/automatisation – PoC), Go"
   - in: [short, long]
     category: { en: "Back-End", fr: "Back-End" }
     items:
       en: "Spring Boot, Spring MVC, Spring Data, Spring Security, Spring Batch, Hibernate, JPA, Node.js, Express.js, NestJS, Prisma, Quarkus"
       fr: "Spring Boot, Spring MVC, Spring Data, Spring Security, Spring Batch, Hibernate, JPA, Node.js, Express.js, NestJS, Prisma, Quarkus"
+  - in: [short, long]
+    category: { en: "Front-End", fr: "Front-End" }
+    items:
+      en: "Angular (15 → 22), RxJS, NGRX, NGXS, Angular Material, React, Redux, TailwindCSS, Ant Design, MUI, HTML5, CSS3/SCSS, Lexical, AG-Grid, ECharts"
+      fr: "Angular (15 → 22), RxJS, NGRX, NGXS, Angular Material, React, Redux, TailwindCSS, Ant Design, MUI, HTML5, CSS3/SCSS, Lexical, AG-Grid, ECharts"
   - in: [long]
     category: { en: "APIs", fr: "APIs" }
     items: { en: "REST, GraphQL", fr: "REST, GraphQL" }
@@ -109,8 +109,8 @@ experiences:
   - in: [short, long]
     company: "TotalEnergies"
     role:
-      en: "Senior Full Stack AI Developer (TypeScript / Python)"
-      fr: "Développeur Full Stack IA Senior (TypeScript / Python)"
+      en: "Senior Full Stack AI Developer"
+      fr: "Développeur Full Stack IA Senior"
     dates: { en: "November 2026", fr: "Novembre 2026" }
     period: { start: "2026-11", end: null }
     client: null
@@ -601,47 +601,35 @@ experiences:
 
 projects:
   - in: [short, long]
-    name: "Orrery — Multi-Agent Git Orchestrator IDE (Desktop)"
+    name: "Orrery — AI Agent Harness & ADE (Rust)"
     role: { en: "Solo Author — Full Stack Developer", fr: "Auteur Unique — Développeur Full Stack" }
     type: { en: "Personal Open-Source Project", fr: "Projet Personnel Open Source" }
-    repo: "https://github.com/kouji-dev/orrery-releases"
+    link: "https://getorrery.dev"
     context:
-      en: "Orrery is a futuristic, IntelliJ-inspired **multi-agent git orchestrator IDE**, built as a native desktop application with **Tauri (Rust) and Angular 22**. Each project is a git repository, and a project can **spawn multiple AI coding agents** (Claude Code, Codex, Cursor, Gemini) that each run in their own **git worktree, branch, terminal and conversation** — letting a developer drive several agents in parallel from a single cockpit."
-      fr: "Orrery est un **IDE d'orchestration multi-agents Git** futuriste, inspiré d'IntelliJ, conçu comme une application desktop native avec **Tauri (Rust) et Angular 22**. Chaque projet est un dépôt Git, et un projet peut **lancer plusieurs agents de code IA** (Claude Code, Codex, Cursor, Gemini) qui s'exécutent chacun dans leur propre **worktree Git, branche, terminal et conversation** — permettant à un développeur de piloter plusieurs agents en parallèle depuis un cockpit unique."
+      en: "Orrery is a full **AI agent harness** and its **ADE**, built on **Rust**. The **Orrery Harness** is a composable agent runtime — the class of tool Claude Code and Codex are — and **Orrery ADE** is the native desktop app that runs coding agents in parallel, each in its own git worktree and terminal."
+      fr: "Orrery est un **harness d'agents IA** complet et son **ADE**, bâtis sur **Rust**. Le **Orrery Harness** est un runtime d'agents composable — la catégorie d'outil de Claude Code et Codex — et **Orrery ADE** est l'application desktop native qui exécute des agents de code en parallèle, chacun dans son worktree Git et son terminal."
     responsibilities:
       - in: [long]
         text:
-          en: "Architected the application as a **Tauri 2 desktop shell (Rust)** wrapping an **Angular 22** front-end, with a clean **module-per-domain** structure (projects, agents, workspace, orchestrator dashboard, right panel, sidebar, settings, …)"
-          fr: "Architecturé l'application comme un **shell desktop Tauri 2 (Rust)** encapsulant un frontend **Angular 22**, avec une structure propre **par domaine** (projets, agents, workspace, dashboard d'orchestration, panneau de droite, sidebar, paramètres, …)"
+          en: "Built the **Orrery Harness** in **Rust**: a composable agent runtime (workspace of 50+ crates) whose loop is assembled from declared parts, with permissions enforced in the core"
+          fr: "Construit le **Orrery Harness** en **Rust** : un runtime d'agents composable (workspace de 50+ crates) dont la boucle s'assemble à partir de briques déclarées, avec des permissions appliquées dans le cœur"
       - in: [long]
         text:
-          en: "Built the **orchestrator dashboard** — a hero overview with live stats and multiple visualization metaphors for monitoring agents across projects"
-          fr: "Construit le **dashboard d'orchestration** — une vue d'ensemble avec statistiques en direct et plusieurs métaphores de visualisation pour superviser les agents à travers les projets"
+          en: "Opened it to any language and model: out-of-process extensions (**Wasm**, Node.js), **MCP** servers and skills, and providers for Anthropic, OpenAI, Gemini, Ollama and vLLM"
+          fr: "Ouvert à tout langage et tout modèle : extensions hors processus (**Wasm**, Node.js), serveurs **MCP** et skills, providers Anthropic, OpenAI, Gemini, Ollama et vLLM"
       - in: [long]
         text:
-          en: "Implemented the **per-agent workspace** with Diff / Terminal / Chat panes: **WebGL-accelerated integrated terminals**, a diff/merge editor on **CodeMirror 6**, and rich-text / markdown editing via **Lexical**"
-          fr: "Implémenté le **workspace par agent** avec panneaux Diff / Terminal / Chat : **terminaux intégrés accélérés WebGL**, éditeur diff/merge sur **CodeMirror 6**, et édition rich-text / markdown via **Lexical**"
+          en: "Streamed every session over **AG-UI** to interchangeable clients — a **Ratatui** terminal UI, an Ink TUI, JSON events for CI and evals — all checked against shared conformance fixtures"
+          fr: "Diffusé chaque session via **AG-UI** vers des clients interchangeables — TUI **Ratatui**, TUI Ink, événements JSON pour la CI et les évals — tous validés par des fixtures de conformité communes"
       - in: [long]
         text:
-          en: "Designed the **spawn-agent flow** (project, branch, tool, model, effort, prompt) and an **agent-worktree runtime** so each agent is isolated on its own branch and worktree"
-          fr: "Conçu le **flux de lancement d'agent** (projet, branche, outil, modèle, effort, prompt) et un **runtime de worktree par agent** afin que chaque agent soit isolé sur sa propre branche et son worktree"
+          en: "Shipped **Orrery ADE**, a **Tauri 2** native shell with an **Angular 22** UI that runs CLI agents (Claude Code, Codex, Cursor, Gemini) in parallel, with built-in git, code navigation and diff review"
+          fr: "Livré **Orrery ADE**, un shell natif **Tauri 2** avec une UI **Angular 22**, qui exécute des agents CLI (Claude Code, Codex, Cursor, Gemini) en parallèle, avec Git, navigation de code et revue de diff intégrés"
       - in: [long]
         text:
-          en: "Integrated **agent cost tracking** (ccusage) and an **agent hooks / permissions** model to govern what agents are allowed to do"
-          fr: "Intégré le **suivi des coûts par agent** (ccusage) et un modèle de **hooks / permissions d'agent** pour gouverner ce que les agents sont autorisés à faire"
-      - in: [long]
-        text:
-          en: "Built a **design-token-driven design system** with theming, density, colour palettes and motion controls, plus real-time streaming logs and live timers"
-          fr: "Construit un **design system piloté par design tokens** avec thématisation, densité, palettes de couleurs et contrôles de motion, ainsi que des logs en streaming temps réel et des timers en direct"
-      - in: [long]
-        text:
-          en: "Wrote the **Rust backend** pieces (auto-updater, app-icon generation, hooks CLI) and wired the **auto-update** flow via Tauri's updater plugin"
-          fr: "Écrit les éléments du **backend Rust** (auto-updater, génération d'icône d'application, CLI de hooks) et câblé le flux de **mise à jour automatique** via le plugin updater de Tauri"
-      - in: [long]
-        text:
-          en: "Established a **quality & release pipeline**: **Vitest** unit tests, **Playwright** end-to-end suites, a **performance smoke-test** harness with assertions, semantic version-bump scripts, and **GitHub Actions** workflows (including a Render-deployed landing site)"
-          fr: "Établi une **pipeline qualité & release** : tests unitaires **Vitest**, suites end-to-end **Playwright**, un harnais de **smoke-test de performance** avec assertions, scripts de bump de version sémantique, et workflows **GitHub Actions** (incluant un site vitrine déployé sur Render)"
-    tech: "Angular 22, TypeScript, RxJS, CodeMirror 6, Lexical, Tauri 2, Rust, Vitest, Playwright, GitHub Actions"
+          en: "Kept the desktop app light: **12 MB installer** and **1.3 s** from start to first paint, with auto-updated releases for Windows and macOS"
+          fr: "Gardé l'application légère : **installeur de 12 Mo** et **1,3 s** du lancement au premier affichage, avec des releases auto-mises à jour pour Windows et macOS"
+    tech: "Rust, Tauri 2, Ratatui, AG-UI, MCP, Wasm, Angular 22, TypeScript, Vitest, Playwright, GitHub Actions"
 
   - in: [short, long]
     name: "Vortex — Enterprise LLM Gateway"

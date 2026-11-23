@@ -10,7 +10,7 @@ I build with agents: skills, MCP servers, evals and benchmarks, then review ever
 
 ## Now
 
-- Building [Orrery](https://orrery.kouji.dev), the ultimate harness for coding agents
+- Building [Orrery](https://getorrery.dev), a full AI harness and ADE for coding agents
 - Building the design system at TotalEnergies — Figma to accessible Angular, automated by agents
 - Maintaining [kouji/ui](https://ui.kouji.dev), 60+ accessible Angular components
 
@@ -29,7 +29,8 @@ I build with agents: skills, MCP servers, evals and benchmarks, then review ever
 
 | Project | What | Stack |
 |---|---|---|
-| [Orrery](https://orrery.kouji.dev) | The ultimate harness for coding agents | Rust · Tauri · Angular 22 |
+| [Orrery Harness](https://getorrery.dev) | Rust agent runtime to build your own coding agent | Rust · Ratatui · AG-UI · MCP |
+| [Orrery ADE](https://getorrery.dev) | Desktop app running coding agents in parallel | Rust · native shell · Angular 22 |
 | [kouji/ui](https://ui.kouji.dev) | Angular design system | 60+ components |
 | [Vortex](https://github.com/kouji-dev/vortex) | Enterprise LLM gateway | Node.js · Hono · Drizzle · Angular 22 |
 | [Pages](https://github.com/kouji-dev/pages) | Jira + Confluence in one | Python · FastAPI · Angular 20 |
