@@ -158,7 +158,7 @@ window.BLOG_POSTS = [
       { t: 'table', label: 'The tools I went through: what each did well, why I moved on and what Orrery does better', head: ['Tool', 'What it did well', 'Why I moved on', 'What Orrery does better'], rows: [
         ['IntelliJ', 'The IDE I knew by heart', 'Slow, heavy, and no worktree management at the time', 'Light, and every agent gets its own worktree'],
         ['Terminal + Vim', 'As light as it gets', 'A wall of shortcuts for simple needs', 'Talk to the agent and review its output, nothing to memorize'],
-        ['Zed', 'Fast, free, built with Rust', 'Poor git graph, and review did not fit my workflow', 'A full git graph and a review built around the changed files']
+        ['Zed', 'Fast, free, built with Rust', 'Poor git graph, and review did not fit my workflow', 'A better developer experience: the git graph and the UI']
       ] },
 
       { t: 'h2', text: 'Then the agent itself became the problem' },
