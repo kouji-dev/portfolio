@@ -357,6 +357,21 @@ test.describe('post (fixture)', () => {
     await expect(page.locator('a[aria-label="Share on LinkedIn"]')).toHaveAttribute('href', 'https://www.linkedin.com/sharing/share-offsite/?url=' + enc);
   });
 
+  test('a figure with field "shader" sits on the drifting multicolour field, not on the dotted paper', async ({ page }) => {
+    await withPosts(page, [Object.assign({}, full, { body: [{ t: 'figure', field: 'shader', alt: 'A mark', svg: '<circle cx="320" cy="180" r="60" fill="#fff"></circle>' }, { t: 'figure', alt: 'Plain', svg: '<circle class="ink" cx="320" cy="180" r="60"></circle>' }] })]);
+    await page.goto('/blogs?id=' + full.slug);
+    const figs = page.locator('[data-view-post] figure svg.illo');
+    const shader = page.locator('[data-view-post] svg.illo-shader');
+    await expect(shader).toHaveCount(1);
+    await expect(shader.locator('rect.bg')).toHaveCount(0);
+    await expect(shader).toHaveCSS('background-blend-mode', /overlay/);
+    await expect(shader).toHaveCSS('animation-name', 'illo-drift');
+    await expect(figs.last().locator('rect.bg')).toHaveCount(1);
+    // reduced motion: the field stays, still
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(shader).toHaveCSS('animation-name', 'none');
+  });
+
   test('tabs switch the code block shown', async ({ page }) => {
     const tabs = page.locator('.tabs [role="tab"]'), panels = page.locator('.tabs [role="tabpanel"]');
     await expect(tabs).toHaveText(['bash', 'PowerShell']);

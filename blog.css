@@ -55,6 +55,11 @@ a.tag:hover{color:var(--fg)}
 .illo .fills{opacity:.92}
 .illo .txt{fill:var(--ink);font-family:'JetBrains Mono',monospace;font-size:13px}
 .illo .big{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600}
+/* Orrery's shader field, as its landing page draws it (.wl-shader): the streaks texture over the spectrum, blended as an
+   overlay, drifting slowly. The same in both themes: drawings on it use white, not .ink */
+.illo-shader{background:url(assets/blog/orrery-streaks.jpg) 0 0/840px 420px,linear-gradient(100deg,#ff5d9e,#c26cf5,#8b6cf8,#6d6af8,#d9a441,#57c98a,#3fb6c4,#22d3ee,#ff8a5c);background-blend-mode:overlay;border-color:transparent;animation:illo-drift 14s ease-in-out infinite alternate}
+@keyframes illo-drift{to{background-position:-360px 0,0 0}}
+@media (prefers-reduced-motion:reduce){.illo-shader{animation:none}}
 .illo-link{display:block;text-decoration:none}
 
 /* ---------- index ---------- */

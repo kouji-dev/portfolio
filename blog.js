@@ -94,15 +94,16 @@
   }
 
   /* An illustration: dotted paper, then the author's drawing — `svg` (inner markup on a 640×360 canvas, using the
-     .ink / .f-* classes of blog.css, so it follows the theme) or `src` (an image file). With neither, the topic's name. */
+     .ink / .f-* classes of blog.css, so it follows the theme) or `src` (an image file). With neither, the topic's name.
+     `field: 'shader'` swaps the paper for Orrery's shader field (blog.css .illo-shader). */
   var illoN = 0;
   function illo(c, fallback) {
     c = c || {};
     if (c.src) return '<img class="illo" src="' + esc(c.src) + '" alt="' + esc(c.alt) + '" width="640" height="360" loading="lazy">';
-    var id = 'dots-' + (illoN++);
-    return '<svg class="illo" viewBox="0 0 640 360" ' + (c.alt ? 'role="img" aria-label="' + esc(c.alt) + '"' : 'aria-hidden="true"') + '>' +
+    var id = 'dots-' + (illoN++), shader = c.field === 'shader';
+    return '<svg class="illo' + (shader ? ' illo-shader' : '') + '" viewBox="0 0 640 360" ' + (c.alt ? 'role="img" aria-label="' + esc(c.alt) + '"' : 'aria-hidden="true"') + '>' +
       '<defs><pattern id="' + id + '" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs>' +
-      '<rect class="bg" width="640" height="360"></rect><rect width="640" height="360" fill="url(#' + id + ')"></rect>' +
+      (shader ? '' : '<rect class="bg" width="640" height="360"></rect><rect width="640" height="360" fill="url(#' + id + ')"></rect>') +
       (c.svg || '<text class="txt big" x="32" y="328">' + esc(fallback) + '</text>') + '</svg>';
   }
   function postIllo(p) { return illo(p.cover, topics(p)[0]); }

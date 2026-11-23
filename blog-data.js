@@ -47,7 +47,9 @@
      { t: 'tabs',    label?, tabs: [{ label, lang, text, file?, hl? }] }   one code block per tab
      { t: 'callout', tone: 'note' | 'tip' | 'warn' | 'bad', title?, text }
      { t: 'table',   head: [text], rows: [[text]], label? }   scrolls sideways when narrow; label names it for a11y
-     { t: 'figure',  svg | src, alt?, caption? }     an illustration inside the body, same rules as `cover`
+     { t: 'figure',  svg | src, alt?, caption?, field? }   an illustration inside the body, same rules as `cover`.
+                     field: 'shader' (also on `cover`) swaps the dotted paper for Orrery's drifting multicolour field;
+                     draw on it in white (fill="#fff"), the theme classes are for the paper
      { t: 'flow',    nodes: [{ title, sub?, tone?: 'orr' | 'note' | 'tip' | 'warn' | 'bad', fail? }], caption? }
                      numbered boxes joined by arrows; `fail` hangs a dashed "what happens on failure" note under one
      { t: 'metrics', items: [{ n, label }] }         big numbers
@@ -180,8 +182,14 @@ window.BLOG_POSTS = [
       { t: 'p', text: 'The highlighted lines are the whole contract: the manifest names the runtime and the tool, the script announces the tool and answers the call. The same tool exists in Node, Go and Rust in the examples.' },
       { t: 'callout', tone: 'note', title: 'A target, not a benchmark', text: 'The hundred-to-ten ratio is the goal I am building toward. I have not published a measurement of it yet.' },
 
+      { t: 'h2', text: 'One session, every screen' },
+      { t: 'p', text: 'A harness that runs on a machine leaves one more question: why should I have to sit at that machine? An agent can work for a long while, and when it needs an answer I want to give it from whatever is in front of me.' },
+      { t: 'p', text: 'That is the job of **Orrery Relay**. It joins any client to any session on any machine I have enrolled. Each machine dials out to the relay, and the relay is one binary you can host yourself.' },
+      { t: 'figure', field: 'shader', alt: "The Orrery Relay mark, a white letter R with the monogram’s planet in its bowl, on a drifting field of pink, violet, blue, green and cyan streaks, with the words Orrery Relay, one session, every screen",
+        svg: "<defs><clipPath id=\"rl-orr-c\"><rect x=\"0\" y=\"20\" width=\"200\" height=\"160\"></rect></clipPath><mask id=\"rl-orr-m\" maskUnits=\"userSpaceOnUse\" x=\"-20\" y=\"-20\" width=\"240\" height=\"240\"><rect x=\"-20\" y=\"-20\" width=\"240\" height=\"240\" fill=\"#fff\"></rect><circle cx=\"119.87\" cy=\"47.13\" r=\"26\" fill=\"#000\"></circle></mask></defs><g transform=\"translate(216 34) scale(1.1)\"><g clip-path=\"url(#rl-orr-c)\"><g mask=\"url(#rl-orr-m)\"><g stroke=\"#fff\" stroke-width=\"32\" fill=\"none\"><path d=\"M51 20 V196\"></path><path d=\"M51 36 H93 A38 38 0 0 1 93 112 H51\" stroke-linejoin=\"miter\"></path><path d=\"M95 104 L159 194\"></path></g></g></g><circle cx=\"119.87\" cy=\"47.13\" r=\"16\" fill=\"#fff\"></circle></g><text class=\"txt big\" x=\"320\" y=\"290\" text-anchor=\"middle\" style=\"fill:#fff\">Orrery Relay</text><text class=\"txt\" x=\"320\" y=\"316\" text-anchor=\"middle\" style=\"fill:#fff\">one session, every screen</text>" },
+      { t: 'p', text: 'The aim is one session on every platform: the terminal, the desktop app, the browser and the phone. A reply from any of them shows on all of them.' },
       { t: 'h2', text: 'Where it stands' },
-      { t: 'p', text: '[Orrery](https://getorrery.dev) is now two things: a harness and an ADE. The harness runs the agent. The ADE is where I run many of them side by side, review what they did and ship it.' },
+      { t: 'p', text: '[Orrery](https://getorrery.dev) is now two things: a harness and an ADE. The harness runs the agent. The ADE is where I run many of them side by side, review what they did and ship it. The relay carries a session between them, and to every other screen.' },
       { t: 'p', text: 'Both exist because of small frustrations I refused to keep living with. If some of them sound familiar, have a look.' },
       { t: 'cards', items: [
         { title: 'Orrery', text: 'A full AI harness and ADE for coding agents.', href: 'https://getorrery.dev' }
