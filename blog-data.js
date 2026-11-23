@@ -105,7 +105,7 @@ window.BLOG_POSTS = [
     dek: 'Two years of working with AI changed my job one annoyance at a time. This is how a heavy IDE, a pile of copied folders and one hungry CLI turned into Orrery.',
     date: '2026-11-23',
     category: 'Agents',
-    tags: ['Orrery', 'Rust', 'Workflow'],
+    tags: ['Harness', 'Rust', 'AI'],
     cover: {
       alt: 'A box labelled IDE splits into four parallel branches, each ending in a coloured agent dot; dashed lines carry the four to the Orrery logo',
       caption: 'One checkout became many worktrees, one agent each. Orrery is where they meet.',

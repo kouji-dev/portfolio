@@ -108,7 +108,6 @@ a.tag:hover{color:var(--fg)}
 .series{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:30px;padding:0 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--orr) 45%,transparent);color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:12px}
 .series i{width:6px;height:6px;border-radius:50%;background:var(--orr)}
 .avatar{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none;background:var(--chip);border:1px solid var(--btn-bd);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px}
-.avatar-lg{width:56px;height:56px;font-size:18px}
 .toc{position:relative;margin:0;padding:0 0 0 14px;list-style:none;display:flex;flex-direction:column;border-left:1px solid var(--panel-bd)}
 .toc a,.toc span{display:flex;align-items:center;min-height:34px;color:var(--muted);text-decoration:none;font-size:13.5px}
 .toc a:hover{color:var(--fg)}
@@ -220,14 +219,8 @@ a.linkcard:hover{border-color:#a855f7;color:var(--fg)}
 .faq details[open] summary:after{content:"−"}
 .faq details p{margin:0 0 16px;color:var(--muted)}
 
-/* ---------- after the post: tags, author, newer / older, read next ---------- */
+/* ---------- after the post: tags, newer / older, read next ---------- */
 .after-tags{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-top:20px;border-top:1px solid var(--panel-bd)}
-.author-box{display:flex;flex-wrap:wrap;gap:18px;padding:22px;border:1px solid var(--panel-bd);border-radius:18px;background:var(--btn)}
-.author-text{flex:1 1 300px;display:flex;flex-direction:column;gap:6px}
-.author-text p{margin:0}
-.author-text .author-name{font-weight:600}
-.author-text .author-bio{color:var(--muted);font-size:14px}
-.author-text .links{font-size:14px}
 .more-posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px}
 .more-posts .linkcard{flex-direction:column;gap:4px}
 .more-posts .linkcard[aria-disabled]{opacity:.55;color:var(--muted)}

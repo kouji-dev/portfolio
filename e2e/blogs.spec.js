@@ -369,12 +369,9 @@ test.describe('post (fixture)', () => {
     await expect(panels.nth(1).locator('.code-file')).toHaveText('a.ps1');
   });
 
-  test('after the post: tags, author with CV links, newer / older, read next', async ({ page }) => {
+  test('after the post: tags, newer / older, read next; no author box', async ({ page }) => {
     await expect(page.locator('.after-tags a.tag')).toHaveText(['Testing', 'Fixtures', 'Blocks']);
-    const author = page.locator('.author-box');
-    await expect(author).toContainText('Written by Driss Najih');
-    await expect(author.locator('a[download][href*="cv-en-short"]')).toHaveCount(1);
-    await expect(author.locator('a[download][href*="cv-fr-short"]')).toHaveCount(1);
+    await expect(page.locator('.author-box')).toHaveCount(0);
 
     const more = page.locator('.more-posts .linkcard');
     await expect(more.nth(0)).toHaveAttribute('aria-disabled', 'true');

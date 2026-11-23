@@ -471,7 +471,6 @@
       .sort(function (a, b) { return shared(b) - shared(a); }).slice(0, 2);
 
     var shareBtns = '<button type="button" class="btn btn-sm" data-copy-link>Copy link</button>';
-    var authorBox = document.querySelector('[data-author-box]');
 
     viewPost.innerHTML =
       '<aside aria-label="About this post" class="post-side">' +
@@ -499,7 +498,6 @@
         (post.cover ? '<figure class="cover">' + postIllo(post) + (post.cover.caption ? '<figcaption>' + inline(post.cover.caption) + '</figcaption>' : '') + '</figure>' : '') +
         '<div class="prose" data-post-body>' + body + '</div>' +
         '<div class="after-tags"><div class="tags">' + tagsHTML(post, true) + '</div>' + shareBtns + '</div>' +
-        (authorBox ? '<section aria-label="Author" class="author-box">' + authorBox.innerHTML + '</section>' : '') +
         (posts.length > 1 ? '<nav aria-label="More posts" class="more-posts">' +
           stepHTML(newer, '← Newer', 'This is the latest post') + stepHTML(older, 'Older →', 'This is the first post') + '</nav>' : '') +
         (related.length ? '<section aria-labelledby="rel-h" class="related"><h2 id="rel-h">Read next</h2><div class="rel-grid">' +
