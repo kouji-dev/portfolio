@@ -149,13 +149,6 @@ window.BLOG_POSTS = [
       { t: 'p', text: 'But it did not match my workflow. The git graph was poor, and reviewing changed files felt off for the way I work. Everything else, I loved.' },
       { t: 'pull', text: 'I did not need a better editor. I needed a place to run agents.' },
 
-      { t: 'table', label: 'The tools I went through, what each did well and why I moved on', head: ['Tool', 'What it did well', 'Why I moved on'], rows: [
-        ['IntelliJ', 'The IDE I knew by heart', 'Slow, heavy, and no worktree management at the time'],
-        ['Terminal + Vim', 'Light', 'Too many shortcuts for simple needs'],
-        ['Zed', 'Fast, free, built with Rust', 'Git graph and review did not fit my workflow'],
-        ['**Orrery ADE**', 'Agents, worktrees and review in one window', 'Still here'],
-        ['**Orrery Harness**', 'The agent runtime itself, in Rust', 'Still here']
-      ] },
 
       { t: 'h2', text: 'So I built one' },
       { t: 'p', text: 'That is where the fun idea came from: a side project to build my own environment for agents. I did not even know the category existed. I found other products later, and they were not optimized the way I wanted. I started learning Rust in parallel and got to work.' },
@@ -168,6 +161,12 @@ window.BLOG_POSTS = [
       ] },
       { t: 'p', text: 'That was all of it, and it worked. It did the job well enough that I was soon building Orrery with Orrery.' },
       { t: 'p', text: 'The bigger features came later: a full git graph and git operations, symbol search across every worktree, which is really fast, and language servers for Java, TypeScript, Go and Rust.' },
+
+      { t: 'table', label: 'The tools I went through: what each did well, why I moved on and what Orrery does better', head: ['Tool', 'What it did well', 'Why I moved on', 'What Orrery does better'], rows: [
+        ['IntelliJ', 'The IDE I knew by heart', 'Slow, heavy, and no worktree management at the time', 'Light, and every agent gets its own worktree'],
+        ['Terminal + Vim', 'As light as it gets', 'A wall of shortcuts for simple needs', 'Talk to the agent and review its output, nothing to memorize'],
+        ['Zed', 'Fast, free, built with Rust', 'Poor git graph, and review did not fit my workflow', 'A full git graph and a review built around the changed files']
+      ] },
 
       { t: 'h2', text: 'Then the agent itself became the problem' },
       { t: 'p', text: 'With the environment sorted, the next bottleneck was the agent CLI. I mostly ran Claude Code, and I want to be fair to it: it is a beautiful tool with one of the greatest harnesses, on top of a very smart model.' },
