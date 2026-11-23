@@ -107,7 +107,7 @@ window.BLOG_POSTS = [
     category: 'Agents',
     tags: ['Orrery', 'Rust', 'Workflow'],
     cover: {
-      alt: 'A box labelled IDE splits into four parallel branches, each ending in a coloured agent dot; dashed lines carry the four to a small orbit drawing labelled orrery',
+      alt: 'A box labelled IDE splits into four parallel branches, each ending in a coloured agent dot; dashed lines carry the four to the Orrery logo',
       caption: 'One checkout became many worktrees, one agent each. Orrery is where they meet.',
       svg: '<rect class="ink f-w" x="44" y="140" width="116" height="80" rx="14"></rect><text class="txt big" x="102" y="188" text-anchor="middle">IDE</text>' +
         '<path class="ink" d="M160 180C215 180 215 72 270 72H322"></path><path class="ink" d="M160 180C215 180 215 144 270 144H322"></path>' +
@@ -116,8 +116,11 @@ window.BLOG_POSTS = [
         '<text class="txt" x="232" y="58">worktree</text><text class="txt" x="232" y="310">worktree</text>' +
         '<path class="ink thin dash" d="M350 72C420 72 440 130 478 160"></path><path class="ink thin dash" d="M350 144C400 144 430 160 470 172"></path>' +
         '<path class="ink thin dash" d="M350 216C400 216 430 200 470 188"></path><path class="ink thin dash" d="M350 288C420 288 440 230 478 200"></path>' +
-        '<ellipse class="ink thin" cx="540" cy="180" rx="66" ry="24"></ellipse><ellipse class="ink thin" cx="540" cy="180" rx="66" ry="24" transform="rotate(60 540 180)"></ellipse><ellipse class="ink thin" cx="540" cy="180" rx="66" ry="24" transform="rotate(120 540 180)"></ellipse>' +
-        '<circle class="f-v" cx="540" cy="180" r="11"></circle><text class="txt" x="540" y="282" text-anchor="middle">orrery</text>'
+        '<defs><linearGradient id="cv-orr-r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5d9e"></stop><stop offset=".5" stop-color="#a855f7"></stop><stop offset="1" stop-color="#22d3ee"></stop></linearGradient>' +
+        '<radialGradient id="cv-orr-c"><stop offset="0" stop-color="#fff"></stop><stop offset=".45" stop-color="#a855f7"></stop><stop offset="1" stop-color="#a855f7" stop-opacity="0"></stop></radialGradient></defs>' +
+        // the Orrery mark as shipped (orrery: landing/img/mark.svg), without its dark tile
+        '<g transform="translate(466 106) scale(1.48)"><path d="M85.0 50.0L84.8 48.8L84.3 47.7L83.4 46.7L82.2 45.8L80.8 45.1L79.0 44.6L77.1 44.4L74.9 44.4L72.7 44.8L70.3 45.4L67.9 46.4L65.6 47.6L63.3 49.2L61.1 51.0L59.1 53.0L57.3 55.3L55.7 57.7L54.4 60.3L53.3 62.9L52.6 65.6L52.1 68.2L51.9 70.7L52.0 73.2L52.4 75.4L53.0 77.5L53.9 79.3L54.8 80.8L56.0 82.0L57.2 82.8L58.4 83.3L59.6 83.5L60.8 83.3L61.9 82.8L62.8 81.9L63.5 80.8L64.0 79.4L64.2 77.7L64.1 75.9L63.7 74.0L63.0 72.0L62.0 69.9L60.6 67.9L59.0 65.9L57.1 64.1L54.9 62.4L52.5 60.9L49.9 59.6L47.2 58.6L44.4 57.8L41.6 57.3L38.8 57.1L36.0 57.2L33.3 57.6L30.9 58.2L28.6 59.1L26.6 60.2L24.8 61.4L23.3 62.7L22.2 64.1L21.4 65.6L21.0 67.0L20.9 68.3L21.1 69.5L21.7 70.6L22.5 71.4L23.6 72.0L24.9 72.3L26.4 72.4L28.0 72.1L29.7 71.4L31.4 70.5L33.1 69.2L34.7 67.6L36.2 65.7L37.6 63.5L38.8 61.1L39.7 58.5L40.4 55.7L40.9 52.9L41.0 50.0L40.9 47.1L40.4 44.3L39.7 41.5L38.8 38.9L37.6 36.5L36.2 34.3L34.7 32.4L33.1 30.8L31.4 29.5L29.7 28.6L28.0 27.9L26.4 27.6L24.9 27.7L23.6 28.0L22.5 28.6L21.7 29.4L21.1 30.5L20.9 31.7L21.0 33.0L21.4 34.4L22.2 35.9L23.3 37.3L24.8 38.6L26.6 39.8L28.6 40.9L30.9 41.8L33.3 42.4L36.0 42.8L38.8 42.9L41.6 42.7L44.4 42.2L47.2 41.4L49.9 40.4L52.5 39.1L54.9 37.6L57.1 35.9L59.0 34.1L60.6 32.1L62.0 30.1L63.0 28.0L63.7 26.0L64.1 24.1L64.2 22.3L64.0 20.6L63.5 19.2L62.8 18.1L61.9 17.2L60.8 16.7L59.6 16.5L58.4 16.7L57.2 17.2L56.0 18.0L54.8 19.2L53.9 20.7L53.0 22.5L52.4 24.6L52.0 26.8L51.9 29.3L52.1 31.8L52.6 34.4L53.3 37.1L54.4 39.7L55.7 42.3L57.3 44.7L59.1 47.0L61.1 49.0L63.3 50.8L65.6 52.4L67.9 53.6L70.3 54.6L72.7 55.2L74.9 55.6L77.1 55.6L79.0 55.4L80.8 54.9L82.2 54.2L83.4 53.3L84.3 52.3L84.8 51.2L85.0 50.0Z" fill="none" stroke="url(#cv-orr-r)" stroke-width="5" stroke-linejoin="round"></path><circle cx="50" cy="50" r="13" fill="url(#cv-orr-c)"></circle></g>' +
+        '<text class="txt" x="540" y="282" text-anchor="middle">orrery</text>'
     },
     body: [
       { t: 'lead', text: 'Two years ago I was a developer with an IDE. Today I spend my days directing coding agents and reviewing what they hand back. None of it was planned. It happened one annoyance at a time, and each annoyance ended with me building something.' },
