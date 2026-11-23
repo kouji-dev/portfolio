@@ -1,31 +1,73 @@
 /* =========================================================================
    Blog posts — single source of truth.
 
-   Currently empty: the mock posts from the design handoff were removed;
-   real posts get added here one by one.
+   Real posts only: the mock posts from the design handoff stay out.
 
    Consumed by:
-   - blog.js     (blogs.html — index + article rendering, ?id= routing)
-   - index.html  (latest-3 rows in the "Notes from the build" section,
-                  hidden while there are no posts)
-   - palette.js  (⌘K page index — "Blog" group)
+   - blog.js     (blogs.html — index + post rendering, ?id= and ?tag= routing)
+   - home.js     (index.html — the latest posts in the "Writing" section,
+                  hidden while there are no posts; reads slug, title, date)
 
-   Post shape:
+   Post shape (fields marked ? are optional):
    {
-     slug: 'url-safe-id',            // /blogs?id=<slug>
-     title: '…',
-     dek: 'one-paragraph standfirst',
-     date: 'YYYY-MM-DD', dateLabel: 'Mon D, YYYY', read: 'N min',
-     category: 'Agents',             // becomes a filter chip
-     tags: ['…'],
-     body: [                         // block types: p | h2 | quote | list | code
-       { t: 'p',     text: '…' },
-       { t: 'h2',    text: '…' },
-       { t: 'quote', text: '…' },
-       { t: 'list',  items: ['…'] },
-       { t: 'code',  lang: 'bash', text: '…' }
-     ]
+     slug: 'url-safe-id',            // /blogs?id=<slug>; unique
+     title: '…',                     // plain text
+     dek: 'one-paragraph standfirst',// plain text; also the meta description
+     date: 'YYYY-MM-DD',             // sorts the posts; shown as "Mon YYYY"
+     category: 'Agents',             // the main topic: breadcrumb, first filter chip
+     tags: ['…'],                    // more topics; each one is a filter chip and /blogs?tag=<name>
+     read?: 'N min',                 // else worked out from the body, 220 words a minute
+     cover?: {                       // the illustration on the cards and above the post;
+       svg: '<path class="ink" …>',  //   inner SVG markup on a 640×360 canvas, trusted (not escaped). Classes from
+                                     //   blog.css follow the theme: ink, thin, dash, f-p f-v f-c f-l f-w f-i, txt, big
+       src: 'assets/blog/x.png',     //   OR an image file (16:9); it does not follow the theme
+       alt: '…', caption: '…'        //   both optional
+     },                              //   without a cover the cards show dotted paper with the category's name
+     series?: { name: '…', part: 1, of: 3 },  // posts sharing `name` are listed in the side column by `part`;
+                                     //   `of` (optional) announces parts that are "not out yet"
+     notes?: ['…'],                  // footnotes, cited in any text as [^1], [^2]… ; add a "Notes" section
+     changelog?: ['Mon YYYY · what changed'],  // lines under the notes
+     body: [ …blocks ]
    }
+
+   Blocks. Every `text`, `title`, `caption`, `cite`, list item and table cell takes the inline marks below;
+   headings, post titles and deks are plain text. Text is always escaped: raw HTML shows as typed.
+     { t: 'lead',    text }                          opening paragraph, larger
+     { t: 'p',       text }
+     { t: 'h2',      text }                          a section: gets an id, a # anchor, a line in "On this page"
+     { t: 'h3',      text }
+     { t: 'quote',   text, cite? }                   blockquote with its source
+     { t: 'pull',    text }                          large centred pull quote
+     { t: 'list',    items: [text], ordered?, title? }
+     { t: 'tasks',   items: [{ text, done? }], title? }   read-only checklist
+     { t: 'code',    lang, text, file?, hl?: [lineNo] }   numbered, coloured, Copy button; `hl` marks lines.
+                     lang 'terminal': lines starting "$ " are commands, the rest output; Copy takes the commands
+                     lang 'diff':     lines starting "+" / "-" are added / removed; no Copy
+                     lang '' | 'text': no colouring
+     { t: 'tabs',    label?, tabs: [{ label, lang, text, file?, hl? }] }   one code block per tab
+     { t: 'callout', tone: 'note' | 'tip' | 'warn' | 'bad', title?, text }
+     { t: 'table',   head: [text], rows: [[text]], label? }   scrolls sideways when narrow; label names it for a11y
+     { t: 'figure',  svg | src, alt?, caption? }     an illustration inside the body, same rules as `cover`
+     { t: 'flow',    nodes: [{ title, sub?, tone?: 'orr' | 'note' | 'tip' | 'warn' | 'bad', fail? }], caption? }
+                     numbered boxes joined by arrows; `fail` hangs a dashed "what happens on failure" note under one
+     { t: 'metrics', items: [{ n, label }] }         big numbers
+     { t: 'faq',     items: [{ q, a }] }             collapsible questions
+     { t: 'cards',   items: [{ title, text?, href }] }    link cards; the host name is shown under the text
+     { t: 'hr' }
+   An unknown `t` renders nothing.
+
+   Inline marks:  **strong**  *em*  ~~struck~~  ==highlight==  `code`  [[Key]]  [text](url)
+                  [abbr]{what it stands for}  [^1] (footnote, see `notes`)
+   Links only accept http(s):, mailto:, / and # targets; anything else stays as typed.
+
+   Worked out by blog.js, nothing to write: read time, contents list, copy link + share buttons, newer / older,
+   "Read next" (two other posts, most shared topics first), filter chips, pages (9 cards a page), meta + JSON-LD.
+
+   Limits:
+   - Code colouring is line by line: a comment or string spanning lines is coloured on its first line only.
+   - A footnote should be cited once; cited twice, "back" returns to the first.
+   - Many topics mean many chips: they wrap, there is no "more" menu.
+   - `cover.svg` and `figure.svg` are inserted as written: only ever paste your own markup there.
    ========================================================================= */
 
 /* Link helpers — clean URLs (/blogs, /#about) need a server that maps them
@@ -56,7 +98,94 @@ if (location.protocol === 'file:') {
     });
 }
 
-window.BLOG_POSTS = [];
+window.BLOG_POSTS = [
+  {
+    slug: 'why-i-built-orrery',
+    title: 'My IDE got slow, so I built an agent harness',
+    dek: 'Two years of working with AI changed my job one annoyance at a time. This is how a heavy IDE, a pile of copied folders and one hungry CLI turned into Orrery.',
+    date: '2026-11-23',
+    category: 'Agents',
+    tags: ['Orrery', 'Rust', 'Workflow'],
+    cover: {
+      alt: 'A box labelled IDE splits into four parallel branches, each ending in a coloured agent dot; dashed lines carry the four to a small orbit drawing labelled orrery',
+      caption: 'One checkout became many worktrees, one agent each. Orrery is where they meet.',
+      svg: '<rect class="ink f-w" x="44" y="140" width="116" height="80" rx="14"></rect><text class="txt big" x="102" y="188" text-anchor="middle">IDE</text>' +
+        '<path class="ink" d="M160 180C215 180 215 72 270 72H322"></path><path class="ink" d="M160 180C215 180 215 144 270 144H322"></path>' +
+        '<path class="ink" d="M160 180C215 180 215 216 270 216H322"></path><path class="ink" d="M160 180C215 180 215 288 270 288H322"></path>' +
+        '<circle class="f-p" cx="334" cy="72" r="10"></circle><circle class="f-v" cx="334" cy="144" r="10"></circle><circle class="f-c" cx="334" cy="216" r="10"></circle><circle class="f-l" cx="334" cy="288" r="10"></circle>' +
+        '<text class="txt" x="232" y="58">worktree</text><text class="txt" x="232" y="310">worktree</text>' +
+        '<path class="ink thin dash" d="M350 72C420 72 440 130 478 160"></path><path class="ink thin dash" d="M350 144C400 144 430 160 470 172"></path>' +
+        '<path class="ink thin dash" d="M350 216C400 216 430 200 470 188"></path><path class="ink thin dash" d="M350 288C420 288 440 230 478 200"></path>' +
+        '<ellipse class="ink thin" cx="540" cy="180" rx="66" ry="24"></ellipse><ellipse class="ink thin" cx="540" cy="180" rx="66" ry="24" transform="rotate(60 540 180)"></ellipse><ellipse class="ink thin" cx="540" cy="180" rx="66" ry="24" transform="rotate(120 540 180)"></ellipse>' +
+        '<circle class="f-v" cx="540" cy="180" r="11"></circle><text class="txt" x="540" y="282" text-anchor="middle">orrery</text>'
+    },
+    body: [
+      { t: 'lead', text: 'Two years ago I was a developer with an IDE. Today I spend my days directing coding agents and reviewing what they hand back. None of it was planned. It happened one annoyance at a time, and each annoyance ended with me building something.' },
+
+      { t: 'h2', text: 'The uncomfortable middle' },
+      { t: 'p', text: 'When you start using AI seriously, you hit a choice almost at once. Either you automate the problem and let the agent run, or you leave AI out of it because the task comes down to one decision you have to take yourself.' },
+      { t: 'p', text: 'The middle is the hard place. Half driving, half watching, you end up working more, not less.' },
+      { t: 'p', text: 'What got me out of it was to stop treating an agent as a faster version of me. The gain is in running several pieces of work at the same time. To benefit most from AI, parallelize as much as the work allows.' },
+
+      { t: 'h2', text: 'Worktrees, or how I stopped copying folders' },
+      { t: 'p', text: 'Parallel work has an obvious problem: two agents cannot edit the same checkout. My first answer was the crude one. I duplicated the project.' },
+      { t: 'p', text: 'Then I discovered git worktrees, later than I would like to admit. One repository, many working folders, each on its own branch. It solved exactly the problem I had.' },
+      { t: 'code', lang: 'terminal', text: '$ git worktree add ../shop-checkout -b feat/checkout\n$ git worktree add ../shop-search -b feat/search' },
+
+      { t: 'h2', text: 'My IDE was built for a job I no longer did' },
+      { t: 'p', text: 'With agents working in parallel, IntelliJ started to struggle. It got slow, it ate memory and it felt clunky. And I noticed something else: I was barely using it. I had committed to AI in my workflow, so what I needed from an editor had shrunk to a short list.' },
+      { t: 'list', items: ['Find a file.', 'Open it.', 'Edit it, only when necessary.', 'Review what the agent changed.'] },
+      { t: 'p', text: 'So I went looking for the lightest tool that could do just that.' },
+
+      { t: 'h2', text: 'The terminal, and the wall of shortcuts' },
+      { t: 'p', text: 'The lightest tool there is, is a terminal. I tried living in it, Vim included. Learning it was fun at the beginning.' },
+      { t: 'p', text: 'It did not last. Those tools were not ready for the agentic era, and going fully keyboard-driven meant learning a long list of shortcuts before I could do simple things. All I wanted was to talk to an agent and review its output properly.' },
+
+      { t: 'h2', text: 'Zed came close' },
+      { t: 'p', text: 'Next was [Zed](https://zed.dev). It is built with Rust, its whole ecosystem is really fast, and it is free. For me it is the best editor on the market.' },
+      { t: 'p', text: 'But it did not match my workflow. The git graph was poor, and reviewing changed files felt off for the way I work. Everything else, I loved.' },
+      { t: 'pull', text: 'I did not need a better editor. I needed a place to run agents.' },
+
+      { t: 'table', label: 'The tools I went through, what each did well and why I moved on', head: ['Tool', 'What it did well', 'Why I moved on'], rows: [
+        ['IntelliJ', 'Everything', 'Heavy once agents ran in parallel'],
+        ['Terminal + Vim', 'Light', 'Too many shortcuts for simple needs'],
+        ['Zed', 'Fast, free, built with Rust', 'Git graph and review did not fit my workflow'],
+        ['**Orrery ADE**', 'Agents, worktrees and review in one window', 'Still here'],
+        ['**Orrery Harness**', 'The agent runtime itself, in Rust', 'Still here']
+      ] },
+
+      { t: 'h2', text: 'So I built one' },
+      { t: 'p', text: 'That is where the fun idea came from: a side project to build my own environment for agents. I did not even know the category existed. I found other products later, and they were not optimized the way I wanted. I started learning Rust in parallel and got to work.' },
+      { t: 'p', text: 'Version one of Orrery ADE was deliberately small.' },
+      { t: 'tasks', title: 'V1', items: [
+        { text: 'Register a directory as a project', done: true },
+        { text: 'Create every agent in its own worktree, with the CLI I choose: Claude Code, Gemini, Codex', done: true },
+        { text: 'Pick the model and the effort, and save that configuration', done: true },
+        { text: 'List the files, track the ones that changed and show them in a tree, with syntax highlighting', done: true }
+      ] },
+      { t: 'p', text: 'That was all of it, and it worked. It did the job well enough that I was soon building Orrery with Orrery.' },
+      { t: 'p', text: 'The bigger features came later: a full git graph and git operations, symbol search across every worktree, which is really fast, and language servers for Java, TypeScript, Go and Rust.' },
+
+      { t: 'h2', text: 'Then the agent itself became the problem' },
+      { t: 'p', text: 'With the environment sorted, the next bottleneck was the agent CLI. I mostly ran Claude Code, and I want to be fair to it: it is a beautiful tool with one of the greatest harnesses, on top of a very smart model.' },
+      { t: 'p', text: 'But it runs on a JavaScript runtime. On my machine an instance started at around 200 MB before it had done anything. Run several in parallel and that adds up quickly.' },
+      { t: 'p', text: 'That became the second project: **Orrery Harness**, an agent runtime written in Rust. I set three goals for it.' },
+      { t: 'list', ordered: true, items: [
+        '**Use the least resources.** The target is scale: on one VPS, a hundred Orrery instances should cost less than ten Claude Code instances.',
+        '**Be plugin-based.** Anyone on a team, especially in an enterprise, can write their own extension, for tooling, for MCP or for anything else, and plug it in.',
+        '**Be language-agnostic.** An extension can be written in any language and it still works.'
+      ] },
+      { t: 'callout', tone: 'note', title: 'A target, not a benchmark', text: 'The hundred-to-ten ratio is the goal I am building toward. I have not published a measurement of it yet.' },
+
+      { t: 'h2', text: 'Where it stands' },
+      { t: 'p', text: 'Orrery is now two things: a harness and an ADE. The harness runs the agent. The ADE is where I run many of them side by side, review what they did and ship it.' },
+      { t: 'p', text: 'Both exist because of small frustrations I refused to keep living with. If some of them sound familiar, have a look.' },
+      { t: 'cards', items: [
+        { title: 'Orrery', text: 'A full AI harness and ADE for coding agents.', href: 'https://getorrery.dev' }
+      ] }
+    ]
+  }
+];
 
 /* newest first, shared by every consumer */
 window.BLOG_POSTS_SORTED = window.BLOG_POSTS.slice().sort(function (a, b) {

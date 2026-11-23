@@ -32,12 +32,48 @@
       "expand": "fill",
       "is_interactive": true,
       "title": "404"
+    },
+    "Atlas.dc.html": {
+      "x": 1520,
+      "y": 1020,
+      "w": 1440,
+      "h": 880,
+      "title": "Atlas — painting study"
+    },
+    "BlogIndex.dc.html": {
+      "x": 3040,
+      "y": 0,
+      "w": 1440,
+      "h": 2300,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Blog — index"
+    },
+    "BlogPost.dc.html": {
+      "x": 4560,
+      "y": 0,
+      "w": 1440,
+      "h": 9600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Blog — post template"
     }
   },
   "order": [
     "Main.dc.html",
-    "404.dc.html"
+    "404.dc.html",
+    "Atlas.dc.html",
+    "BlogIndex.dc.html",
+    "BlogPost.dc.html"
   ],
-  "notes": {},
+  "notes": {
+    "blog-title": {
+      "x": 3040,
+      "y": -320,
+      "text": "Blog",
+      "kind": "title1",
+      "maxW": 2960
+    }
+  },
   "designSystems": []
 }

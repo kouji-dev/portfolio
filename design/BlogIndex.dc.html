@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Writing</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300..700&amp;family=Space+Grotesk:wght@400..700&amp;family=JetBrains+Mono:wght@400..700&amp;display=swap" rel="stylesheet">
+<style>
+/* the portfolio's design system (Main.dc.html / home.css): theme tokens, Sora / Space Grotesk / JetBrains Mono, the brand gradient.
+   Added for the blog: code colours, callout tones, the illustrations' paper and ink. */
+[data-theme="dark"]{--chip:#121422;--fg:#EDEDEC;--muted:#A1A09A;--ul:rgba(237,237,236,0.28);--accent:#9DB9FF;--orr:#C39AFC;--kj:#B8F500;--line:#7AA2FF;--bg:#0c0e16;
+  --bgimg:radial-gradient(520px 320px at 50% -60px, rgba(122,162,255,0.10), rgba(122,162,255,0) 70%), linear-gradient(180deg, #11131d 0, #0c0e16 900px, #08090f 1900px);
+  --panel-bd:rgba(157,185,255,0.10);--btn:rgba(255,255,255,0.04);--btn-bd:rgba(255,255,255,0.10);--ink:#EDEDEC;
+  --code-bg:#0f111b;--code-bd:rgba(157,185,255,0.12);--code-hl:rgba(157,185,255,0.09);--t-k:#C39AFC;--t-s:#B8F500;--t-f:#9DB9FF;--t-c:#8f8e88;--t-n:#ff9dc2;--t-p:#c9c8c2;
+  --add:rgba(184,245,0,0.10);--add-fg:#B8F500;--del:rgba(255,93,158,0.12);--del-fg:#ff9dc2;
+  --note:#9DB9FF;--tip:#B8F500;--warn:#ffc46b;--bad:#ff7aa8;
+  --illo-bg:#121422;--illo-dot:rgba(237,237,236,0.10);--paper:#1d2135;color-scheme:dark}
+[data-theme="light"]{--chip:#f8f6f1;--fg:#1B1D24;--muted:#64635E;--ul:rgba(27,29,36,0.25);--accent:#3F5FD1;--orr:#7C4DDB;--kj:#6E9A00;--line:#3F63D6;--bg:#f3f1ec;
+  --bgimg:radial-gradient(560px 340px at 50% -60px, rgba(255,190,160,0.22), rgba(255,190,160,0) 70%), linear-gradient(180deg, #fbf9f5 0, #f6f4ef 900px, #f1efe9 1900px);
+  --panel-bd:rgba(40,50,110,0.10);--btn:rgba(27,29,36,0.03);--btn-bd:rgba(27,29,36,0.12);--ink:#1B1D24;
+  --code-bg:#fbfaf6;--code-bd:rgba(27,29,36,0.12);--code-hl:rgba(63,95,209,0.08);--t-k:#7C4DDB;--t-s:#3d7a12;--t-f:#3F5FD1;--t-c:#6f6d66;--t-n:#c0245f;--t-p:#3a3c44;
+  --add:rgba(110,154,0,0.12);--add-fg:#3d7a12;--del:rgba(192,36,95,0.10);--del-fg:#c0245f;
+  --note:#3F5FD1;--tip:#4f7a00;--warn:#a85d00;--bad:#c0245f;
+  --illo-bg:#f8f6f1;--illo-dot:rgba(27,29,36,0.10);--paper:#ffffff;color-scheme:light}
+body{margin:0}
+.root{min-height:100vh;box-sizing:border-box;background:var(--bgimg);color:var(--fg);font-family:'Sora',sans-serif;font-size:15px;line-height:1.7;transition:background-color .5s,color .5s}
+a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--ul);text-underline-offset:3px}
+a:hover{color:var(--accent);text-decoration-color:#a855f7}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.ai-grad{background:linear-gradient(100deg,#ff5d9e,#a855f7 50%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mono{font-family:'JetBrains Mono',monospace}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--btn-bd);background:var(--btn);color:var(--fg);font:inherit;font-size:14px;cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s}
+.btn:hover{border-color:#a855f7;color:var(--fg)}
+.icon-btn{width:44px;padding:0}
+.tag{display:inline-flex;align-items:center;min-height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--btn-bd);background:var(--chip);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);text-decoration:none}
+a.tag:hover{color:var(--fg)}
+/* the illustrations: risograph-like, flat brand inks printed a few pixels off their line work, on dotted paper */
+.illo{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--panel-bd)}
+.illo .bg{fill:var(--illo-bg)}
+.illo .dot{fill:var(--illo-dot)}
+.illo .ink{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.illo .thin{stroke-width:1.4}
+.illo .dash{stroke-dasharray:3 7}
+.illo .f-p{fill:#ff5d9e}.illo .f-v{fill:#a855f7}.illo .f-c{fill:#22d3ee}.illo .f-l{fill:#c7f23a}.illo .f-w{fill:var(--paper)}.illo .f-i{fill:var(--ink)}
+.illo .fills{opacity:.92;mix-blend-mode:normal}
+.illo .txt{fill:var(--ink);font-family:'JetBrains Mono',monospace;font-size:13px}
+.illo .big{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600}
+
+.search{width:100%;box-sizing:border-box;min-height:44px;padding:0 14px 0 40px;border-radius:12px;border:1px solid var(--btn-bd);background:var(--chip);color:var(--fg);font:inherit;font-size:14px}
+.search::placeholder{color:var(--muted)}
+</style>
+</helmet>
+<div class="root" data-theme="{{ theme }}" style="padding: 32px 20px 72px;">
+  <header style="max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;">
+    <a href="Main.dc.html" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.4px; text-decoration: none;"><span aria-hidden="true" class="ai-grad" style="font-weight: 500; margin-right: 2px;">@</span>NAJIH Driss</a>
+    <nav aria-label="Site" style="display: flex; flex-wrap: wrap; align-items: center; gap: 2px;">
+      <a href="Main.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--muted); text-decoration: none; font-size: 14px;">Home</a>
+      <a href="BlogIndex.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--fg); text-decoration: none; font-size: 14px;">Writing</a>
+      <a href="https://calendar.app.google/KTPtgPtkgrbJUEjm7" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--muted); text-decoration: none; font-size: 14px;">Book a call</a>
+      <a class="btn" href="https://kouji.dev/blogs/rss.xml" style="min-height: 36px; padding: 0 12px; margin-left: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">RSS</a>
+      <button type="button" class="btn icon-btn" aria-label="{{ themeLabel }}" title="{{ themeLabel }}" onClick="{{ flipTheme }}" style="margin-left: 6px;">
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"></path></svg></sc-if>
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"></path></svg></sc-if>
+      </button>
+    </nav>
+  </header>
+  <main style="max-width: 1120px; margin: 0 auto; padding-top: clamp(40px, 7vw, 88px); display: flex; flex-direction: column; gap: 44px;">
+    <section aria-labelledby="w-h" style="display: flex; flex-direction: column; gap: 14px; max-width: 640px;">
+      <h1 id="w-h" style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 44px; font-weight: 600; letter-spacing: -1.4px; line-height: 1.05;">Writing</h1>
+      <p style="margin: 0; color: var(--muted);">Notes from things that shipped: agents, platforms, Angular and Java at scale, and the AI inside them.</p>
+    </section>
+
+    <!-- SEARCH + FILTER -->
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px;">
+        <div style="position: relative; flex: 1 1 280px; max-width: 420px;">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%);">Search the posts</label>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="position: absolute; left: 14px; top: 14px; color: var(--muted);"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+          <input id="q" class="search" type="search" placeholder="Search posts" value="{{ query }}" onChange="{{ onQ }}">
+        </div>
+        <span class="mono" aria-live="polite" style="font-size: 12px; color: var(--muted);">{{ count }}</span>
+      </div>
+      <div role="group" aria-label="Filter by topic" style="display: flex; flex-wrap: wrap; gap: 8px;">
+        <sc-for list="{{ chips }}" as="chip" hint-placeholder-count="7">
+          <button type="button" class="btn" aria-pressed="{{ chip.pressed }}" onClick="{{ chip.pick }}" style="min-height: 36px; padding: 0 14px; border-radius: 999px; font-size: 13px; background: {{ chip.bg }}; color: {{ chip.fg }}; border-color: {{ chip.bd }};">{{ chip.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- FEATURED -->
+      <sc-if value="{{ show.agents }}" hint-placeholder-val="{{ true }}">
+      <article style="display: flex; flex-wrap: wrap; align-items: center; gap: 28px 40px; padding: 20px; border: 1px solid var(--panel-bd); border-radius: 22px; background: var(--btn);">
+        <a href="BlogPost.dc.html" aria-hidden="true" style="flex: 1 1 420px; min-width: 0; display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-idx-agents" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-idx-agents)"></rect><g class="fills" transform="translate(5 4)"><circle class="f-v" cx="320" cy="150" r="30"></circle><circle class="f-w" cx="320" cy="150" r="13"></circle><circle class="f-p" cx="254.2" cy="141.4" r="9"></circle><circle class="f-c" cx="417.0" cy="129.8" r="11"></circle><circle class="f-l" cx="438.0" cy="185.6" r="10"></circle><circle class="f-p" cx="135.8" cy="174.1" r="12"></circle><circle class="f-c" cx="439.0" cy="75.8" r="10"></circle><circle class="f-v" cx="583.1" cy="184.5" r="13"></circle><circle class="f-p" cx="110" cy="258" r="7"></circle><circle class="f-c" cx="170" cy="258" r="7"></circle><circle class="f-l" cx="230" cy="258" r="7"></circle><circle class="f-p" cx="410" cy="258" r="7"></circle><circle class="f-c" cx="470" cy="258" r="7"></circle><circle class="f-v" cx="530" cy="258" r="7"></circle><circle class="f-w" cx="80" cy="318" r="8"></circle><circle class="f-w" cx="200" cy="318" r="8"></circle><circle class="f-w" cx="320" cy="318" r="8"></circle><circle class="f-w" cx="440" cy="318" r="8"></circle><circle class="f-w" cx="560" cy="318" r="8"></circle></g><g><ellipse class="ink thin dash" cx="320" cy="150" rx="70" ry="25"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="112" ry="40"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="154" ry="55"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="196" ry="71"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="238" ry="86"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="280" ry="101"></ellipse><circle class="ink" cx="320" cy="150" r="30"></circle><circle class="ink" cx="320" cy="150" r="13"></circle><circle class="ink" cx="254.2" cy="141.4" r="9"></circle><circle class="ink" cx="417.0" cy="129.8" r="11"></circle><circle class="ink" cx="438.0" cy="185.6" r="10"></circle><circle class="ink" cx="135.8" cy="174.1" r="12"></circle><circle class="ink" cx="439.0" cy="75.8" r="10"></circle><circle class="ink" cx="583.1" cy="184.5" r="13"></circle><path class="ink" d="M60 318 L580 318"></path><path class="ink thin" d="M110 262 C110 296 246.5 292 258.5 318"></path><circle class="ink" cx="110" cy="258" r="7"></circle><path class="ink thin" d="M170 262 C170 296 267.5 292 279.5 318"></path><circle class="ink" cx="170" cy="258" r="7"></circle><path class="ink thin" d="M230 262 C230 296 288.5 292 300.5 318"></path><circle class="ink" cx="230" cy="258" r="7"></circle><path class="ink thin" d="M410 262 C410 296 351.5 292 339.5 318"></path><circle class="ink" cx="410" cy="258" r="7"></circle><path class="ink thin" d="M470 262 C470 296 372.5 292 360.5 318"></path><circle class="ink" cx="470" cy="258" r="7"></circle><path class="ink thin" d="M530 262 C530 296 393.5 292 381.5 318"></path><circle class="ink" cx="530" cy="258" r="7"></circle><circle class="ink" cx="80" cy="318" r="8"></circle><circle class="ink" cx="200" cy="318" r="8"></circle><circle class="ink" cx="320" cy="318" r="8"></circle><circle class="ink" cx="440" cy="318" r="8"></circle><circle class="ink" cx="560" cy="318" r="8"></circle></g><text class="txt" x="552" y="345">main</text></svg></a>
+        <div style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+          <span class="mono" style="font-size: 12px; color: var(--muted);">Latest · Jul 2026</span>
+          <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 600; letter-spacing: -0.8px; line-height: 1.12;"><a href="BlogPost.dc.html" style="text-decoration: none;">Six agents, one repo, zero merge hell</a></h2>
+          <p style="margin: 0; color: var(--muted);">Running coding agents in parallel on one codebase: a worktree each, owned files, and a merge queue that keeps main green.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px;"><span class="tag">Agents</span><span class="tag">Git</span></div>
+          <a class="btn" href="BlogPost.dc.html" style="align-self: flex-start; margin-top: 6px;">Read the post <span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+      </sc-if>
+
+    <!-- ALL POSTS -->
+    <section aria-label="All posts" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 40px 32px;">
+        <sc-if value="{{ show.retrieval }}" hint-placeholder-val="{{ true }}">
+        <article style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="#" aria-hidden="true" style="display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-idx-retrieval" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-idx-retrieval)"></rect><g class="fills" transform="translate(5 4)"><rect class="f-p" x="62" y="154" width="17" height="96" rx="3"></rect><rect class="f-w" x="87" y="196" width="17" height="54" rx="3"></rect><rect class="f-p" x="112" y="122" width="17" height="128" rx="3"></rect><rect class="f-w" x="137" y="212" width="17" height="38" rx="3"></rect><rect class="f-p" x="162" y="170" width="17" height="80" rx="3"></rect><rect class="f-w" x="187" y="228" width="17" height="22" rx="3"></rect><rect class="f-p" x="212" y="188" width="17" height="62" rx="3"></rect><circle class="f-w" cx="444" cy="176" r="6"></circle><circle class="f-c" cx="529" cy="178" r="4"></circle><circle class="f-c" cx="445" cy="168" r="6"></circle><circle class="f-w" cx="459" cy="173" r="5"></circle><circle class="f-c" cx="472" cy="166" r="5"></circle><circle class="f-c" cx="506" cy="175" r="4"></circle><circle class="f-w" cx="417" cy="129" r="4"></circle><circle class="f-c" cx="418" cy="145" r="4"></circle><circle class="f-c" cx="535" cy="178" r="5"></circle><circle class="f-w" cx="409" cy="179" r="6"></circle><circle class="f-c" cx="427" cy="215" r="4"></circle><circle class="f-c" cx="499" cy="185" r="4"></circle><circle class="f-w" cx="418" cy="189" r="4"></circle><circle class="f-c" cx="401" cy="143" r="5"></circle><circle class="f-c" cx="436" cy="129" r="5"></circle><circle class="f-w" cx="362" cy="176" r="5"></circle><circle class="f-c" cx="432" cy="214" r="6"></circle><circle class="f-c" cx="458" cy="147" r="5"></circle><circle class="f-w" cx="370" cy="150" r="6"></circle><circle class="f-c" cx="400" cy="174" r="4"></circle><circle class="f-c" cx="487" cy="182" r="5"></circle><circle class="f-w" cx="483" cy="190" r="4"></circle><circle class="f-c" cx="471" cy="157" r="6"></circle><circle class="f-c" cx="378" cy="131" r="5"></circle><circle class="f-w" cx="434" cy="185" r="5"></circle><circle class="f-c" cx="414" cy="143" r="4"></circle><path class="f-l" d="M470 136 L476 150 L491 151 L479 160 L484 175 L470 166 L456 175 L461 160 L449 151 L464 150 Z"></path><rect class="f-v" x="256" y="284" width="132" height="18" rx="9"></rect><rect class="f-p" x="256" y="308" width="112" height="18" rx="9"></rect><rect class="f-c" x="256" y="332" width="92" height="18" rx="9"></rect></g><g><rect class="ink" x="62" y="154" width="17" height="96" rx="3"></rect><rect class="ink" x="87" y="196" width="17" height="54" rx="3"></rect><rect class="ink" x="112" y="122" width="17" height="128" rx="3"></rect><rect class="ink" x="137" y="212" width="17" height="38" rx="3"></rect><rect class="ink" x="162" y="170" width="17" height="80" rx="3"></rect><rect class="ink" x="187" y="228" width="17" height="22" rx="3"></rect><rect class="ink" x="212" y="188" width="17" height="62" rx="3"></rect><path class="ink" d="M52 250 L240 250"></path><circle class="ink" cx="444" cy="176" r="6"></circle><circle class="ink" cx="529" cy="178" r="4"></circle><circle class="ink" cx="445" cy="168" r="6"></circle><circle class="ink" cx="459" cy="173" r="5"></circle><circle class="ink" cx="472" cy="166" r="5"></circle><circle class="ink" cx="506" cy="175" r="4"></circle><circle class="ink" cx="417" cy="129" r="4"></circle><circle class="ink" cx="418" cy="145" r="4"></circle><circle class="ink" cx="535" cy="178" r="5"></circle><circle class="ink" cx="409" cy="179" r="6"></circle><circle class="ink" cx="427" cy="215" r="4"></circle><circle class="ink" cx="499" cy="185" r="4"></circle><circle class="ink" cx="418" cy="189" r="4"></circle><circle class="ink" cx="401" cy="143" r="5"></circle><circle class="ink" cx="436" cy="129" r="5"></circle><circle class="ink" cx="362" cy="176" r="5"></circle><circle class="ink" cx="432" cy="214" r="6"></circle><circle class="ink" cx="458" cy="147" r="5"></circle><circle class="ink" cx="370" cy="150" r="6"></circle><circle class="ink" cx="400" cy="174" r="4"></circle><circle class="ink" cx="487" cy="182" r="5"></circle><circle class="ink" cx="483" cy="190" r="4"></circle><circle class="ink" cx="471" cy="157" r="6"></circle><circle class="ink" cx="378" cy="131" r="5"></circle><circle class="ink" cx="434" cy="185" r="5"></circle><circle class="ink" cx="414" cy="143" r="4"></circle><circle class="ink thin dash" cx="470" cy="156" r="58"></circle><path class="ink" d="M470 136 L476 150 L491 151 L479 160 L484 175 L470 166 L456 175 L461 160 L449 151 L464 150 Z"></path><path class="ink thin" d="M150 262 C150 300 220 300 250 300"></path><path class="ink thin" d="M470 220 C470 300 420 300 392 300"></path><rect class="ink" x="256" y="284" width="132" height="18" rx="9"></rect><rect class="ink" x="256" y="308" width="112" height="18" rx="9"></rect><rect class="ink" x="256" y="332" width="92" height="18" rx="9"></rect></g><text class="txt" x="62" y="108">BM25</text><text class="txt" x="420" y="72">vectors</text><text class="txt" x="228" y="298">1</text><text class="txt" x="228" y="322">2</text><text class="txt" x="228" y="346">3</text></svg></a>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;"><span class="mono" style="font-size: 12px; color: var(--muted); margin-right: 4px;">Jun 2026</span><span class="tag">AI</span><span class="tag">Postgres</span></div>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.25;"><a href="#" style="text-decoration: none;">Hybrid retrieval: BM25 and pgvector, together</a></h3>
+          <p style="margin: 0; color: var(--muted); font-size: 14px;">Keyword search finds the exact term, vectors find the meaning. Fusing both ranked lists in one Postgres query.</p>
+        </article>
+        </sc-if>
+        <sc-if value="{{ show.prompts }}" hint-placeholder-val="{{ true }}">
+        <article style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="#" aria-hidden="true" style="display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-idx-prompts" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-idx-prompts)"></rect><g class="fills" transform="translate(5 4)"><rect class="f-w" x="96" y="62" width="280" height="226" rx="18"></rect><rect class="f-v" x="120" y="172" width="236" height="9" rx="4.5"></rect><rect class="f-c" x="120" y="220" width="190" height="9" rx="4.5"></rect><rect class="f-v" x="450" y="150" width="58" height="50" rx="10"></rect><rect class="f-c" x="536" y="108" width="64" height="134" rx="16"></rect><circle class="f-w" cx="568" cy="163" r="6"></circle><circle class="f-w" cx="568" cy="187" r="6"></circle></g><g><rect class="ink" x="96" y="62" width="280" height="226" rx="18"></rect><path class="ink" d="M96 104 L376 104"></path><rect class="ink thin" x="120" y="124" width="210" height="9" rx="4.5"></rect><rect class="ink thin" x="120" y="148" width="168" height="9" rx="4.5"></rect><rect class="ink" x="120" y="172" width="236" height="9" rx="4.5"></rect><rect class="ink thin" x="120" y="196" width="120" height="9" rx="4.5"></rect><rect class="ink" x="120" y="220" width="190" height="9" rx="4.5"></rect><rect class="ink thin" x="120" y="244" width="150" height="9" rx="4.5"></rect><path class="ink" d="M376 175 C420 175 410 175 450 175"></path><rect class="ink" x="450" y="150" width="58" height="50" rx="10"></rect><path class="ink" d="M508 163 L532 163 M508 187 L532 187"></path><rect class="ink" x="536" y="108" width="64" height="134" rx="16"></rect><circle class="ink" cx="568" cy="163" r="6"></circle><circle class="ink" cx="568" cy="187" r="6"></circle><path class="ink thin" d="M546 82 L540 64 M570 78 L572 58 M592 86 L604 70"></path></g><text class="txt" x="116" y="89">POST /v2/prompt</text><text class="txt" x="544" y="268">schema</text></svg></a>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;"><span class="mono" style="font-size: 12px; color: var(--muted); margin-right: 4px;">May 2026</span><span class="tag">AI</span><span class="tag">Architecture</span></div>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.25;"><a href="#" style="text-decoration: none;">Prompts are an API surface</a></h3>
+          <p style="margin: 0; color: var(--muted); font-size: 14px;">Version them, type their inputs, test their outputs: treating a prompt like any other contract between teams.</p>
+        </article>
+        </sc-if>
+        <sc-if value="{{ show.migration }}" hint-placeholder-val="{{ true }}">
+        <article style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="#" aria-hidden="true" style="display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-idx-migration" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-idx-migration)"></rect><g class="fills" transform="translate(5 4)"><rect class="f-w" x="70" y="288" width="80" height="32" rx="6"></rect><rect class="f-c" x="150" y="252" width="80" height="68" rx="6"></rect><rect class="f-w" x="230" y="216" width="80" height="104" rx="6"></rect><rect class="f-p" x="310" y="180" width="80" height="140" rx="6"></rect><rect class="f-w" x="390" y="144" width="80" height="176" rx="6"></rect><rect class="f-v" x="470" y="108" width="80" height="212" rx="6"></rect><path class="f-l" d="M520 30 L560 42 L520 54 Z"></path></g><g><rect class="ink" x="70" y="288" width="80" height="32" rx="6"></rect><rect class="ink" x="150" y="252" width="80" height="68" rx="6"></rect><rect class="ink" x="230" y="216" width="80" height="104" rx="6"></rect><rect class="ink" x="310" y="180" width="80" height="140" rx="6"></rect><rect class="ink" x="390" y="144" width="80" height="176" rx="6"></rect><rect class="ink" x="470" y="108" width="80" height="212" rx="6"></rect><path class="ink" d="M52 320 L588 320"></path><path class="ink thin dash" d="M110 270 C150 210 230 230 270 180 S390 120 430 100 S500 60 520 52"></path><path class="ink" d="M520 106 L520 30"></path><path class="ink" d="M520 30 L560 42 L520 54 Z"></path></g><text class="txt big" x="96" y="318">15</text><text class="txt big" x="176" y="282">16</text><text class="txt big" x="256" y="246">17</text><text class="txt big" x="336" y="210">18</text><text class="txt big" x="416" y="174">19</text><text class="txt big" x="496" y="138">20</text></svg></a>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;"><span class="mono" style="font-size: 12px; color: var(--muted); margin-right: 4px;">Mar 2026</span><span class="tag">Angular</span><span class="tag">Platform</span></div>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.25;"><a href="#" style="text-decoration: none;">Migrating Angular 15 to 20 across forty teams</a></h3>
+          <p style="margin: 0; color: var(--muted); font-size: 14px;">One version at a time, schematics first, and a dashboard everyone could read: how a framework moved without a freeze.</p>
+        </article>
+        </sc-if>
+        <sc-if value="{{ show.stream }}" hint-placeholder-val="{{ true }}">
+        <article style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="#" aria-hidden="true" style="display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-idx-stream" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-idx-stream)"></rect><g class="fills" transform="translate(5 4)"><rect class="f-v" x="54" y="104" width="128" height="150" rx="16"></rect><circle class="f-w" cx="152" cy="136" r="4"></circle><circle class="f-w" cx="152" cy="162" r="4"></circle><circle class="f-w" cx="152" cy="188" r="4"></circle><circle class="f-w" cx="152" cy="214" r="4"></circle><rect class="f-c" x="199" y="177" width="30" height="18" rx="9"></rect><rect class="f-p" x="237" y="185" width="30" height="18" rx="9"></rect><rect class="f-l" x="281" y="189" width="30" height="18" rx="9"></rect><rect class="f-c" x="329" y="186" width="30" height="18" rx="9"></rect><rect class="f-p" x="371" y="178" width="30" height="18" rx="9"></rect><path class="f-w" d="M430 84 L590 84 Q606 84 606 100 L606 206 Q606 222 590 222 L470 222 L446 246 L450 222 Q430 222 430 206 L430 100 Q430 84 446 84 Z"></path><rect class="f-c" x="452" y="184" width="72" height="10" rx="5"></rect><rect class="f-i" x="528" y="184" width="12" height="14" rx="2"></rect></g><g><rect class="ink" x="54" y="104" width="128" height="150" rx="16"></rect><path class="ink thin" d="M74 136 L162 136"></path><circle class="ink" cx="152" cy="136" r="4"></circle><path class="ink thin" d="M74 162 L162 162"></path><circle class="ink" cx="152" cy="162" r="4"></circle><path class="ink thin" d="M74 188 L162 188"></path><circle class="ink" cx="152" cy="188" r="4"></circle><path class="ink thin" d="M74 214 L162 214"></path><circle class="ink" cx="152" cy="214" r="4"></circle><path class="ink" d="M182 160 C240 160 240 200 300 200 S360 160 420 160"></path><path class="ink" d="M182 196 C240 196 240 236 300 236 S360 196 420 196"></path><rect class="ink" x="199" y="177" width="30" height="18" rx="9"></rect><rect class="ink" x="237" y="185" width="30" height="18" rx="9"></rect><rect class="ink" x="281" y="189" width="30" height="18" rx="9"></rect><rect class="ink" x="329" y="186" width="30" height="18" rx="9"></rect><rect class="ink" x="371" y="178" width="30" height="18" rx="9"></rect><path class="ink" d="M430 84 L590 84 Q606 84 606 100 L606 206 Q606 222 590 222 L470 222 L446 246 L450 222 Q430 222 430 206 L430 100 Q430 84 446 84 Z"></path><rect class="ink thin" x="452" y="106" width="132" height="10" rx="5"></rect><rect class="ink thin" x="452" y="132" width="104" height="10" rx="5"></rect><rect class="ink thin" x="452" y="158" width="140" height="10" rx="5"></rect><rect class="ink" x="452" y="184" width="72" height="10" rx="5"></rect><rect class="ink" x="528" y="184" width="12" height="14" rx="2"></rect></g></svg></a>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;"><span class="mono" style="font-size: 12px; color: var(--muted); margin-right: 4px;">Feb 2026</span><span class="tag">Java</span><span class="tag">AI</span></div>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.25;"><a href="#" style="text-decoration: none;">Streaming tokens through a Spring Boot backend</a></h3>
+          <p style="margin: 0; color: var(--muted); font-size: 14px;">Server-sent events from the model to the browser, through a Spring Boot service that still checks every request.</p>
+        </article>
+        </sc-if>
+        <sc-if value="{{ show.tokens }}" hint-placeholder-val="{{ true }}">
+        <article style="display: flex; flex-direction: column; gap: 12px;">
+          <a href="#" aria-hidden="true" style="display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-idx-tokens" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-idx-tokens)"></rect><g class="fills" transform="translate(5 4)"><circle class="f-v" cx="320" cy="214" r="12"></circle><rect class="f-p" x="96" y="40" width="30" height="30" rx="7"></rect><rect class="f-v" x="134" y="40" width="30" height="30" rx="7"></rect><rect class="f-c" x="172" y="40" width="30" height="30" rx="7"></rect><rect class="f-l" x="210" y="40" width="30" height="30" rx="7"></rect><rect class="f-p" x="396" y="40" width="30" height="30" rx="7"></rect><rect class="f-v" x="434" y="40" width="30" height="30" rx="7"></rect><rect class="f-c" x="472" y="40" width="30" height="30" rx="7"></rect><rect class="f-l" x="510" y="40" width="30" height="30" rx="7"></rect><rect class="f-p" x="246" y="270" width="30" height="30" rx="7"></rect><rect class="f-v" x="284" y="270" width="30" height="30" rx="7"></rect><rect class="f-c" x="322" y="270" width="30" height="30" rx="7"></rect><rect class="f-l" x="360" y="270" width="30" height="30" rx="7"></rect></g><g><path class="ink" d="M320 336 L320 214"></path><path class="ink" d="M320 214 C320 150 180 160 170 86"></path><path class="ink" d="M320 214 C320 150 460 160 470 86"></path><circle class="ink" cx="320" cy="214" r="12"></circle><rect class="ink" x="96" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="134" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="172" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="210" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="396" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="434" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="472" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="510" y="40" width="30" height="30" rx="7"></rect><rect class="ink" x="246" y="270" width="30" height="30" rx="7"></rect><rect class="ink" x="284" y="270" width="30" height="30" rx="7"></rect><rect class="ink" x="322" y="270" width="30" height="30" rx="7"></rect><rect class="ink" x="360" y="270" width="30" height="30" rx="7"></rect></g><text class="txt" x="96" y="112">main</text><text class="txt" x="420" y="112">fork</text><text class="txt" x="338" y="222">tokens.json</text></svg></a>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;"><span class="mono" style="font-size: 12px; color: var(--muted); margin-right: 4px;">Dec 2025</span><span class="tag">Design systems</span></div>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 600; letter-spacing: -0.3px; line-height: 1.25;"><a href="#" style="text-decoration: none;">Design tokens that survive a fork</a></h3>
+          <p style="margin: 0; color: var(--muted); font-size: 14px;">When a product forks the design system, its colours and spacing should not. Tokens as the one shared source.</p>
+        </article>
+        </sc-if>
+    </section>
+
+    <!-- EMPTY STATE -->
+    <sc-if value="{{ none }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 32px; border: 1px dashed var(--btn-bd); border-radius: 22px;">
+        <h2 style="margin: 0; font-size: 18px; font-weight: 600;">No post matches that.</h2>
+        <p style="margin: 0; color: var(--muted);">Try another word, or show every topic again.</p>
+        <button type="button" class="btn" onClick="{{ clear }}">Clear the filters</button>
+      </div>
+    </sc-if>
+
+    <!-- PAGINATION -->
+    <nav aria-label="Pages" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; border-top: 1px solid var(--panel-bd);">
+      <span class="btn" aria-disabled="true" style="opacity: .45; cursor: default;"><span aria-hidden="true">←</span> Newer</span>
+      <div style="display: flex; gap: 6px;">
+        <a class="btn icon-btn" href="#" aria-current="page" aria-label="Page 1" style="background: var(--fg); color: var(--bg); border-color: var(--fg);">1</a>
+        <a class="btn icon-btn" href="#" aria-label="Page 2">2</a>
+        <a class="btn icon-btn" href="#" aria-label="Page 3">3</a>
+      </div>
+      <a class="btn" href="#">Older <span aria-hidden="true">→</span></a>
+    </nav>
+
+    <!-- NEWSLETTER -->
+    <section aria-labelledby="nl-h" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 40px; padding: 28px; border: 1px solid var(--panel-bd); border-radius: 22px; background: var(--btn);">
+      <div style="flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px;">
+        <h2 id="nl-h" style="margin: 0; font-size: 18px; font-weight: 600;">New posts by email</h2>
+        <p style="margin: 0; color: var(--muted); font-size: 14px;">One email when something new is up. Nothing else.</p>
+      </div>
+      <form onSubmit="{{ noSubmit }}" style="flex: 1 1 360px; display: flex; flex-wrap: wrap; gap: 10px;">
+        <label for="nl-mail" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%);">Email address</label>
+        <input id="nl-mail" class="search" type="email" placeholder="you@company.com" style="flex: 1 1 220px; padding-left: 14px;">
+        <button type="button" class="btn" style="background: var(--fg); color: var(--bg); border-color: var(--fg);">Subscribe</button>
+      </form>
+    </section>
+
+    <footer class="mono" style="font-size: 12px; color: var(--muted);">Built with agents<span class="ai-grad"> ✦ </span>reviewed by a human.</footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["auto","light","dark"],"default":"auto"},"$preview":{"width":1440,"height":2300}}'>
+class Component extends DCLogic {
+  state = { theme: null, q: '', tag: 'All' };
+  renderVals() {
+    // like the home page: light by day, dark from dusk; the Theme tweak pins one, the button flips it
+    const t = this.state.theme || this.props.theme || 'auto', h = new Date().getHours();
+    const theme = t === 'auto' ? (h >= 7 && h < 19 ? 'light' : 'dark') : t;
+    return { theme, isDark: theme === 'dark', isLight: theme !== 'dark', themeLabel: theme === 'dark' ? 'Switch to the light theme' : 'Switch to the dark theme',
+      flipTheme: () => this.setState({ theme: theme === 'dark' ? 'light' : 'dark' }),
+      ...this.filter(theme) };
+  }
+  filter(theme) {
+    const POSTS = [{"key": "agents", "title": "Six agents, one repo, zero merge hell", "dek": "Running coding agents in parallel on one codebase: a worktree each, owned files, and a merge queue that keeps main green.", "tags": ["Agents", "Git"]}, {"key": "retrieval", "title": "Hybrid retrieval: BM25 and pgvector, together", "dek": "Keyword search finds the exact term, vectors find the meaning. Fusing both ranked lists in one Postgres query.", "tags": ["AI", "Postgres"]}, {"key": "prompts", "title": "Prompts are an API surface", "dek": "Version them, type their inputs, test their outputs: treating a prompt like any other contract between teams.", "tags": ["AI", "Architecture"]}, {"key": "migration", "title": "Migrating Angular 15 to 20 across forty teams", "dek": "One version at a time, schematics first, and a dashboard everyone could read: how a framework moved without a freeze.", "tags": ["Angular", "Platform"]}, {"key": "stream", "title": "Streaming tokens through a Spring Boot backend", "dek": "Server-sent events from the model to the browser, through a Spring Boot service that still checks every request.", "tags": ["Java", "AI"]}, {"key": "tokens", "title": "Design tokens that survive a fork", "dek": "When a product forks the design system, its colours and spacing should not. Tokens as the one shared source.", "tags": ["Design systems"]}], TAGS = ["All", "Agents", "AI", "Angular", "Java", "Architecture", "Design systems"];
+    const q = (this.state.q || '').trim().toLowerCase(), tag = this.state.tag || 'All', show = {};
+    let n = 0;
+    POSTS.forEach((p) => { const on = (tag === 'All' || p.tags.indexOf(tag) >= 0) && (!q || (p.title + ' ' + p.dek + ' ' + p.tags.join(' ')).toLowerCase().indexOf(q) >= 0); show[p.key] = on; if (on) n++; });
+    const dark = theme === 'dark';
+    return {
+      show, none: n === 0, count: n === 1 ? '1 post' : n + ' posts', q: this.state.q || '', query: this.state.q || '',
+      onQ: (e) => this.setState({ q: e.target.value }), noSubmit: (e) => e.preventDefault(), clear: () => this.setState({ q: '', tag: 'All' }),
+      chips: TAGS.map((t) => ({ label: t, pressed: t === tag ? 'true' : 'false', pick: () => this.setState({ tag: t }),
+        bg: t === tag ? 'var(--fg)' : 'var(--btn)', fg: t === tag ? 'var(--bg)' : 'var(--fg)', bd: t === tag ? 'var(--fg)' : 'var(--btn-bd)' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

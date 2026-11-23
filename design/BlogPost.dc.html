@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Blog post</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300..700&amp;family=Space+Grotesk:wght@400..700&amp;family=JetBrains+Mono:wght@400..700&amp;display=swap" rel="stylesheet">
+<style>
+/* the portfolio's design system (Main.dc.html / home.css): theme tokens, Sora / Space Grotesk / JetBrains Mono, the brand gradient.
+   Added for the blog: code colours, callout tones, the illustrations' paper and ink. */
+[data-theme="dark"]{--chip:#121422;--fg:#EDEDEC;--muted:#A1A09A;--ul:rgba(237,237,236,0.28);--accent:#9DB9FF;--orr:#C39AFC;--kj:#B8F500;--line:#7AA2FF;--bg:#0c0e16;
+  --bgimg:radial-gradient(520px 320px at 50% -60px, rgba(122,162,255,0.10), rgba(122,162,255,0) 70%), linear-gradient(180deg, #11131d 0, #0c0e16 900px, #08090f 1900px);
+  --panel-bd:rgba(157,185,255,0.10);--btn:rgba(255,255,255,0.04);--btn-bd:rgba(255,255,255,0.10);--ink:#EDEDEC;
+  --code-bg:#0f111b;--code-bd:rgba(157,185,255,0.12);--code-hl:rgba(157,185,255,0.09);--t-k:#C39AFC;--t-s:#B8F500;--t-f:#9DB9FF;--t-c:#8f8e88;--t-n:#ff9dc2;--t-p:#c9c8c2;
+  --add:rgba(184,245,0,0.10);--add-fg:#B8F500;--del:rgba(255,93,158,0.12);--del-fg:#ff9dc2;
+  --note:#9DB9FF;--tip:#B8F500;--warn:#ffc46b;--bad:#ff7aa8;
+  --illo-bg:#121422;--illo-dot:rgba(237,237,236,0.10);--paper:#1d2135;color-scheme:dark}
+[data-theme="light"]{--chip:#f8f6f1;--fg:#1B1D24;--muted:#64635E;--ul:rgba(27,29,36,0.25);--accent:#3F5FD1;--orr:#7C4DDB;--kj:#6E9A00;--line:#3F63D6;--bg:#f3f1ec;
+  --bgimg:radial-gradient(560px 340px at 50% -60px, rgba(255,190,160,0.22), rgba(255,190,160,0) 70%), linear-gradient(180deg, #fbf9f5 0, #f6f4ef 900px, #f1efe9 1900px);
+  --panel-bd:rgba(40,50,110,0.10);--btn:rgba(27,29,36,0.03);--btn-bd:rgba(27,29,36,0.12);--ink:#1B1D24;
+  --code-bg:#fbfaf6;--code-bd:rgba(27,29,36,0.12);--code-hl:rgba(63,95,209,0.08);--t-k:#7C4DDB;--t-s:#3d7a12;--t-f:#3F5FD1;--t-c:#6f6d66;--t-n:#c0245f;--t-p:#3a3c44;
+  --add:rgba(110,154,0,0.12);--add-fg:#3d7a12;--del:rgba(192,36,95,0.10);--del-fg:#c0245f;
+  --note:#3F5FD1;--tip:#4f7a00;--warn:#a85d00;--bad:#c0245f;
+  --illo-bg:#f8f6f1;--illo-dot:rgba(27,29,36,0.10);--paper:#ffffff;color-scheme:light}
+body{margin:0}
+.root{min-height:100vh;box-sizing:border-box;background:var(--bgimg);color:var(--fg);font-family:'Sora',sans-serif;font-size:15px;line-height:1.7;transition:background-color .5s,color .5s}
+a{color:var(--fg);text-decoration:underline;text-decoration-color:var(--ul);text-underline-offset:3px}
+a:hover{color:var(--accent);text-decoration-color:#a855f7}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.ai-grad{background:linear-gradient(100deg,#ff5d9e,#a855f7 50%,#22d3ee);-webkit-background-clip:text;background-clip:text;color:transparent}
+.mono{font-family:'JetBrains Mono',monospace}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--btn-bd);background:var(--btn);color:var(--fg);font:inherit;font-size:14px;cursor:pointer;text-decoration:none;transition:border-color .2s,color .2s}
+.btn:hover{border-color:#a855f7;color:var(--fg)}
+.icon-btn{width:44px;padding:0}
+.tag{display:inline-flex;align-items:center;min-height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--btn-bd);background:var(--chip);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);text-decoration:none}
+a.tag:hover{color:var(--fg)}
+/* the illustrations: risograph-like, flat brand inks printed a few pixels off their line work, on dotted paper */
+.illo{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--panel-bd)}
+.illo .bg{fill:var(--illo-bg)}
+.illo .dot{fill:var(--illo-dot)}
+.illo .ink{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.illo .thin{stroke-width:1.4}
+.illo .dash{stroke-dasharray:3 7}
+.illo .f-p{fill:#ff5d9e}.illo .f-v{fill:#a855f7}.illo .f-c{fill:#22d3ee}.illo .f-l{fill:#c7f23a}.illo .f-w{fill:var(--paper)}.illo .f-i{fill:var(--ink)}
+.illo .fills{opacity:.92;mix-blend-mode:normal}
+.illo .txt{fill:var(--ink);font-family:'JetBrains Mono',monospace;font-size:13px}
+.illo .big{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600}
+
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.crumbs a{color:var(--muted)}
+.series{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:30px;padding:0 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--orr) 45%,transparent);color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:12px}
+.series i{width:6px;height:6px;border-radius:50%;background:var(--orr)}
+.avatar{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none;background:var(--chip);border:1px solid var(--btn-bd);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px}
+.toc{position:relative;margin:0;padding:0 0 0 14px;list-style:none;display:flex;flex-direction:column;border-left:1px solid var(--panel-bd)}
+.toc a{display:flex;align-items:center;min-height:34px;color:var(--muted);text-decoration:none;font-size:13.5px}
+.toc a:hover{color:var(--fg)}
+.toc a[aria-current]{color:var(--fg);font-weight:500}
+.toc a[aria-current]:before{content:"";position:absolute;left:-1px;width:2px;height:22px;background:linear-gradient(#ff5d9e,#a855f7,#22d3ee);border-radius:2px}
+.side-h{margin:0 0 10px;font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* the article: what a Markdown body renders to */
+.prose{font-size:16.5px;line-height:1.75}
+.prose > *{margin:0}
+.prose > * + *{margin-top:22px}
+.prose .lead{font-size:19px;line-height:1.6}
+.prose h2{position:relative;margin-top:56px;font-family:'Space Grotesk',sans-serif;font-size:27px;font-weight:600;letter-spacing:-.5px;line-height:1.2;scroll-margin-top:24px}
+.prose h3{margin-top:36px;font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600}
+.prose .anchor{margin-left:10px;color:var(--muted);text-decoration:none;opacity:0;font-weight:400;transition:opacity .15s}
+.prose h2:hover .anchor,.prose .anchor:focus-visible{opacity:1}
+.prose strong{font-weight:600}
+.prose em{font-style:italic}
+.prose s{color:var(--muted)}
+.prose mark{background:linear-gradient(transparent 52%,color-mix(in srgb,#a855f7 32%,transparent) 52%);color:inherit;padding:0 2px}
+.prose abbr{text-decoration:underline dotted;text-underline-offset:3px;cursor:help}
+.prose :not(pre) > code,.prose td code,.prose li code,.prose p code,.prose span code{font-family:'JetBrains Mono',monospace;font-size:.84em;padding:2px 6px;border-radius:6px;background:var(--chip);border:1px solid var(--btn-bd)}
+.prose kbd{display:inline-block;min-width:20px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.78em;padding:1px 7px;border-radius:6px;border:1px solid var(--btn-bd);border-bottom-width:2px;background:var(--chip)}
+.prose sup.fn a{font-family:'JetBrains Mono',monospace;font-size:11px;text-decoration:none;color:var(--accent);padding:0 2px}
+.prose ul,.prose ol{padding-left:24px}
+.prose li + li{margin-top:8px}
+.prose ol li::marker{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--muted)}
+.prose ul li::marker{color:#a855f7}
+.prose .list-title{font-weight:600;margin-bottom:-10px}
+.prose .tasks{list-style:none;padding:0}
+.prose .tasks li{display:flex;align-items:flex-start;gap:10px}
+.prose .tasks input{margin:6px 0 0;width:16px;height:16px;accent-color:#a855f7;flex:none}
+.prose blockquote{padding:4px 0 4px 22px;border-left:2px solid var(--btn-bd);color:var(--fg)}
+.prose blockquote p{margin:0;font-size:17px}
+.prose blockquote footer{margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.prose blockquote footer:before{content:"— "}
+.prose .pull{margin:40px 0;font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;letter-spacing:-.7px;line-height:1.2;text-align:center;text-wrap:balance}
+.prose hr{border:0;height:1px;background:var(--panel-bd);margin-top:56px}
+.prose .footnotes{font-size:14px;color:var(--muted)}
+.prose .footnotes a{white-space:nowrap}
+.prose .changelog{font-size:12px;color:var(--muted)}
+/* code: one component for files, terminals and diffs */
+.code{border:1px solid var(--code-bd);border-radius:14px;background:var(--code-bg);overflow:hidden}
+.code-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 6px 0 16px;min-height:44px;border-bottom:1px solid var(--code-bd)}
+.code-file{font-size:12.5px;color:var(--fg)}
+.code-tools{display:flex;align-items:center;gap:6px}
+.lang{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;color:var(--muted);padding:2px 8px;border-radius:6px;border:1px solid var(--code-bd)}
+.copy{min-height:34px;min-width:64px;padding:0 10px;border-radius:9px;border:1px solid transparent;background:transparent;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px;cursor:pointer}
+.copy:hover{color:var(--fg);border-color:var(--code-bd)}
+.code pre{margin:0;padding:14px 0;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.75;color:var(--t-p)}
+.code code{display:block;min-width:max-content}
+.ln{display:flex;padding:0 18px 0 0}
+.ln.hl{background:var(--code-hl);box-shadow:inset 2px 0 0 #a855f7}
+.ln.add{background:var(--add)}.ln.add .sign{color:var(--add-fg)}
+.ln.del{background:var(--del)}.ln.del .sign{color:var(--del-fg)}
+.no{flex:none;width:44px;padding-right:16px;text-align:right;color:var(--t-c);user-select:none}
+.term .ln{padding-left:18px}
+.lc{white-space:pre}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.t-k{color:var(--t-k)}.t-s{color:var(--t-s)}.t-f{color:var(--t-f)}.t-c{color:var(--t-c);font-style:italic}.t-n{color:var(--t-n)}
+.t-prompt{color:#a855f7}.t-out{color:var(--t-c)}
+.tablist{display:flex;gap:4px;border-bottom:1px solid var(--panel-bd);margin-bottom:12px}
+.tab{min-height:44px;padding:0 14px;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;background:transparent;font-family:'JetBrains Mono',monospace;font-size:12.5px;cursor:pointer}
+/* callouts: a tone per kind; the icon and the title carry it, not colour alone */
+.callout{display:flex;gap:14px;padding:16px 18px;border-radius:14px;border:1px solid color-mix(in srgb,var(--tone) 40%,transparent);background:color-mix(in srgb,var(--tone) 7%,transparent)}
+.callout-ic{flex:none;margin-top:3px;color:var(--tone)}
+.callout p{margin:0;font-size:15px}
+.callout .callout-t{font-weight:600;margin-bottom:2px}
+/* table */
+.table-box{border:1px solid var(--panel-bd);border-radius:14px}
+.prose table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+.prose th{text-align:left;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:500;letter-spacing:.04em;color:var(--muted);padding:12px 14px;border-bottom:1px solid var(--panel-bd);background:var(--chip)}
+.prose td{padding:11px 14px;border-bottom:1px solid var(--panel-bd);vertical-align:top}
+.prose tbody tr:last-child td{border-bottom:0}
+/* the architecture diagram: separate boxes and arrows */
+.arch{padding:22px;border:1px solid var(--panel-bd);border-radius:18px;background:var(--btn)}
+.arch-row{display:flex;align-items:center;gap:10px;overflow-x:auto;padding-bottom:6px}
+.arch-col{display:flex;flex-direction:column;gap:8px;flex:none}
+.arch-node{flex:none;display:flex;flex-direction:column;gap:2px;min-width:112px;padding:12px 14px;border-radius:12px;border:1px solid var(--btn-bd);background:var(--chip)}
+.arch-node strong{font-size:14px;font-weight:600}
+.arch-k{font-size:10.5px;color:var(--muted)}
+.arch-s{font-size:12px;color:var(--muted);line-height:1.4}
+.arch-arrow{flex:none;color:var(--muted)}
+.arch-fail{display:flex;align-items:center;gap:6px;max-width:150px;font-size:11px;line-height:1.4;color:var(--muted);padding:6px 10px;border:1px dashed var(--btn-bd);border-radius:10px}
+.arch figcaption,.cover figcaption{margin-top:14px;font-size:13px;color:var(--muted)}
+.cover figcaption{text-align:center}
+/* metrics, link cards, faq */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.metric{display:flex;flex-direction:column;gap:2px;padding:18px;border:1px solid var(--panel-bd);border-radius:14px;background:var(--btn)}
+.metric-n{font-family:'Space Grotesk',sans-serif;font-size:44px;font-weight:600;line-height:1}
+.metric-l{font-size:13.5px;color:var(--muted)}
+.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.linkcard{display:flex;gap:14px;padding:16px;border:1px solid var(--panel-bd);border-radius:14px;background:var(--btn);text-decoration:none;transition:border-color .2s}
+.linkcard:hover{border-color:#a855f7;color:var(--fg)}
+.linkcard-ic{flex:none;width:40px;height:40px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--chip);border:1px solid var(--btn-bd)}
+.linkcard-b{display:flex;flex-direction:column;gap:2px;font-size:14px;line-height:1.5;min-width:0}
+.linkcard-b span{color:var(--muted)}
+.linkcard-u{font-size:11.5px}
+.faq{border-top:1px solid var(--panel-bd)}
+.faq details{border-bottom:1px solid var(--panel-bd)}
+.faq summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;cursor:pointer;font-weight:500;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:18px}
+.faq details[open] summary:after{content:"−"}
+.faq details p{margin:0 0 16px;color:var(--muted)}
+.rel{display:flex;flex-direction:column;gap:10px}
+.input{box-sizing:border-box;min-height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--btn-bd);background:var(--chip);color:var(--fg);font:inherit;font-size:14px}
+.input::placeholder{color:var(--muted)}
+</style>
+</helmet>
+<div class="root" data-theme="{{ theme }}" style="padding: 32px 20px 72px;">
+  <header style="max-width: 1120px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;">
+    <a href="Main.dc.html" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -0.4px; text-decoration: none;"><span aria-hidden="true" class="ai-grad" style="font-weight: 500; margin-right: 2px;">@</span>NAJIH Driss</a>
+    <nav aria-label="Site" style="display: flex; flex-wrap: wrap; align-items: center; gap: 2px;">
+      <a href="Main.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--muted); text-decoration: none; font-size: 14px;">Home</a>
+      <a href="BlogIndex.dc.html" aria-current="page" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--fg); text-decoration: none; font-size: 14px;">Writing</a>
+      <a href="https://calendar.app.google/KTPtgPtkgrbJUEjm7" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--muted); text-decoration: none; font-size: 14px;">Book a call</a>
+      <a class="btn" href="https://kouji.dev/blogs/rss.xml" style="min-height: 36px; padding: 0 12px; margin-left: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px;">RSS</a>
+      <button type="button" class="btn icon-btn" aria-label="{{ themeLabel }}" title="{{ themeLabel }}" onClick="{{ flipTheme }}" style="margin-left: 6px;">
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"></path></svg></sc-if>
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"></path></svg></sc-if>
+      </button>
+    </nav>
+  </header>
+  <div style="max-width: 1120px; margin: 0 auto; padding-top: clamp(40px, 7vw, 80px); display: flex; flex-wrap: wrap; align-items: flex-start; gap: 40px 64px;">
+
+    <!-- SIDE: contents, series, tags (stacks above the article on a phone) -->
+    <aside aria-label="About this post" style="flex: 1 1 220px; max-width: 260px; min-width: 0; display: flex; flex-direction: column; gap: 32px; padding-top: 6px;">
+      <nav aria-labelledby="toc-h">
+        <p id="toc-h" class="side-h">On this page</p>
+        <ol class="toc"><li><a href="#problem" aria-current="location">The problem</a></li><li><a href="#worktrees">One worktree per agent</a></li><li><a href="#ownership">Owned files</a></li><li><a href="#queue">A merge queue</a></li><li><a href="#changed">What it changed</a></li><li><a href="#takeaways">Takeaways</a></li><li><a href="#notes">Notes</a></li></ol>
+      </nav>
+      <section aria-labelledby="ser-h">
+        <p id="ser-h" class="side-h">Series · Agents at scale</p>
+        <ol class="toc" style="font-size: 13px;">
+          <li><a href="#problem" aria-current="page">1 · Six agents, one repo</a></li>
+          <li><span style="display: flex; align-items: center; min-height: 34px; color: var(--muted);">2 · [Next part] · not out yet</span></li>
+          <li><span style="display: flex; align-items: center; min-height: 34px; color: var(--muted);">3 · [Last part] · not out yet</span></li>
+        </ol>
+      </section>
+      <section aria-labelledby="tag-h">
+        <p id="tag-h" class="side-h">Tags</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;"><a class="tag" href="BlogIndex.dc.html">Agents</a><a class="tag" href="BlogIndex.dc.html">Git</a><a class="tag" href="BlogIndex.dc.html">CI</a><a class="tag" href="BlogIndex.dc.html">Platform</a></div>
+      </section>
+    </aside>
+
+    <!-- ARTICLE -->
+    <article style="flex: 999 1 560px; max-width: 720px; min-width: 0; display: flex; flex-direction: column; gap: 28px;">
+      <header style="display: flex; flex-direction: column; gap: 16px;">
+        <nav aria-label="Breadcrumb" class="crumbs"><a href="BlogIndex.dc.html">Writing</a><span aria-hidden="true">/</span><a href="BlogIndex.dc.html">Agents</a></nav>
+        <span class="series"><i aria-hidden="true"></i>Agents at scale · part 1 of 3</span>
+        <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: clamp(34px, 5vw, 50px); font-weight: 600; letter-spacing: -1.6px; line-height: 1.05; text-wrap: balance;">Six agents, one repo, zero merge hell</h1>
+        <p style="margin: 0; font-size: 19px; line-height: 1.55; color: var(--muted);">Running coding agents in parallel on one codebase: a worktree each, owned files, and a merge queue that keeps main green.</p>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; padding-top: 4px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span class="avatar" aria-hidden="true">DN</span>
+            <div style="display: flex; flex-direction: column; line-height: 1.4;"><a href="Main.dc.html" style="text-decoration: none; font-weight: 500; font-size: 14px;">Driss Najih</a><span class="mono" style="font-size: 12px; color: var(--muted);">Jul 2026 · 5 min read</span></div>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <button type="button" class="btn" onClick="{{ copyLink }}" style="min-height: 40px; font-size: 13px;">{{ copiedLink }}</button>
+            <a class="btn icon-btn" href="https://x.com/intent/post?url=https%3A%2F%2Fkouji.dev%2Fblogs%2Fsix-agents-one-repo" aria-label="Share on X" style="min-height: 40px; width: 40px;"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"></path></svg></a>
+            <a class="btn icon-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fkouji.dev%2Fblogs%2Fsix-agents-one-repo" aria-label="Share on LinkedIn" style="min-height: 40px; width: 40px;"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"></path></svg></a>
+          </div>
+        </div>
+      </header>
+
+      <figure class="cover" style="margin: 0;">
+        <svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-post-cover" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-post-cover)"></rect><g class="fills" transform="translate(5 4)"><circle class="f-v" cx="320" cy="150" r="30"></circle><circle class="f-w" cx="320" cy="150" r="13"></circle><circle class="f-p" cx="254.2" cy="141.4" r="9"></circle><circle class="f-c" cx="417.0" cy="129.8" r="11"></circle><circle class="f-l" cx="438.0" cy="185.6" r="10"></circle><circle class="f-p" cx="135.8" cy="174.1" r="12"></circle><circle class="f-c" cx="439.0" cy="75.8" r="10"></circle><circle class="f-v" cx="583.1" cy="184.5" r="13"></circle><circle class="f-p" cx="110" cy="258" r="7"></circle><circle class="f-c" cx="170" cy="258" r="7"></circle><circle class="f-l" cx="230" cy="258" r="7"></circle><circle class="f-p" cx="410" cy="258" r="7"></circle><circle class="f-c" cx="470" cy="258" r="7"></circle><circle class="f-v" cx="530" cy="258" r="7"></circle><circle class="f-w" cx="80" cy="318" r="8"></circle><circle class="f-w" cx="200" cy="318" r="8"></circle><circle class="f-w" cx="320" cy="318" r="8"></circle><circle class="f-w" cx="440" cy="318" r="8"></circle><circle class="f-w" cx="560" cy="318" r="8"></circle></g><g><ellipse class="ink thin dash" cx="320" cy="150" rx="70" ry="25"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="112" ry="40"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="154" ry="55"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="196" ry="71"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="238" ry="86"></ellipse><ellipse class="ink thin dash" cx="320" cy="150" rx="280" ry="101"></ellipse><circle class="ink" cx="320" cy="150" r="30"></circle><circle class="ink" cx="320" cy="150" r="13"></circle><circle class="ink" cx="254.2" cy="141.4" r="9"></circle><circle class="ink" cx="417.0" cy="129.8" r="11"></circle><circle class="ink" cx="438.0" cy="185.6" r="10"></circle><circle class="ink" cx="135.8" cy="174.1" r="12"></circle><circle class="ink" cx="439.0" cy="75.8" r="10"></circle><circle class="ink" cx="583.1" cy="184.5" r="13"></circle><path class="ink" d="M60 318 L580 318"></path><path class="ink thin" d="M110 262 C110 296 246.5 292 258.5 318"></path><circle class="ink" cx="110" cy="258" r="7"></circle><path class="ink thin" d="M170 262 C170 296 267.5 292 279.5 318"></path><circle class="ink" cx="170" cy="258" r="7"></circle><path class="ink thin" d="M230 262 C230 296 288.5 292 300.5 318"></path><circle class="ink" cx="230" cy="258" r="7"></circle><path class="ink thin" d="M410 262 C410 296 351.5 292 339.5 318"></path><circle class="ink" cx="410" cy="258" r="7"></circle><path class="ink thin" d="M470 262 C470 296 372.5 292 360.5 318"></path><circle class="ink" cx="470" cy="258" r="7"></circle><path class="ink thin" d="M530 262 C530 296 393.5 292 381.5 318"></path><circle class="ink" cx="530" cy="258" r="7"></circle><circle class="ink" cx="80" cy="318" r="8"></circle><circle class="ink" cx="200" cy="318" r="8"></circle><circle class="ink" cx="320" cy="318" r="8"></circle><circle class="ink" cx="440" cy="318" r="8"></circle><circle class="ink" cx="560" cy="318" r="8"></circle></g><text class="txt" x="552" y="345">main</text></svg>
+        <figcaption>Six branches, each on its own orbit, all landing on one straight main.</figcaption>
+      </figure>
+
+      <div class="prose">
+      <p class="lead">Give one coding agent a task and it works like a careful colleague: it reads, edits, runs the tests. Give <strong>six</strong> of them the same repository and they behave like six people sharing one laptop.</p>
+
+      <h2 id="problem">The problem<a class="anchor" href="#problem" aria-label="Link to the section The problem">#</a></h2>
+      <p>They overwrite each other's files, run the tests against half-finished changes, and the last one to finish inherits everyone's conflicts.<sup class="fn"><a href="#fn1" id="fnref1" aria-label="Note 1">1</a></sup> Adding a seventh makes it <s>faster</s> worse.</p>
+      <p>The fix is not a smarter agent. It is the discipline a human team already uses: <em>separate checkouts</em>, <em>clear ownership</em>, and <mark>one gate into <code>main</code></mark>. None of it is new; <abbr title="continuous integration">CI</abbr> systems and merge queues have done it for people for years. Agents just make the problem arrive in an afternoon instead of a quarter.</p>
+      <aside class="callout" style="--tone: var(--note);" aria-label="Plain git all the way">
+  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="callout-ic"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 7.5v.5"></path></svg>
+  <div><p class="callout-t">Plain git all the way</p><p>Every step here uses <code>git</code> and a test runner. <a href="https://orrery.kouji.dev">Orrery</a> automates the same steps, but nothing in this post depends on it.</p></div>
+</aside>
+
+      <h2 id="worktrees">One worktree per agent<a class="anchor" href="#worktrees" aria-label="Link to the section One worktree per agent">#</a></h2>
+      <p>A <code>git worktree</code> is a second checkout of the same repository, on its own branch, sharing one object store. It takes seconds, and it means an agent's half-written file never exists in another agent's tree.</p>
+      <figure class="code term">
+  <div class="code-head"><span class="mono code-file"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 6px;"><path d="M4 6l6 6-6 6M12 18h8"></path></svg>Terminal</span><span class="code-tools"><button type="button" class="copy" onClick="{{ copy_term }}" aria-label="Copy the commands">{{ copied_term }}</button></span></div>
+  <pre><code><span class="ln"><span class="lc"><span class="t-prompt" aria-hidden="true">$ </span>git worktree add ../agent-1 -b agent/1-auth-tokens</span></span><span class="ln"><span class="lc"><span class="t-out">Preparing worktree (new branch &#x27;agent/1-auth-tokens&#x27;)</span></span></span><span class="ln"><span class="lc"><span class="t-out">HEAD is now at 4f2c9e1 chore: bump dependencies</span></span></span><span class="ln"><span class="lc"><span class="t-prompt" aria-hidden="true">$ </span>git worktree list</span></span><span class="ln"><span class="lc"><span class="t-out">/repo      4f2c9e1 [main]</span></span></span><span class="ln"><span class="lc"><span class="t-out">/agent-1   4f2c9e1 [agent/1-auth-tokens]</span></span></span></code></pre>
+</figure>
+      <p>Six of them, in whichever shell you use:</p>
+      <div class="tabs">
+        <div role="tablist" aria-label="Shell" class="tablist">
+          <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="3">
+            <button type="button" role="tab" class="tab" aria-selected="{{ tab.selected }}" onClick="{{ tab.pick }}" style="color: {{ tab.fg }}; border-bottom-color: {{ tab.line }};">{{ tab.label }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ tabBash }}" hint-placeholder-val="{{ true }}"><figure class="code">
+  <div class="code-head"><span class="mono code-file">worktrees.sh</span><span class="code-tools"><span class="lang">BASH</span><button type="button" class="copy" onClick="{{ copy_bash }}" aria-label="Copy the code from worktrees.sh">{{ copied_bash }}</button></span></div>
+  <pre><code><span class="ln"><span class="no" aria-hidden="true">1</span><span class="lc"><span class="t-k">for</span> i <span class="t-k">in</span> <span class="t-n">1</span> <span class="t-n">2</span> <span class="t-n">3</span> <span class="t-n">4</span> <span class="t-n">5</span> <span class="t-n">6</span>; <span class="t-k">do</span></span></span><span class="ln"><span class="no" aria-hidden="true">2</span><span class="lc">  <span class="t-k">git</span> worktree add <span class="t-s">&quot;../agent-$i&quot;</span> -b <span class="t-s">&quot;agent/$i&quot;</span></span></span><span class="ln"><span class="no" aria-hidden="true">3</span><span class="lc"><span class="t-k">done</span></span></span></code></pre>
+</figure></sc-if>
+        <sc-if value="{{ tabPs }}" hint-placeholder-val="{{ false }}"><figure class="code">
+  <div class="code-head"><span class="mono code-file">worktrees.ps1</span><span class="code-tools"><span class="lang">POWERSHELL</span><button type="button" class="copy" onClick="{{ copy_ps }}" aria-label="Copy the code from worktrees.ps1">{{ copied_ps }}</button></span></div>
+  <pre><code><span class="ln"><span class="no" aria-hidden="true">1</span><span class="lc"><span class="t-n">1</span>..<span class="t-n">6</span> | ForEach-Object {</span></span><span class="ln"><span class="no" aria-hidden="true">2</span><span class="lc">  <span class="t-k">git</span> worktree add <span class="t-s">&quot;../agent-$_&quot;</span> -b <span class="t-s">&quot;agent/$_&quot;</span></span></span><span class="ln"><span class="no" aria-hidden="true">3</span><span class="lc">}</span></span></code></pre>
+</figure></sc-if>
+        <sc-if value="{{ tabNode }}" hint-placeholder-val="{{ false }}"><figure class="code">
+  <div class="code-head"><span class="mono code-file">worktrees.mjs</span><span class="code-tools"><span class="lang">NODE</span><button type="button" class="copy" onClick="{{ copy_node }}" aria-label="Copy the code from worktrees.mjs">{{ copied_node }}</button></span></div>
+  <pre><code><span class="ln"><span class="no" aria-hidden="true">1</span><span class="lc"><span class="t-k">import</span> { execFileSync } <span class="t-k">from</span> <span class="t-s">&#x27;node:child_process&#x27;</span>;</span></span><span class="ln"><span class="no" aria-hidden="true">2</span><span class="lc"> </span></span><span class="ln"><span class="no" aria-hidden="true">3</span><span class="lc"><span class="t-k">for</span> (<span class="t-k">const</span> i <span class="t-k">of</span> [<span class="t-n">1</span>, <span class="t-n">2</span>, <span class="t-n">3</span>, <span class="t-n">4</span>, <span class="t-n">5</span>, <span class="t-n">6</span>]) {</span></span><span class="ln"><span class="no" aria-hidden="true">4</span><span class="lc">  <span class="t-f">execFileSync</span>(<span class="t-s">&#x27;git&#x27;</span>, [<span class="t-s">&#x27;worktree&#x27;</span>, <span class="t-s">&#x27;add&#x27;</span>, <span class="t-s">`../agent-${i}`</span>, <span class="t-s">&#x27;-b&#x27;</span>, <span class="t-s">`agent/${i}`</span>]);</span></span><span class="ln"><span class="no" aria-hidden="true">5</span><span class="lc">}</span></span></code></pre>
+</figure></sc-if>
+      </div>
+      <ol>
+        <li>Create each worktree from the current <code>main</code>.</li>
+        <li>Install dependencies once per worktree.</li>
+        <li>Start each agent with its working directory set to its own worktree.</li>
+        <li>Remove the worktree once its branch has merged: <code>git worktree remove ../agent-1</code>.</li>
+      </ol>
+      <aside class="callout" style="--tone: var(--tip);" aria-label="Share the package store, not node_modules">
+  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="callout-ic"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"></path></svg>
+  <div><p class="callout-t">Share the package store, not node_modules</p><p>pnpm links every worktree to one content-addressed store on disk, so six installs mostly cost links, not downloads.</p></div>
+</aside>
+
+      <h2 id="ownership">Owned files<a class="anchor" href="#ownership" aria-label="Link to the section Owned files">#</a></h2>
+      <p>Worktrees stop agents from seeing each other's unfinished work. They do not stop two agents from editing the same file and colliding at merge time. That takes a plan made <em>before</em> anyone starts: every task names the paths it may change.</p>
+      <div class="table-box" role="region" aria-label="Who owns what" style="overflow-x: auto;">
+        <table>
+          <thead><tr><th scope="col">Branch</th><th scope="col">Task</th><th scope="col">Owns</th><th scope="col">Reads only</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">agent/1</td><td>Token refresh</td><td><code>src/auth/**</code></td><td><code>src/http/**</code></td></tr>
+            <tr><td class="mono">agent/2</td><td>Retry policy</td><td><code>src/http/retry.ts</code></td><td><code>src/http/**</code></td></tr>
+            <tr><td class="mono">agent/3</td><td>Settings page</td><td><code>src/app/settings/**</code></td><td><code>src/ui/**</code></td></tr>
+            <tr><td class="mono">agent/4</td><td>End-to-end tests</td><td><code>e2e/**</code></td><td>everything</td></tr>
+            <tr><td class="mono">agent/5</td><td>Docs</td><td><code>docs/**</code></td><td>everything</td></tr>
+            <tr><td class="mono">agent/6</td><td>Dependencies</td><td><code>package.json</code>, <code>pnpm-lock.yaml</code></td><td>nothing else</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <blockquote>
+        <p>Owns <code>src/auth/**</code>. Reads <code>src/http/**</code>. Done when the refresh test passes and no other path changed.</p>
+        <footer>the task card agent/1 starts from</footer>
+      </blockquote>
+      <p class="list-title">Before starting six agents</p>
+      <ul class="tasks">
+        <li><input type="checkbox" id="t1" checked="{{ true }}" disabled="{{ true }}"><label for="t1">Every task lists the paths it owns</label></li>
+        <li><input type="checkbox" id="t2" checked="{{ true }}" disabled="{{ true }}"><label for="t2">No path is owned twice</label></li>
+        <li><input type="checkbox" id="t3" checked="{{ true }}" disabled="{{ true }}"><label for="t3">Shared files (the lockfile, routes, translations) have exactly one owner</label></li>
+        <li><input type="checkbox" id="t4" disabled="{{ true }}"><label for="t4">CI fails a branch that touches a path it does not own</label></li>
+      </ul>
+      <aside class="callout" style="--tone: var(--warn);" aria-label="Watch the lockfile">
+  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="callout-ic"><path d="M12 3.5l9.5 16.5h-19z"></path><path d="M12 10v4.5M12 17.2v.3"></path></svg>
+  <div><p class="callout-t">Watch the lockfile</p><p>It is the file every task wants to touch. Give it to one agent; the others ask for a dependency instead of adding it.</p></div>
+</aside>
+
+      <h2 id="queue">A merge queue<a class="anchor" href="#queue" aria-label="Link to the section A merge queue">#</a></h2>
+      <p>Six branches finishing at different times is where the trouble usually starts. Instead of merging as they finish, each finished branch joins a queue. The queue takes one at a time, rebases it on the current <code>main</code>, runs the gates, and merges only if they pass.</p>
+      <figure class="arch" aria-labelledby="arch-cap">
+        <div class="arch-row">
+          <div class="arch-node"><span class="mono arch-k">01</span><strong>Six agents</strong><span class="arch-s">one task card each</span></div><svg class="arch-arrow" aria-hidden="true" width="34" height="14" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h30M25 1.5L31 7l-6 5.5"></path></svg>
+          <div class="arch-node"><span class="mono arch-k">02</span><strong>Worktrees</strong><span class="arch-s">one branch each</span></div><svg class="arch-arrow" aria-hidden="true" width="34" height="14" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h30M25 1.5L31 7l-6 5.5"></path></svg>
+          <div class="arch-node" style="border-color: var(--orr);"><span class="mono arch-k">03</span><strong>Merge queue</strong><span class="arch-s">one branch at a time</span></div><svg class="arch-arrow" aria-hidden="true" width="34" height="14" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h30M25 1.5L31 7l-6 5.5"></path></svg>
+          <div class="arch-col"><div class="arch-node" style="border-color: var(--warn);"><span class="mono arch-k">04</span><strong>Gates</strong><span class="arch-s">rebase · typecheck · tests</span></div><div class="arch-fail mono"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3"></path></svg> fails: back to its agent, with the log</div></div><svg class="arch-arrow" aria-hidden="true" width="34" height="14" viewBox="0 0 34 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h30M25 1.5L31 7l-6 5.5"></path></svg>
+          <div class="arch-node" style="border-color: var(--tip);"><span class="mono arch-k">05</span><strong>main</strong><span class="arch-s">fast-forward only</span></div>
+        </div>
+        <figcaption id="arch-cap">The path of one branch. Only the queue writes to <code>main</code>.</figcaption>
+      </figure>
+      <figure class="code">
+  <div class="code-head"><span class="mono code-file">merge-queue.ts</span><span class="code-tools"><span class="lang">TYPESCRIPT</span><button type="button" class="copy" onClick="{{ copy_ts }}" aria-label="Copy the code from merge-queue.ts">{{ copied_ts }}</button></span></div>
+  <pre><code><span class="ln"><span class="no" aria-hidden="true">1</span><span class="lc"><span class="t-k">import</span> { execFileSync } <span class="t-k">from</span> <span class="t-s">&#x27;node:child_process&#x27;</span>;</span></span><span class="ln"><span class="no" aria-hidden="true">2</span><span class="lc"> </span></span><span class="ln"><span class="no" aria-hidden="true">3</span><span class="lc"><span class="t-k">const</span> git = (...args: string[]) =&gt; <span class="t-f">execFileSync</span>(<span class="t-s">&#x27;git&#x27;</span>, args, { encoding: <span class="t-s">&#x27;utf8&#x27;</span> });</span></span><span class="ln"><span class="no" aria-hidden="true">4</span><span class="lc"> </span></span><span class="ln"><span class="no" aria-hidden="true">5</span><span class="lc"><span class="t-c">// Merge finished branches one at a time: rebase on main, run the gates, fast-forward.</span></span></span><span class="ln"><span class="no" aria-hidden="true">6</span><span class="lc"><span class="t-k">export</span> <span class="t-k">async</span> <span class="t-k">function</span> <span class="t-f">drain</span>(queue: string[], gate: (b: string) =&gt; Promise&lt;boolean&gt;, onFail: (b: string) =&gt; void) {</span></span><span class="ln"><span class="no" aria-hidden="true">7</span><span class="lc">  <span class="t-k">while</span> (queue.length &gt; <span class="t-n">0</span>) {</span></span><span class="ln"><span class="no" aria-hidden="true">8</span><span class="lc">    <span class="t-k">const</span> branch = queue.<span class="t-f">shift</span>()!;</span></span><span class="ln"><span class="no" aria-hidden="true">9</span><span class="lc">    <span class="t-f">git</span>(<span class="t-s">&#x27;fetch&#x27;</span>, <span class="t-s">&#x27;origin&#x27;</span>, <span class="t-s">&#x27;main&#x27;</span>);</span></span><span class="ln"><span class="no" aria-hidden="true">10</span><span class="lc">    <span class="t-f">git</span>(<span class="t-s">&#x27;checkout&#x27;</span>, branch);</span></span><span class="ln hl"><span class="no" aria-hidden="true">11</span><span class="lc">    <span class="t-f">git</span>(<span class="t-s">&#x27;rebase&#x27;</span>, <span class="t-s">&#x27;origin/main&#x27;</span>);                <span class="t-c">// a conflict throws here, on one branch</span></span></span><span class="ln"><span class="no" aria-hidden="true">12</span><span class="lc">    <span class="t-k">if</span> (!(<span class="t-k">await</span> <span class="t-f">gate</span>(branch))) { <span class="t-f">onFail</span>(branch); continue; }</span></span><span class="ln"><span class="no" aria-hidden="true">13</span><span class="lc">    <span class="t-f">git</span>(<span class="t-s">&#x27;checkout&#x27;</span>, <span class="t-s">&#x27;-B&#x27;</span>, <span class="t-s">&#x27;main&#x27;</span>, <span class="t-s">&#x27;origin/main&#x27;</span>);</span></span><span class="ln hl"><span class="no" aria-hidden="true">14</span><span class="lc">    <span class="t-f">git</span>(<span class="t-s">&#x27;merge&#x27;</span>, <span class="t-s">&#x27;--ff-only&#x27;</span>, branch);           <span class="t-c">// main only ever moves forward</span></span></span><span class="ln"><span class="no" aria-hidden="true">15</span><span class="lc">    <span class="t-f">git</span>(<span class="t-s">&#x27;push&#x27;</span>, <span class="t-s">&#x27;origin&#x27;</span>, <span class="t-s">&#x27;main&#x27;</span>);</span></span><span class="ln"><span class="no" aria-hidden="true">16</span><span class="lc">  }</span></span><span class="ln"><span class="no" aria-hidden="true">17</span><span class="lc">}</span></span></code></pre>
+</figure>
+      <p>On GitHub the same queue is a branch protection setting, and CI listens for it:<sup class="fn"><a href="#fn2" id="fnref2" aria-label="Note 2">2</a></sup></p>
+      <figure class="code">
+  <div class="code-head"><span class="mono code-file">.github/workflows/ci.yml</span><span class="code-tools"><span class="lang">DIFF</span></span></div>
+  <pre><code><span class="ln"><span class="no sign" aria-hidden="true"> </span><span class="lc"><span class="sr"></span>on:</span></span><span class="ln del"><span class="no sign" aria-hidden="true">−</span><span class="lc"><span class="sr">removed: </span>  push:</span></span><span class="ln del"><span class="no sign" aria-hidden="true">−</span><span class="lc"><span class="sr">removed: </span>    branches: [main]</span></span><span class="ln add"><span class="no sign" aria-hidden="true">+</span><span class="lc"><span class="sr">added: </span>  pull_request:</span></span><span class="ln add"><span class="no sign" aria-hidden="true">+</span><span class="lc"><span class="sr">added: </span>  merge_group:</span></span><span class="ln"><span class="no sign" aria-hidden="true"> </span><span class="lc"><span class="sr"></span>jobs:</span></span><span class="ln"><span class="no sign" aria-hidden="true"> </span><span class="lc"><span class="sr"></span>  test:</span></span></code></pre>
+</figure>
+      <aside class="callout" style="--tone: var(--bad);" aria-label="Never force-push main to unblock the queue">
+  <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="callout-ic"><path d="M8.2 3h7.6L21 8.2v7.6L15.8 21H8.2L3 15.8V8.2z"></path><path d="M9 9l6 6M15 9l-6 6"></path></svg>
+  <div><p class="callout-t">Never force-push main to unblock the queue</p><p>Revert the bad merge with a new commit instead. Every worktree was made from main; rewriting it pulls the floor from under all six.</p></div>
+</aside>
+
+      <h2 id="changed">What it changed<a class="anchor" href="#changed" aria-label="Link to the section What it changed">#</a></h2>
+      <div class="metrics">
+        <div class="metric"><span class="metric-n ai-grad">6</span><span class="metric-l">agents working at once</span></div>
+        <div class="metric"><span class="metric-n ai-grad">1</span><span class="metric-l">repository, one <code>main</code></span></div>
+        <div class="metric"><span class="metric-n ai-grad">0</span><span class="metric-l">conflicts allowed to reach <code>main</code></span></div>
+      </div>
+      <p>Conflicts still happen. They happen earlier, on one branch, in one worktree, to the one agent that knows what it was doing, instead of on <code>main</code> at the end of the day in front of a person.</p>
+      <p class="pull">Conflicts still happen. They just happen to one branch at a time.</p>
+      <div class="faq">
+        <details>
+          <summary>Why not let each agent open a pull request?</summary>
+          <p>You can, and the queue still applies: a pull request is how a branch asks to join it. What matters is that nothing merges outside the queue.</p>
+        </details>
+        <details>
+          <summary>Why rebase instead of merging main into the branch?</summary>
+          <p>A rebased branch merges fast-forward, so the history of <code>main</code> stays one line and every step on it was tested exactly as it landed.</p>
+        </details>
+        <details>
+          <summary>What if the gates are slow?</summary>
+          <p>Test two or three queued branches together and split the batch only when it fails.</p>
+        </details>
+      </div>
+
+      <h2 id="takeaways">Takeaways<a class="anchor" href="#takeaways" aria-label="Link to the section Takeaways">#</a></h2>
+      <ul>
+        <li><strong>Isolate.</strong> One worktree and one branch per agent; nobody shares a working tree.</li>
+        <li><strong>Assign.</strong> Every path has one owner before work starts, the lockfile included.</li>
+        <li><strong>Queue.</strong> One way into <code>main</code>: rebased, tested, fast-forward.</li>
+        <li><strong>Stop cleanly.</strong> An agent stopped with <kbd>Ctrl</kbd> + <kbd>C</kbd> leaves its worktree as it was; nothing else is touched.</li>
+      </ul>
+      <div class="cards2">
+        <a class="linkcard" href="https://orrery.kouji.dev">
+          <span class="linkcard-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="2.6"></circle><ellipse cx="12" cy="12" rx="9.5" ry="4"></ellipse><circle cx="20.4" cy="10.5" r="1.4" fill="currentColor"></circle></svg></span>
+          <span class="linkcard-b"><strong>Orrery</strong><span>Run several coding agents on one repository, each in its own worktree.</span><span class="mono linkcard-u">orrery.kouji.dev</span></span>
+        </a>
+        <a class="linkcard" href="https://git-scm.com/docs/git-worktree">
+          <span class="linkcard-ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="6" cy="6" r="2.2"></circle><circle cx="6" cy="18" r="2.2"></circle><circle cx="18" cy="9" r="2.2"></circle><path d="M6 8.2v7.6M18 11.2c0 3-4 3.6-10.2 5.4"></path></svg></span>
+          <span class="linkcard-b"><strong>git-worktree</strong><span>The reference page: add, list, move and remove worktrees.</span><span class="mono linkcard-u">git-scm.com</span></span>
+        </a>
+      </div>
+
+      <hr>
+      <section aria-labelledby="notes">
+        <h2 id="notes">Notes<a class="anchor" href="#notes" aria-label="Link to the section Notes">#</a></h2>
+        <ol class="footnotes">
+          <li id="fn1">Six is the number in this setup, not a limit: the trouble grows with how many agents touch the same files, not with how many there are. <a href="#fnref1" aria-label="Back to the text">↑ back</a></li>
+          <li id="fn2">GitHub Actions runs a workflow for a queued change on the <code>merge_group</code> event; without it the queue waits for checks that never start. <a href="#fnref2" aria-label="Back to the text">↑ back</a></li>
+        </ol>
+        <p class="changelog mono">Changelog · Jul 2026 · first published</p>
+      </section>
+</div>
+
+      <!-- AFTER THE POST: tags, author, previous / next, related, newsletter -->
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 20px; border-top: 1px solid var(--panel-bd);">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;"><a class="tag" href="BlogIndex.dc.html">Agents</a><a class="tag" href="BlogIndex.dc.html">Git</a><a class="tag" href="BlogIndex.dc.html">CI</a><a class="tag" href="BlogIndex.dc.html">Platform</a></div>
+        <button type="button" class="btn" onClick="{{ copyLink }}" style="min-height: 40px; font-size: 13px;">{{ copiedLink }}</button>
+      </div>
+
+      <section aria-label="Author" style="display: flex; flex-wrap: wrap; gap: 18px; padding: 22px; border: 1px solid var(--panel-bd); border-radius: 18px; background: var(--btn);">
+        <span class="avatar" aria-hidden="true" style="width: 56px; height: 56px; font-size: 18px;">DN</span>
+        <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 6px;">
+          <p style="margin: 0; font-weight: 600;">Written by Driss Najih</p>
+          <p style="margin: 0; color: var(--muted); font-size: 14px;">Senior AI-augmented developer, freelance, in Paris. Builds the platforms other teams build on: Angular frameworks, Java and Node backends, and lately the AI inside them.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 14px;"><a href="https://calendar.app.google/KTPtgPtkgrbJUEjm7" style="display: inline-flex; align-items: center; min-height: 44px;">Book a call</a><a href="https://www.linkedin.com/in/najih-driss/" style="display: inline-flex; align-items: center; min-height: 44px;">LinkedIn</a><a href="https://github.com/kouji-dev" style="display: inline-flex; align-items: center; min-height: 44px;">GitHub</a></div>
+        </div>
+      </section>
+
+      <nav aria-label="More posts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;">
+        <span class="linkcard" aria-disabled="true" style="flex-direction: column; gap: 4px; opacity: .55;"><span class="mono" style="font-size: 12px; color: var(--muted);">← Newer</span><span style="color: var(--muted);">This is the latest post</span></span>
+        <a class="linkcard" href="BlogIndex.dc.html" style="flex-direction: column; gap: 4px; text-align: right;"><span class="mono" style="font-size: 12px; color: var(--muted);">Older →</span><span style="font-weight: 500;">Hybrid retrieval: BM25 and pgvector, together</span></a>
+      </nav>
+
+      <section aria-labelledby="rel-h" style="display: flex; flex-direction: column; gap: 16px;">
+        <h2 id="rel-h" style="margin: 0; font-size: 15px; font-weight: 500; color: var(--muted);">Read next</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px;">
+        <article class="rel">
+          <a href="BlogIndex.dc.html" aria-hidden="true" style="display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-post-prompts" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-post-prompts)"></rect><g class="fills" transform="translate(5 4)"><rect class="f-w" x="96" y="62" width="280" height="226" rx="18"></rect><rect class="f-v" x="120" y="172" width="236" height="9" rx="4.5"></rect><rect class="f-c" x="120" y="220" width="190" height="9" rx="4.5"></rect><rect class="f-v" x="450" y="150" width="58" height="50" rx="10"></rect><rect class="f-c" x="536" y="108" width="64" height="134" rx="16"></rect><circle class="f-w" cx="568" cy="163" r="6"></circle><circle class="f-w" cx="568" cy="187" r="6"></circle></g><g><rect class="ink" x="96" y="62" width="280" height="226" rx="18"></rect><path class="ink" d="M96 104 L376 104"></path><rect class="ink thin" x="120" y="124" width="210" height="9" rx="4.5"></rect><rect class="ink thin" x="120" y="148" width="168" height="9" rx="4.5"></rect><rect class="ink" x="120" y="172" width="236" height="9" rx="4.5"></rect><rect class="ink thin" x="120" y="196" width="120" height="9" rx="4.5"></rect><rect class="ink" x="120" y="220" width="190" height="9" rx="4.5"></rect><rect class="ink thin" x="120" y="244" width="150" height="9" rx="4.5"></rect><path class="ink" d="M376 175 C420 175 410 175 450 175"></path><rect class="ink" x="450" y="150" width="58" height="50" rx="10"></rect><path class="ink" d="M508 163 L532 163 M508 187 L532 187"></path><rect class="ink" x="536" y="108" width="64" height="134" rx="16"></rect><circle class="ink" cx="568" cy="163" r="6"></circle><circle class="ink" cx="568" cy="187" r="6"></circle><path class="ink thin" d="M546 82 L540 64 M570 78 L572 58 M592 86 L604 70"></path></g><text class="txt" x="116" y="89">POST /v2/prompt</text><text class="txt" x="544" y="268">schema</text></svg></a>
+          <span class="mono" style="font-size: 12px; color: var(--muted);">May 2026 · AI · Architecture</span>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 600; line-height: 1.3;"><a href="BlogIndex.dc.html" style="text-decoration: none;">Prompts are an API surface</a></h3>
+        </article>
+        <article class="rel">
+          <a href="BlogIndex.dc.html" aria-hidden="true" style="display: block; text-decoration: none;"><svg class="illo" viewBox="0 0 640 360" aria-hidden="true"><defs><pattern id="dots-post-stream" width="16" height="16" patternUnits="userSpaceOnUse"><circle class="dot" cx="2" cy="2" r="1.1"></circle></pattern></defs><rect class="bg" x="0" y="0" width="640" height="360"></rect><rect x="0" y="0" width="640" height="360" fill="url(#dots-post-stream)"></rect><g class="fills" transform="translate(5 4)"><rect class="f-v" x="54" y="104" width="128" height="150" rx="16"></rect><circle class="f-w" cx="152" cy="136" r="4"></circle><circle class="f-w" cx="152" cy="162" r="4"></circle><circle class="f-w" cx="152" cy="188" r="4"></circle><circle class="f-w" cx="152" cy="214" r="4"></circle><rect class="f-c" x="199" y="177" width="30" height="18" rx="9"></rect><rect class="f-p" x="237" y="185" width="30" height="18" rx="9"></rect><rect class="f-l" x="281" y="189" width="30" height="18" rx="9"></rect><rect class="f-c" x="329" y="186" width="30" height="18" rx="9"></rect><rect class="f-p" x="371" y="178" width="30" height="18" rx="9"></rect><path class="f-w" d="M430 84 L590 84 Q606 84 606 100 L606 206 Q606 222 590 222 L470 222 L446 246 L450 222 Q430 222 430 206 L430 100 Q430 84 446 84 Z"></path><rect class="f-c" x="452" y="184" width="72" height="10" rx="5"></rect><rect class="f-i" x="528" y="184" width="12" height="14" rx="2"></rect></g><g><rect class="ink" x="54" y="104" width="128" height="150" rx="16"></rect><path class="ink thin" d="M74 136 L162 136"></path><circle class="ink" cx="152" cy="136" r="4"></circle><path class="ink thin" d="M74 162 L162 162"></path><circle class="ink" cx="152" cy="162" r="4"></circle><path class="ink thin" d="M74 188 L162 188"></path><circle class="ink" cx="152" cy="188" r="4"></circle><path class="ink thin" d="M74 214 L162 214"></path><circle class="ink" cx="152" cy="214" r="4"></circle><path class="ink" d="M182 160 C240 160 240 200 300 200 S360 160 420 160"></path><path class="ink" d="M182 196 C240 196 240 236 300 236 S360 196 420 196"></path><rect class="ink" x="199" y="177" width="30" height="18" rx="9"></rect><rect class="ink" x="237" y="185" width="30" height="18" rx="9"></rect><rect class="ink" x="281" y="189" width="30" height="18" rx="9"></rect><rect class="ink" x="329" y="186" width="30" height="18" rx="9"></rect><rect class="ink" x="371" y="178" width="30" height="18" rx="9"></rect><path class="ink" d="M430 84 L590 84 Q606 84 606 100 L606 206 Q606 222 590 222 L470 222 L446 246 L450 222 Q430 222 430 206 L430 100 Q430 84 446 84 Z"></path><rect class="ink thin" x="452" y="106" width="132" height="10" rx="5"></rect><rect class="ink thin" x="452" y="132" width="104" height="10" rx="5"></rect><rect class="ink thin" x="452" y="158" width="140" height="10" rx="5"></rect><rect class="ink" x="452" y="184" width="72" height="10" rx="5"></rect><rect class="ink" x="528" y="184" width="12" height="14" rx="2"></rect></g></svg></a>
+          <span class="mono" style="font-size: 12px; color: var(--muted);">Feb 2026 · Java · AI</span>
+          <h3 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 19px; font-weight: 600; line-height: 1.3;"><a href="BlogIndex.dc.html" style="text-decoration: none;">Streaming tokens through a Spring Boot backend</a></h3>
+        </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="nl-h" style="display: flex; flex-direction: column; gap: 12px; padding: 22px; border: 1px solid var(--panel-bd); border-radius: 18px;">
+        <h2 id="nl-h" style="margin: 0; font-size: 17px; font-weight: 600;">New posts by email</h2>
+        <form onSubmit="{{ noSubmit }}" style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <label for="nl-mail" class="sr">Email address</label>
+          <input id="nl-mail" class="input" type="email" placeholder="you@company.com" style="flex: 1 1 220px;">
+          <button type="button" class="btn" style="background: var(--fg); color: var(--bg); border-color: var(--fg);">Subscribe</button>
+        </form>
+      </section>
+    </article>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"theme":{"editor":"enum","options":["auto","light","dark"],"default":"auto"},"$preview":{"width":1440,"height":9600}}'>
+class Component extends DCLogic {
+  state = { theme: null, tab: 'bash', copied: '' };
+  renderVals() {
+    // like the home page: light by day, dark from dusk; the Theme tweak pins one, the button flips it
+    const t = this.state.theme || this.props.theme || 'auto', h = new Date().getHours();
+    const theme = t === 'auto' ? (h >= 7 && h < 19 ? 'light' : 'dark') : t;
+    return { theme, isDark: theme === 'dark', isLight: theme !== 'dark', themeLabel: theme === 'dark' ? 'Switch to the light theme' : 'Switch to the dark theme',
+      flipTheme: () => this.setState({ theme: theme === 'dark' ? 'light' : 'dark' }),
+      ...this.extra() };
+  }
+  extra() {
+    const CODE = {"term": "git worktree add ../agent-1 -b agent/1-auth-tokens\ngit worktree list", "bash": "for i in 1 2 3 4 5 6; do\n  git worktree add \"../agent-$i\" -b \"agent/$i\"\ndone", "ps": "1..6 | ForEach-Object {\n  git worktree add \"../agent-$_\" -b \"agent/$_\"\n}", "node": "import { execFileSync } from 'node:child_process';\n\nfor (const i of [1, 2, 3, 4, 5, 6]) {\n  execFileSync('git', ['worktree', 'add', `../agent-${i}`, '-b', `agent/${i}`]);\n}", "ts": "import { execFileSync } from 'node:child_process';\n\nconst git = (...args: string[]) => execFileSync('git', args, { encoding: 'utf8' });\n\n// Merge finished branches one at a time: rebase on main, run the gates, fast-forward.\nexport async function drain(queue: string[], gate: (b: string) => Promise<boolean>, onFail: (b: string) => void) {\n  while (queue.length > 0) {\n    const branch = queue.shift()!;\n    git('fetch', 'origin', 'main');\n    git('checkout', branch);\n    git('rebase', 'origin/main');                // a conflict throws here, on one branch\n    if (!(await gate(branch))) { onFail(branch); continue; }\n    git('checkout', '-B', 'main', 'origin/main');\n    git('merge', '--ff-only', branch);           // main only ever moves forward\n    git('push', 'origin', 'main');\n  }\n}"}, tab = this.state.tab, copied = this.state.copied, out = {};
+    Object.keys(CODE).forEach((k) => {
+      out['copy_' + k] = () => { try { navigator.clipboard.writeText(CODE[k]); } catch (e) {} this.setState({ copied: k }); clearTimeout(this._ct); this._ct = setTimeout(() => this.setState({ copied: '' }), 1600); };
+      out['copied_' + k] = copied === k ? 'Copied' : 'Copy';
+    });
+    out.copiedLink = copied === 'link' ? 'Link copied' : 'Copy link';
+    out.copyLink = () => { try { navigator.clipboard.writeText('https://kouji.dev/blogs/six-agents-one-repo'); } catch (e) {} this.setState({ copied: 'link' }); clearTimeout(this._ct); this._ct = setTimeout(() => this.setState({ copied: '' }), 1600); };
+    out.tabs = [['bash', 'bash'], ['ps', 'PowerShell'], ['node', 'Node']].map((t) => ({ label: t[1], selected: tab === t[0] ? 'true' : 'false',
+      fg: tab === t[0] ? 'var(--fg)' : 'var(--muted)', line: tab === t[0] ? '#a855f7' : 'transparent', pick: () => this.setState({ tab: t[0] }) }));
+    out.tabBash = tab === 'bash'; out.tabPs = tab === 'ps'; out.tabNode = tab === 'node';
+    out.noSubmit = (e) => e.preventDefault();
+    return out;
+  }
+  componentWillUnmount() { clearTimeout(this._ct); }
+}
+</script>
+</body>
+</html>

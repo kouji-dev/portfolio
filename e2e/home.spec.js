@@ -63,10 +63,41 @@ test.describe('home', () => {
     expect(x.next).toBe(x.full);
   });
 
+  test('3D place button: switches to the Atlas painting and back, and the choice is remembered', async ({ page }) => {
+    test.setTimeout(360000);
+    await at(page, '2026-05-12T15:00:00+02:00');
+    await page.goto('/');
+    const root = page.locator('.root'), btn = page.locator('[data-place-toggle]'), pt = page.locator('.sky .pt');
+    // hidden until the Paris scene runs, and atlas3d.js is not fetched before the first click
+    await expect(btn).toBeHidden();
+    await expect(pt).toHaveAttribute('data-loaded', '1', { timeout: 230000 });
+    await expect(btn).toBeVisible();
+    await expect(btn).toHaveAttribute('aria-label', 'Show the Atlas painting');
+    expect(await page.evaluate(() => performance.getEntriesByType('resource').some((r) => /atlas3d\.js/.test(r.name)))).toBe(false);
+    await btn.click();
+    await expect(root).toHaveAttribute('data-place', 'atlas', { timeout: 100000 });
+    await expect(btn).not.toHaveAttribute('data-busy', '1');
+    await expect(btn).toHaveAttribute('aria-label', 'Show the Paris painting');
+    await expect(page.locator('.sky .pt3d-atlas')).toBeVisible();
+    await expect(page.locator('.sky .pt3d')).toBeHidden();
+    await expect(page.locator('[data-sky-inner]')).toHaveAttribute('aria-label', /village in the Atlas by day/);
+    // the Atlas has none of Paris' events or weather
+    await expect(pt).toHaveAttribute('data-event', '');
+    await expect(pt).toHaveAttribute('data-wx', '');
+    expect(await page.evaluate(() => localStorage.getItem('dn-place'))).toBe('atlas');
+    await btn.click();
+    await expect(root).toHaveAttribute('data-place', 'paris');
+    await expect(page.locator('.sky .pt3d')).toBeVisible();
+    await expect(page.locator('.sky .pt3d-atlas')).toBeHidden();
+    await expect(page.locator('[data-sky-inner]')).toHaveAttribute('aria-label', /Eiffel Tower/);
+  });
+
   test('3D painting is skipped without WebGL 2: the SVG painting stays', async ({ page }) => {
     await page.addInitScript(() => { delete window.WebGL2RenderingContext; });
     await page.goto('/');
     const pt = page.locator('.sky .pt');
+    // no 3D, no second painting: the place button stays hidden
+    await expect(page.locator('[data-place-toggle]')).toBeHidden();
     await expect(pt).toHaveAttribute('data-q', /full|lite|static/);
     await expect(pt).not.toHaveAttribute('data-gl', '1');
     await expect(page.locator('.sky .pt-b').first()).toBeVisible();
@@ -83,8 +114,8 @@ test.describe('home', () => {
     for (const id of ['about', 'now', 'work', 'activity', 'projects', 'contact']) {
       await expect(page.locator('#' + id)).toBeVisible();
     }
-    await expect(page.locator('#work .rows li')).toHaveCount(5);
-    await expect(page.locator('#projects .rows li')).toHaveCount(5);
+    await expect(page.locator('#work .rows li')).toHaveCount(6);
+    await expect(page.locator('#projects .rows li')).toHaveCount(6);
     await expect(page.locator('#contact a[download][href*="cv-fr-short"]')).toBeVisible();
   });
 

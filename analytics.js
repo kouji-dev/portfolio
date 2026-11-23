@@ -7,7 +7,7 @@
 
    Event naming follows GA4 recommended events where one exists
    (page_view, search, select_content, file_download, click for outbound)
-   and snake_case custom events elsewhere (read_25…, copy_code, palette_*).
+   and snake_case custom events elsewhere (read_25…, copy_code).
    ========================================================================= */
 (function () {
   'use strict';
@@ -22,7 +22,7 @@
   }
 
   /* One delegated listener covers static markup AND dynamically rendered
-     links (blog rows, prev/next, palette items). Capture phase so it still
+     links (blog cards, newer/older). Capture phase so it still
      fires when a handler preventDefaults and navigates programmatically. */
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest && e.target.closest('a[href]');
@@ -52,7 +52,7 @@
       return;
     }
 
-    // internal links to a blog post (home rows, index rows, prev/next, palette)
+    // internal links to a blog post (home rows, index cards, newer/older, read next)
     var slug = postSlug(href);
     if (slug && href.indexOf('blogs') >= 0) {
       window.track('select_content', { content_type: 'post', content_id: slug });

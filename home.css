@@ -74,6 +74,13 @@ a:hover{color:var(--accent);text-decoration-color:#a855f7}
 .skin-btn{position:relative}.skin-btn[hidden]{display:none}.skin-sel{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;font-size:16px;-webkit-appearance:none;appearance:none}
 .skin-btn:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 [data-theme="dark"] .icon-moon,[data-theme="light"] .icon-sun{display:none}
+/* the place button: the icon shows where the click goes (a kasbah from Paris, the tower from the Atlas); a ring while the Atlas loads */
+.place-btn{position:relative}.place-btn[hidden]{display:none}
+.root[data-place="paris"] .icon-paris,.root[data-place="atlas"] .icon-atlas{display:none}
+.place-btn[data-busy="1"]:after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid transparent;border-top-color:var(--accent);animation:place-spin .8s linear infinite}
+@keyframes place-spin{to{transform:rotate(360deg)}}
+.root[data-place="atlas"] .skin-btn{display:none}
+@media (prefers-reduced-motion: reduce){.place-btn[data-busy="1"]:after{animation:none;border-color:var(--accent)}}
 .tagline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted)}
 .tl-short{display:none}
 

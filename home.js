@@ -27,21 +27,28 @@
   var SKIN_NAMES = { auto: 'Automatic', autumn: 'Autumn', halloween: 'Halloween', winter: 'Winter', christmas: 'Christmas', valentine: 'Valentine’s Day', newyear: 'New Year’s Eve', spring: 'Spring', summer: 'Summer', perseids: 'The Perseids', none: 'None' };
   var st = { moment: '', fw: 0, shape: '', slot: '', corner: 'tl', cx: '50%', cy: '50%', poke: false, gust: 0, gl: 0 };
   var sig = '', ffRaf = null, hooks = null, gl = null;
+  // the place painted: Paris, or the Atlas (a second scene in atlas3d.js, fetched the first time it is asked for)
+  var place = 'paris', atlasGl = null, atlasP = null, switching = false, snapT, wantAtlas = false;
+  var rootEl = document.querySelector('.root'), placeBtn = document.querySelector('[data-place-toggle]');
+  // the place asked for by the link (?place=atlas) or chosen last time on this device: Paris loads first, then the switch
+  try { wantAtlas = (new URLSearchParams(location.search).get('place') || localStorage.getItem('dn-place')) === 'atlas'; } catch (e) {}
 
   function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
   function pt() { return skyEl && skyEl.querySelector('.pt'); }
 
   /* ---------- the sky clock ---------- */
   function clock() { return new Date(Date.now() + vo); }
-  // sunrise / sunset (local minutes) on the 15th of each month at Paris' latitude, interpolated by day
-  function sunTimes(mo, d) {
-    var R = [518, 486, 432, 424, 376, 346, 364, 406, 451, 495, 483, 518];
-    var S = [1041, 1086, 1127, 1233, 1275, 1316, 1311, 1267, 1204, 1140, 1032, 1014];
+  // sunrise / sunset (local minutes) on the 15th of each month, interpolated by day: at Paris' latitude, or in the Atlas
+  // valley (31.05° N, 7.13° W, Morocco's clock) when that painting is the one shown
+  function sunTimes(mo, d, pl) {
+    var atlas = (pl || place) === 'atlas';
+    var R = atlas ? [507, 491, 460, 422, 393, 384, 395, 414, 432, 450, 475, 499] : [518, 486, 432, 424, 376, 346, 364, 406, 451, 495, 483, 518];
+    var S = atlas ? [1127, 1155, 1176, 1196, 1216, 1233, 1234, 1213, 1176, 1138, 1112, 1108] : [1041, 1086, 1127, 1233, 1275, 1316, 1311, 1267, 1204, 1140, 1032, 1014];
     var i = mo - 1, j = d < 15 ? (i + 11) % 12 : (i + 1) % 12, t = Math.abs(d - 15) / 30;
     return [R[i] + (R[j] - R[i]) * t, S[i] + (S[j] - S[i]) * t];
   }
-  function sky(d) {
-    var m = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60, s = sunTimes(d.getMonth() + 1, d.getDate()), rise = s[0], set = s[1];
+  function sky(d, pl) {
+    var m = d.getHours() * 60 + d.getMinutes() + d.getSeconds() / 60, s = sunTimes(d.getMonth() + 1, d.getDate(), pl), rise = s[0], set = s[1];
     var cl = function (v) { return Math.max(0, Math.min(1, v)); };
     var t, fd = null, fn = null;
     if (m >= rise && m < set) { fd = (m - rise) / (set - rise); t = Math.min(m - rise, set - m); }
@@ -102,7 +109,9 @@
     var d = clock(), sk = sky(d), mo = d.getMonth() + 1, day = d.getDate(), h = d.getHours(), y = d.getFullYear();
     var sp = season(mo, day), sea = sp[0], phase = sp[1], event = eventOf(mo, day), wx = '';
     // the skin picker (testing only) overrides the date's skin, as in the design
-    var mode = skinMode.split(':')[0], forceWx = skinMode.split(':')[1] || '';
+    var atlas = place === 'atlas';   // the Atlas has no skins yet and none of Paris' events or weather: the season only
+    if (atlas) event = '';
+    var mode = atlas ? 'auto' : skinMode.split(':')[0], forceWx = atlas ? '' : skinMode.split(':')[1] || '';
     if (mode === 'none') { sea = ''; event = ''; phase = 1; }
     else if (mode !== 'auto') {
       var S = { autumn: 2, winter: 1, spring: 2, summer: 2 }, E = { halloween: 'autumn', christmas: 'winter', newyear: 'winter', valentine: 'winter', perseids: 'summer' };
@@ -115,6 +124,7 @@
     if (sea === 'autumn' && h < 10) wx = 'mist';
     if (event === 'newyear') wx = 'snow';   // a white New Year's Eve: no fog or rain on the fireworks
     if (forceWx) wx = forceWx;
+    if (atlas) wx = '';
     var dayTag = '';
     if (event === 'christmas' && ((day === 24 && h >= 23) || (day === 25 && h < 1))) dayTag = 'eve';
     else if (event === 'christmas' && day === 25 && sk.name === 'day') dayTag = 'xmorning';
@@ -133,7 +143,13 @@
     night: 'A hand-painted night view of the Eiffel Tower from the Trocadéro: the Warsaw fountain lit up in the foreground, traffic on Avenue de New-York, the lamp-lined Pont d’Iéna crossing the Seine with bateaux-mouches moored at the quay, the golden tower sparkling under its rotating beacon, the Tour Montparnasse between its legs, the gilded dome of Les Invalides to the left, Haussmann blocks and a crescent moon among drifting clouds',
     day: 'A hand-painted view of the Eiffel Tower from the Trocadéro by day: the Warsaw fountain’s water cannons in the foreground, cars on Avenue de New-York, the Pont d’Iéna with its equestrian statues leading across the Seine to the bronze tower, the Champ de Mars and Tour Montparnasse seen through its arch, the gilded dome of Les Invalides to the left, cream Haussmann blocks with zinc roofs, swaying trees and flowerbeds, and slow clouds'
   };
+  var ATLAS_LABEL = {
+    dusk: 'A painted view of an earthen hill village in the Atlas at dusk: the sun going down behind the snowy range, kasbah towers glowing orange, the first windows lit, a caravan fording the river, and on the terrace in the foreground a carpet aired on the wall, the Amazigh flag, and a fire lit for the evening dance',
+    night: 'A painted night view of an earthen hill village in the Atlas: the Milky Way and a crescent moon over the snowy range, windows lit across the village, lights trembling on the river, dancers and drummers around a fire behind the terrace wall, lanterns by the tea',
+    day: 'A painted view of an earthen hill village in the Atlas by day: kasbah towers and a minaret stepping up a hill under the snowy High Atlas, palms and almond trees in blossom along the river, a camel caravan fording it, and in the foreground a terrace with a carpet aired on the wall, the Amazigh flag, a bread oven, a tagine and tea'
+  };
   function skyLabel(k, name) {
+    if (place === 'atlas') return ATLAS_LABEL[name];
     var seasonText = k.season === 'autumn' ? '. Autumn: the trees turn amber and rust and leaves drift down'
       : k.season === 'winter' ? '. Winter: bare trees' + (k.wx === 'snow' ? ', snow falling on the roofs and lawns' : k.wx === 'rain' ? ', rain and umbrellas on the esplanade' : k.wx === 'fog' ? ', fog drifting around the tower over the snow' : '')
       : k.season === 'spring' ? (k.phase === 2 ? '. Spring: the cherry trees are in pink bloom and petals drift down' : k.phase === 1 ? '. Early spring: buds on the bare branches' : '. Spring: fresh green trees and tulips')
@@ -171,6 +187,8 @@
     // the wipe button: only where there is something on the glass to wipe (the 3D's rain and fog)
     if (wipeBtn) wipeBtn.hidden = !(st.gl && (k.wx === 'rain' || k.wx === 'fog' || /^(shower|storm|fogroll)$/.test(st.moment)));
     if (skinBtn && !skinBtn.hidden) skinLabel(k);
+    if (rootEl && rootEl.getAttribute('data-place') !== place) rootEl.setAttribute('data-place', place);
+    if (placeBtn) { var pl = place === 'atlas' ? 'Show the Paris painting' : 'Show the Atlas painting'; if (placeBtn.title !== pl) { placeBtn.title = pl; placeBtn.setAttribute('aria-label', pl); } }
     var el = pt();
     if (!el) return;
     light(k.sk.vars);
@@ -309,6 +327,7 @@
     if (wipeBtn) wipeBtn.addEventListener('click', function (e) { e.stopPropagation(); if (gl && gl.wipe) gl.wipe(); });
     skyEl.addEventListener('click', function (e) {
       if (!pt()) return;
+      if (place === 'atlas') { if (atlasGl) atlasGl.poke({ day: snap().sk.name === 'day' }); return; }
       var k = snap(), name = k.sk.name, key = k.event || k.season || '', S = (window.SKY_SK && window.SKY_SK.shapes) || {};
       var list = S[key] || S[''] || ['smiley'], ix = shapeIx[key] || 0; shapeIx[key] = ix + 1;
       var shape = list[ix % list.length]; if (shape === 'year') shape = 'y' + k.year;
@@ -341,7 +360,10 @@
   }
   // put the painting's markup (window.SKY_SVG) in the panel and find the elements the clock drives
   function paintSky() {
-    skyEl.querySelector('[data-sky-inner]').innerHTML = window.SKY_SVG;
+    var inner = skyEl.querySelector('[data-sky-inner]');
+    inner.innerHTML = window.SKY_SVG;
+    // beside the painting, as in the design: the second painting's canvas and the frozen picture washed away on a switch
+    inner.insertAdjacentHTML('beforeend', '<canvas class="pt3d-atlas" aria-hidden="true"></canvas><canvas class="pt-snap" aria-hidden="true"></canvas>');
     bindHooks(pt());
   }
   function mountSky(three) {
@@ -442,8 +464,8 @@
     return new Promise(function (ok, ko) { var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = ko; document.head.appendChild(s); });
   }
   // what the scene reads every frame: the sky clock (sun and moon where the painting puts them) and today's skin
-  function state3d() {
-    var k = snap(), d = k.d, sk = k.sk, age = ((d.getTime() - Date.UTC(2000, 0, 6, 18, 14)) / 864e5) % 29.530588853;
+  function state3d(pl) {
+    var k = snap(), d = k.d, sk = pl ? sky(d, pl) : k.sk, age = ((d.getTime() - Date.UTC(2000, 0, 6, 18, 14)) / 864e5) % 29.530588853;
     if (age < 0) age += 29.530588853;
     return { t: sk.t, m: sk.m, sunx: sk.sun[0], suny: sk.sun[1], monx: sk.moon[0], mony: sk.moon[1], season: k.season, phase: k.phase, wx: k.wx, event: k.event, ny: k.ny,
       fount: k.h >= 10 && k.h < 23, moment: st.moment || '', moon: (1 - Math.cos(2 * Math.PI * age / 29.530588853)) / 2, sparkle: sk.name === 'night' && (k.mi < 5 || st.poke), fw: st.fw };
@@ -461,7 +483,10 @@
     var lift = function () {
       if (lifted) return; lifted = true; stop(); load(1, 'Ready');
       // prod: the overlay leaves the DOM once faded, so its looping animations stop
-      setTimeout(function () { el.setAttribute('data-loaded', '1'); setTimeout(function () { if (ov) ov.remove(); }, 950); }, 380);
+      setTimeout(function () {
+        el.setAttribute('data-loaded', '1'); setTimeout(function () { if (ov) ov.remove(); }, 950);
+        if (wantAtlas) { wantAtlas = false; setTimeout(togglePlace, 700); }
+      }, 380);
     };
     var lt = setInterval(function () { load(Math.round((lp + (cap - lp) * 0.07) * 1000) / 1000); }, 320);
     var lsafe = setTimeout(lift, 30000);
@@ -474,6 +499,10 @@
     var no = function (why) {
       if (window.console) console.warn('[painting] 3D off, SVG painting instead:', why || 'unknown');
       if (gl) { gl.dispose(); gl = null; }
+      // no 3D, no second painting: back to Paris (its SVG painting), and the place button goes
+      wantAtlas = false; clearTimeout(snapT);
+      if (atlasGl) { atlasGl.dispose(); atlasGl = null; atlasP = null; }
+      place = 'paris'; if (placeBtn) placeBtn.hidden = true;
       stop();
       loadSvgPainting().then(function () { st.gl = 0; paintSky(); render(); done(); });
     };
@@ -486,6 +515,7 @@
       .then(function (h) {
         if (!h) return no('the scene did not mount');
         gl = h;
+        if (placeBtn) placeBtn.hidden = false;
         cv.addEventListener('webglcontextlost', function () { no('WebGL context lost'); });
         cap = 0.96; load(0.8, 'Lighting the city');
         el.removeAttribute('data-gl-warm');
@@ -493,6 +523,50 @@
       })
       .catch(no);
   }
+
+  /* ---------- the place: Paris, or the Atlas ----------
+     Paris stays on screen while atlas3d.js (319 KB, generated in the design from its own modules and the Paris scene's
+     core) is fetched and built behind it; the button shows the wait. Then one frozen picture of the place we leave is
+     washed away from the top, and under it only the other scene is live: the hidden canvas pauses its own loop. */
+  function busy(on) { if (placeBtn) { if (on) placeBtn.setAttribute('data-busy', '1'); else placeBtn.removeAttribute('data-busy'); } }
+  function togglePlace() {
+    if (switching || !gl) return;
+    if (place === 'atlas') return switchPlace('paris');
+    if (atlasGl) return switchPlace('atlas');
+    if (!window.WebGL2RenderingContext || !window.THREE) return;
+    switching = true; busy(true);
+    loadAtlas().then(function () { switching = false; busy(false); if (gl) switchPlace('atlas'); })
+      .catch(function (e) { switching = false; atlasP = null; busy(false); if (window.console) console.error('[painting] the Atlas failed', e); });
+  }
+  function loadAtlas() {
+    if (atlasP) return atlasP;
+    atlasP = (window.Atlas3D && window.Atlas3D.mountAsync ? Promise.resolve() : script('atlas3d.js')).then(function () {
+      var el = pt(), cv = skyEl.querySelector('.pt3d-atlas');
+      if (!cv || !window.Atlas3D || !window.Atlas3D.mountAsync) throw new Error('no Atlas scene');
+      return window.Atlas3D.mountAsync(cv, { layout: window.PARIS3D_LAYOUT, tokens: el, state: function () { return state3d('atlas'); } });
+    }).then(function (h) {
+      if (!h) throw new Error('no WebGL');
+      if (!gl) { h.dispose(); throw new Error('the 3D painting stopped'); }
+      atlasGl = h; return h;
+    });
+    return atlasP;
+  }
+  function switchPlace(to) {
+    var from = place, el = pt(); if (from === to || !el) return;
+    var snapCv = skyEl.querySelector('.pt-snap'), frozen = false;
+    try {
+      var src = skyEl.querySelector(from === 'atlas' ? '.pt3d-atlas' : '.pt3d'), h = from === 'atlas' ? atlasGl : gl;
+      if (h && h.renderOnce && src && snapCv && src.width > 8 && !reduced()) { h.renderOnce(0); snapCv.width = src.width; snapCv.height = src.height; snapCv.getContext('2d').drawImage(src, 0, 0); frozen = true; }
+    } catch (e) {}
+    clearTimeout(snapT);
+    place = to; sig = '';
+    // restart the wash even when the last one hasn't finished
+    if (snapCv) { snapCv.removeAttribute('data-on'); if (frozen) { void snapCv.offsetWidth; snapCv.setAttribute('data-on', '1'); } }
+    render();
+    if (frozen) snapT = setTimeout(function () { if (snapCv) snapCv.removeAttribute('data-on'); }, 1500);
+    try { localStorage.setItem('dn-place', to); } catch (e) {}
+  }
+  if (placeBtn) placeBtn.addEventListener('click', togglePlace);
 
   // hovered / focused project → its label in the painting
   var projects = document.querySelector('.rows-proj');

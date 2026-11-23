@@ -1,21 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Blog — Driss Najih · Notes from the build</title>
-  <meta name="description" content="Engineering notes on agents, retrieval and the platform work underneath them — written from things that shipped. By Driss Najih, senior software engineer.">
+  <title>Writing — Driss Najih</title>
+  <meta name="description" content="Notes from things that shipped: agents, platforms, Angular and Java at scale, and the AI inside them. By Driss Najih.">
   <meta name="author" content="Driss Najih">
-  <meta name="theme-color" content="#05060B">
+  <meta name="theme-color" content="#0c0e16">
 
-  <!-- Open Graph / social -->
+  <!-- Open Graph / social (blog.js rewrites these for a post) -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Blog — Driss Najih · Notes from the build">
-  <meta property="og:description" content="Agents, retrieval, and the platform engineering underneath them. Everything here comes out of something that shipped.">
-  <meta property="og:url" content="https://kouji.dev/blogs">
+  <meta property="og:title" content="Writing — Driss Najih">
+  <meta property="og:description" content="Notes from things that shipped: agents, platforms, Angular and Java at scale, and the AI inside them.">
+  <meta property="og:url" content="https://www.kouji.dev/blogs">
+  <meta property="og:image" content="https://www.kouji.dev/og.png">
+  <meta name="twitter:image" content="https://www.kouji.dev/og.png">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://www.kouji.dev/blogs">
+
+  <!-- like the home page: light by day, dark from dusk; the theme button's choice lasts for the tab (design: BlogIndex.dc.html) -->
+  <script>
+    (function () {
+      var t = null, h = new Date().getHours();
+      try { t = sessionStorage.getItem('dn-theme'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t === 'light' || t === 'dark' ? t : h >= 7 && h < 19 ? 'light' : 'dark');
+    })();
+  </script>
 
   <!-- Google tag (gtag.js) -->
   <script>
@@ -23,7 +35,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     // page_view is sent manually from blog.js once routing has resolved the
-    // view (index vs article) and set the real document title.
+    // view (index vs post) and set the real document title.
     gtag('config', 'G-YJ4W6QWCMZ', { send_page_view: false });
     // gtag.js (~150 KB) waits until the page is idle; calls queue in dataLayer meanwhile
     addEventListener('load', function () {
@@ -39,153 +51,89 @@
   <link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/fonts/fonts.css">
 
-  <link rel="stylesheet" href="styles.css">
+  <!-- home.css: the shared design system (tokens, links, socials); blog.css: the blog on top of it -->
+  <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" href="blog.css">
 </head>
-<body data-page="blogs" data-nav-active="writing">
+<body data-page="blogs">
+<div class="root">
 
-  <div class="page">
-
-    <!-- ===== GLOBAL COSMOS (fixed, behind the whole page for continuity) ===== -->
-    <div data-hero-bg class="cosmos"></div>
-    <div class="cosmos-fade" aria-hidden="true"></div>
-    <!-- extra veil: content pages sit on much calmer, darker space -->
-    <div class="cosmos-veil" aria-hidden="true"></div>
-
-    <!-- ===== TOP BAR ===== -->
-    <div class="topbar-wrap">
-      <div class="topbar" data-topbar>
-        <a href="/" class="brand">
-          <span class="brand-orb">
-            <svg width="30" height="30" viewBox="0 0 32 32" class="brand-ring" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"></circle>
-              <circle data-progress-ring cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="87.96" stroke-dashoffset="87.96"></circle>
-            </svg>
-            <span class="brand-orb-core"></span>
-          </span>
-          <span class="brand-name">Driss&nbsp;Najih</span>
-        </a>
-
-        <nav class="navpill" data-navpill aria-label="Primary">
-          <span class="navpill-ind" data-navind aria-hidden="true"></span>
-          <a href="/#about" data-navlink="about">About</a>
-          <a href="/#work" data-navlink="work">Work</a>
-          <a href="/#projects" data-navlink="projects">Projects</a>
-          <a href="/#activity" data-navlink="activity">Activity</a>
-          <a href="/blogs" data-navlink="writing">Blog</a>
-          <a href="/#contact" data-navlink="contact">Contact</a>
-        </nav>
-
-        <div class="topbar-right">
-          <button type="button" class="indexbtn" data-palette-open aria-label="Open page index">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <span class="indexbtn-label">Index</span>
-            <kbd class="indexbtn-kbd">⌘K</kbd>
-          </button>
-          <a href="/#contact" class="navcta">Get in touch</a>
-          <button type="button" data-menubtn class="menubtn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-          </button>
-        </div>
+  <header class="bar">
+    <a class="brand" href="/"><span aria-hidden="true" class="name-at ai-grad">@</span>NAJIH Driss</a>
+    <nav aria-label="Site" class="bar-nav">
+      <a href="/">Home</a>
+      <a href="/blogs" aria-current="page" data-navlink="writing">Writing</a>
+      <a href="https://calendar.app.google/KTPtgPtkgrbJUEjm7">Book a call</a>
+      <!-- production extra (not in the board): the home page's socials -->
+      <div class="socials">
+        <a href="https://github.com/kouji-dev" aria-label="Code on GitHub" title="GitHub"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C18.3 4.7 19.3 5 19.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg></a>
+        <a href="https://www.linkedin.com/in/najih-driss/" aria-label="Connect on LinkedIn" title="LinkedIn"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+        <a href="https://x.com/NajihDriss1" aria-label="Follow on X" title="X"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
       </div>
-    </div>
-
-    <!-- reading progress (article view only, driven from blog.js) -->
-    <div class="readbar" data-readbar aria-hidden="true"></div>
-
-    <!-- ===== MOBILE MENU ===== -->
-    <div id="mobile-menu" class="mobile-menu" data-mobile-menu hidden>
-      <button type="button" data-menuclose class="menuclose" aria-label="Close menu">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      <button type="button" class="btn icon-btn" data-theme-toggle aria-label="Switch theme">
+        <svg class="icon-sun" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"></path></svg>
+        <svg class="icon-moon" aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"></path></svg>
       </button>
-      <a href="/#about">About</a>
-      <a href="/#work">Work</a>
-      <a href="/#projects">Projects</a>
-      <a href="/#activity">Activity</a>
-      <a href="/blogs">Blog</a>
-      <a href="/#contact">Contact</a>
-      <div class="mobile-menu-foot mono">DRISS NAJIH · SENIOR SOFTWARE ENGINEER</div>
+    </nav>
+  </header>
+
+  <noscript><p class="nojs">The posts on this page are rendered with JavaScript. Turn it on to read them, or go back to the <a href="/">home page</a>.</p></noscript>
+
+  <!-- ===== INDEX (/blogs) ===== -->
+  <main data-view-index class="blog-main" hidden>
+    <section aria-labelledby="w-h" class="intro">
+      <h1 id="w-h">Writing</h1>
+      <p>Notes from things that shipped: agents, platforms, Angular and Java at scale, and the AI inside them.</p>
+    </section>
+
+    <div class="filters" data-blog-filters>
+      <div class="filters-row">
+        <div class="search-box">
+          <label for="q" class="sr">Search the posts</label>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+          <input id="q" class="search" type="search" placeholder="Search posts" autocomplete="off" data-blog-search>
+        </div>
+        <span class="date" aria-live="polite" data-blog-count></span>
+      </div>
+      <div role="group" aria-label="Filter by topic" class="chips" data-blog-chips></div>
     </div>
 
-    <!-- ===== BLOG INDEX ===== -->
-    <main data-view-index class="blog-index" hidden>
-      <div data-reveal class="section-num">Blog</div>
-      <h1 data-reveal class="blog-title">Notes from the build.</h1>
-      <p data-reveal class="blog-sub">Agents, retrieval, and the platform engineering underneath them. Everything here comes out of something that shipped — no tutorials, no roundups.</p>
+    <article class="featured" data-blog-featured hidden></article>
+    <section aria-label="All posts" class="grid" data-blog-list hidden></section>
 
-      <div data-reveal class="blog-filters">
-        <label class="blog-search">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input data-blog-search type="text" placeholder="Search posts" autocomplete="off" spellcheck="false">
-        </label>
-        <div class="blog-chips" data-blog-chips></div>
-      </div>
-
-      <div class="post-list post-list-full" data-blog-list></div>
-      <div class="blog-empty mono" data-blog-empty hidden>No posts match that filter.</div>
-    </main>
-
-    <!-- ===== ARTICLE ===== -->
-    <main data-view-post class="post" hidden>
-      <div class="post-head">
-        <a href="/blogs" class="post-back mono">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
-          All posts
-        </a>
-        <div class="post-meta mono" data-post-meta></div>
-        <h1 class="post-title" data-post-title></h1>
-        <p class="post-dek" data-post-dek></p>
-        <div class="post-author">
-          <span class="post-avatar">DN</span>
-          <span class="post-author-names">
-            <span class="post-author-name">Driss Najih</span>
-            <span class="post-author-role mono">Senior Software Engineer</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="article-grid">
-        <article class="article" data-article data-post-body></article>
-
-        <aside class="toc" data-toc>
-          <div class="toc-label mono">On this page</div>
-          <nav class="toc-links" data-toc-links></nav>
-          <a href="/blogs" class="toc-index mono">Index of posts</a>
-        </aside>
-      </div>
-    </main>
-
-    <footer class="footer">
-      <span class="mono">Driss Najih · Senior Software Engineer</span>
-      <span class="mono">© 2026 — built in orbit</span>
-    </footer>
-
-    <!-- ===== PAGE INDEX (⌘K palette, opened from JS) ===== -->
-    <div class="palette" data-palette hidden>
-      <div class="palette-box" role="dialog" aria-modal="true" aria-label="Page index">
-        <div class="palette-head">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input data-palette-input type="text" placeholder="Jump to a section, post or link…" autocomplete="off" spellcheck="false">
-          <kbd class="mono">ESC</kbd>
-        </div>
-        <div class="palette-list" data-palette-list></div>
-        <div class="palette-foot mono">
-          <span>↑↓ navigate</span><span>↵ open</span><span>⌘K toggle</span>
-        </div>
-      </div>
+    <div class="empty" data-blog-empty hidden>
+      <h2>No post matches that.</h2>
+      <p>Try another word, or show every topic again.</p>
+      <button type="button" class="btn" data-blog-clear>Clear the filters</button>
     </div>
 
-    <!-- ===== CUSTOM CURSOR (fine pointers only, enabled from JS) ===== -->
-    <div class="cursor-dot" data-cursor-dot aria-hidden="true"></div>
-    <div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
+    <nav aria-label="Pages" class="pager" data-blog-pager hidden></nav>
+  </main>
 
-  </div>
+  <!-- ===== POST (/blogs?id=<slug>), rendered by blog.js ===== -->
+  <main data-view-post class="post-wrap" hidden></main>
 
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js" defer></script>
+  <!-- the author box under every post: site copy, kept here rather than in blog.js -->
+  <template data-author-box>
+    <span class="avatar avatar-lg" aria-hidden="true">DN</span>
+    <div class="author-text">
+      <p class="author-name">Written by Driss Najih</p>
+      <p class="author-bio">Senior AI-augmented developer, freelance, in Paris. Builds the platforms other teams build on: Angular frameworks, Java and Node backends, and lately the AI inside them.</p>
+      <div class="links">
+        <a href="https://calendar.app.google/KTPtgPtkgrbJUEjm7">Book a call</a>
+        <a href="https://www.linkedin.com/in/najih-driss/">LinkedIn</a>
+        <a href="https://github.com/kouji-dev">GitHub</a>
+        <a href="assets/najih-driss-cv-en-short.pdf" download="Driss Najih - CV (EN).pdf">CV (EN)</a>
+        <a href="assets/najih-driss-cv-fr-short.pdf" download="Driss Najih - CV (FR).pdf">CV (FR)</a>
+      </div>
+    </div>
+  </template>
+
+  <footer class="foot blog-foot">Built with agents<span class="ai-grad"> ✦ </span>reviewed by a human. · <a href="/privacy">Privacy</a></footer>
+</div>
+
   <script src="analytics.js" defer></script>
   <script src="blog-data.js" defer></script>
   <script src="blog.js" defer></script>
-  <script src="cosmos.js" defer></script>
-  <script src="palette.js" defer></script>
 </body>
 </html>

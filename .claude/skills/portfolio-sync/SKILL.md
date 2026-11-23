@@ -25,6 +25,11 @@ hand-ported, build-free vanilla site. This skill moves one into the other.
   The modules are the source; the page loads `paris3d.js`, one classic script generated from them by `pnpm run scene`
   (it also runs from file://, where browsers refuse ES modules). Edit the modules, never paris3d.js; rebuild after any change.
 
+- The canvas also holds a second scene, the Atlas (`ATLAS_SRC` blob in `Main.dc.html`, a generated classic script): save it as `design/atlas3d.js`,
+  rewrite `ATLAS_SRC` to `atlas3d.js`, and copy it unchanged to the repo root (`home.js` fetches it on the place button's first click).
+  Its two canvases (`.pt3d-atlas`, `.pt-snap`) sit after `<!--/PT-->`, so `pnpm run sky` does not carry them: `home.js` adds them beside the painting.
+- Blog boards: `project/BlogIndex.dc.html` and `project/BlogPost.dc.html` → `blogs.html` + `blog.js`; `project/Atlas.dc.html` is a study board, not ported.
+
 ## 1. Pull
 
 1. `Artifact list` with `scope: "files"` on the canvas → note the version and the sizes.

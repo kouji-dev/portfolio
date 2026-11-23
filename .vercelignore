@@ -1,5 +1,5 @@
 # Authoring tooling that lives in the repo but must never be served from the
-# domain root. The static site (index.html, styles.css, cosmos.js, cv/*.pdf)
+# domain root. The static site (index.html, blogs.html, their css/js, assets/*.pdf)
 # ships as before.
 
 # CV pipeline: YAML sources, generator scripts, node deps.
