@@ -143,7 +143,7 @@ window.BLOG_POSTS = [
 
       { t: 'h2', text: 'So I built one' },
       { t: 'p', text: 'That is where the fun idea came from: a side project to build my own environment for agents. I did not even know the category existed. I found other products later, and they were not optimized the way I wanted. I started learning Rust in parallel and got to work.' },
-      { t: 'p', text: 'Version one of Orrery ADE was deliberately small.' },
+      { t: 'p', text: 'Version one of [Orrery ADE](https://getorrery.dev) was deliberately small.' },
       { t: 'tasks', title: 'V1', items: [
         { text: 'Register a directory as a project', done: true },
         { text: 'Create every agent in its own worktree, with the CLI I choose: Claude Code, Gemini, Codex', done: true },
@@ -164,7 +164,7 @@ window.BLOG_POSTS = [
       { t: 'h2', text: 'Then the agent itself became the problem' },
       { t: 'p', text: 'With the environment sorted, the next bottleneck was the agent CLI. I mostly ran Claude Code, and I want to be fair to it: it is a beautiful tool with one of the greatest harnesses, on top of a very smart model.' },
       { t: 'p', text: 'But it runs on a JavaScript runtime. On my machine an instance started at around 200 MB before it had done anything. Run several in parallel and that adds up quickly.' },
-      { t: 'p', text: 'That became the second project: **Orrery Harness**, an agent runtime written in Rust. I set three goals for it.' },
+      { t: 'p', text: 'That became the second project: [Orrery Harness](https://getorrery.dev), an agent runtime written in Rust. I set three goals for it.' },
       { t: 'list', ordered: true, items: [
         '**Use the least resources.** The target is scale: on one VPS, a hundred Orrery instances should cost less than ten Claude Code instances.',
         '**Be plugin-based.** Anyone on a team, especially in an enterprise, can write their own extension, for tooling, for MCP or for anything else, and plug it in.',
@@ -181,7 +181,7 @@ window.BLOG_POSTS = [
       { t: 'callout', tone: 'note', title: 'A target, not a benchmark', text: 'The hundred-to-ten ratio is the goal I am building toward. I have not published a measurement of it yet.' },
 
       { t: 'h2', text: 'Where it stands' },
-      { t: 'p', text: 'Orrery is now two things: a harness and an ADE. The harness runs the agent. The ADE is where I run many of them side by side, review what they did and ship it.' },
+      { t: 'p', text: '[Orrery](https://getorrery.dev) is now two things: a harness and an ADE. The harness runs the agent. The ADE is where I run many of them side by side, review what they did and ship it.' },
       { t: 'p', text: 'Both exist because of small frustrations I refused to keep living with. If some of them sound familiar, have a look.' },
       { t: 'cards', items: [
         { title: 'Orrery', text: 'A full AI harness and ADE for coding agents.', href: 'https://getorrery.dev' }
