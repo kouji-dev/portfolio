@@ -108,8 +108,8 @@ a.tag:hover{color:var(--fg)}
 .series{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;min-height:30px;padding:0 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--orr) 45%,transparent);color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:12px}
 .series i{width:6px;height:6px;border-radius:50%;background:var(--orr)}
 .avatar{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none;background:var(--chip);border:1px solid var(--btn-bd);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px}
-.toc{position:relative;margin:0;padding:0 0 0 14px;list-style:none;display:flex;flex-direction:column;border-left:1px solid var(--panel-bd)}
-.toc a,.toc span{display:flex;align-items:center;min-height:34px;color:var(--muted);text-decoration:none;font-size:13.5px}
+.toc{position:relative;margin:0;padding:0 0 0 14px;list-style:none;display:flex;flex-direction:column;gap:6px;border-left:1px solid var(--panel-bd)}
+.toc a,.toc span{display:flex;align-items:center;min-height:34px;padding:5px 0;line-height:1.4;box-sizing:border-box;color:var(--muted);text-decoration:none;font-size:13.5px}
 .toc a:hover{color:var(--fg)}
 .toc a[aria-current]{color:var(--fg);font-weight:500}
 .toc a[aria-current]:before{content:"";position:absolute;left:-1px;width:2px;height:22px;background:linear-gradient(#ff5d9e,#a855f7,#22d3ee);border-radius:2px}
